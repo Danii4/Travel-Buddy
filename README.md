@@ -4,4 +4,4 @@
 
 **Group Members**: Dania Hanif, Rachel Ho, Fahad Adnan, Abbiram Ramanathan, Suvasan Krishnasamy, Pranavan Pirahalathan
 
-**Project Title**: TBD
+**Project Title**: Travel Buddy
