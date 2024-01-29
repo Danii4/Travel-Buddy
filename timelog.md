@@ -1,2 +1,4 @@
 | Date       | Dania | Rachel | Fahad | Abbiram | Suvasan | Pranavan | Task |
 |−−−−−−−−−−−−|-------|--------|-------|---------|---------|----------|------|
+| 2024/01/22 | 3     | 3      | 3     | 3       | 3       | 3        | Discussed D1,setup Github |
+| 2024/01/24 | 3     |        |       |         |         |          | Worked on D1 |
