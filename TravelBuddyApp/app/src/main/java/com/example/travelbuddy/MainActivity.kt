@@ -4,29 +4,23 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.ExitToApp
-import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,20 +35,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.travelbuddy.screens.BudgetTrackingScreen
+import com.example.travelbuddy.screens.HomeScreen
+import com.example.travelbuddy.screens.TranslationScreen
+import com.example.travelbuddy.screens.TripPlanningScreen
+import com.example.travelbuddy.screens.UnitConversionScreen
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
 import kotlinx.coroutines.launch
@@ -63,6 +61,7 @@ data class DrawerItem(
     val label: String,
     val iconSelected: ImageType,
     val iconUnselected: ImageType,
+    val screen: Screen
 )
 
 val DRAWER_ITEMS: List<DrawerItem> = listOf(
@@ -70,29 +69,33 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         label = "Home",
         iconSelected = ImageType.Vector(Icons.Filled.Home),
         iconUnselected = ImageType.Vector(Icons.Outlined.Home),
+        screen = Screen.Home,
     ),
     DrawerItem(
         label = "Trip planning",
         iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
         iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
+        screen = Screen.TripPlanning,
     ),
     DrawerItem(
         label = "Budget Tracking",
         iconSelected = ImageType.Drawable(R.drawable.payment_filled_24),
         iconUnselected =  ImageType.Drawable(R.drawable.payment_outline_24),
+        screen = Screen.BudgetTracking,
     ),
     DrawerItem(
         label = "Translation",
         iconSelected = ImageType.Vector(Icons.Filled.Phone),
         iconUnselected = ImageType.Vector(Icons.Outlined.Phone),
+        screen = Screen.Translation,
     ),
     DrawerItem(
         label = "Unit Conversion",
         iconSelected = ImageType.Vector(Icons.Filled.ExitToApp),
         iconUnselected = ImageType.Vector(Icons.Outlined.ExitToApp),
+        screen = Screen.UnitConversion,
     ),
 )
-
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -108,6 +111,7 @@ class MainActivity : ComponentActivity() {
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
                     var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+                    val navController = rememberNavController()
 
                     ModalNavigationDrawer(
                         drawerContent = {
@@ -119,6 +123,7 @@ class MainActivity : ComponentActivity() {
                                         selected = index == selectedItemIndex,
                                         onClick = {
                                             selectedItemIndex = index
+                                            navController.navigate(item.screen.route)
                                             scope.launch {
                                                 drawerState.close()
                                             }
@@ -140,6 +145,9 @@ class MainActivity : ComponentActivity() {
                         drawerState = drawerState
                     ) {
                         Scaffold(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(),
                             topBar = {
                                 TopAppBar(
                                     title = {
@@ -150,7 +158,8 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier.padding(2.dp)
                                             )
                                             Text(
-                                                text = "Travel Buddy"
+                                                text = DRAWER_ITEMS[selectedItemIndex].label,
+                                                fontSize = 20.sp
                                             )
                                         }
                                     },
@@ -168,26 +177,22 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
-                        ) {}
+                        ){ paddingValues ->
+                            NavHost(
+                                navController = navController,
+                                startDestination = Screen.Home.route,
+                                modifier = Modifier.padding(paddingValues)
+                            ) {
+                                composable(Screen.BudgetTracking.route) { BudgetTrackingScreen() }
+                                composable(Screen.Home.route) { HomeScreen() }
+                                composable(Screen.Translation.route) { TranslationScreen() }
+                                composable(Screen.TripPlanning.route) { TripPlanningScreen() }
+                                composable(Screen.UnitConversion.route) { UnitConversionScreen() }
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TravelBuddyTheme {
-        Greeting("Android")
     }
 }
