@@ -1,1 +1,8 @@
-| Date | Dania | Rachel | Fahad | Abbiram | Suvasan | Pranavan | Task | |−−−−−−−−−−−−|-------|--------|-------|---------|---------|----------|------| | 2024/01/22 | 3 | 3 | 3 | 3 | 3 | 3 | Discussed D1,setup Github | | 2024/01/24 | 3 | 3| | | | | Worked on D1 | | 2024/01/29 | |3| | 3 | 3 | | Worked on D1 | 2024/02/06 | |3| |  |  | |
+| Date         | Dania | Rachel | Fahad | Abbiram | Suvasan | Pranavan | Task
+|-−−−−−−−−−−−−-|-------|--------|-------|---------|---------|----------|------|
+| 2024/01/22   | 3     | 3      | 3     | 3       | 3       | 3        | Discussed D1,Setup Github
+| 2024/01/24   | 3     | 3      |       |         |         |          | Worked on D1 Proposal Document
+| 2024/01/29   |       | 3      |       | 3       | 3       |          | Finished D1 Proposal Document
+| 2024/02/06   |       | 3      |       | 0.5     |         |          | Worked on D2 Buddy Team Evaluation
+| 2024/02/26   |       |        |       | 1       |         |          | Discussed features, brainstormed work items and divided tasks
+| 2024/02/27   |       |        |       | 1       |         |          | Created structure with MVVM design pattern for features |
