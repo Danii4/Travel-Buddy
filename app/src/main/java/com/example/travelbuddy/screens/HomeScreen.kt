@@ -19,6 +19,44 @@ fun HomeScreen() {
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Medium
             )
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "SignUp",
+                fontSize = 35.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "Username",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "Email Address",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "Main Purpose of Using the App",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "Password",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "Signup",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium
+            )
+
+            
         }
     }
 }
