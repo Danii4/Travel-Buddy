@@ -6,3 +6,4 @@
 | 2024/02/06 |       | 3      |       | 0.5     |         |          | Worked on D2 Buddy Team Evaluation                            |
 | 2024/02/26 |       |1       |       | 1       |         |          | Discussed features, brainstormed work items and divided tasks |
 | 2024/02/27 |       |1       |       | 1       |         |          | Created structure with MVVM design pattern for features       |
+| 2024/02/29 |       |5     |  |    |     |     | Created features for home screen and design home screen components, finished d3 report for home screen section|
