@@ -7,6 +7,23 @@ import androidx.compose.runtime.Composable
 @Composable
 fun HomeScreen() {
     return Surface {
-        Text(text = "Home Screen")
+        Text(modifier = modifier.padding(20.dp),
+             text = "Home Screen",
+             fontSize = 18.sp,
+             fontWeight = FontWeight.Medium
+            )
+        Column{
+            Text(
+                Modifier = Modifier.padding(20.dp),
+                text = "Welcome to TravelBuddy",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
     }
+}
+
+class Verifylogin{
+    val response = OkHttpClient().newCall(request).execute()
+    val json = response.body.string()
 }
