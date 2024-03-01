@@ -31,7 +31,7 @@ class ExpenseModel {
         val expenseId: String = "",
         val name: String = "",
         val expenseType: ExpenseType,
-        val price: Double,
+        val amount: Double,
     )
 
 }
