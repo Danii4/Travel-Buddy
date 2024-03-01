@@ -1,8 +1,11 @@
-package com.example.travelbuddy.screens
-
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.travelbuddy.screens.BudgetTrackingScreen
+import com.example.travelbuddy.expenses.views.ExpenseView
+import com.example.travelbuddy.screens.HomeScreen
+import com.example.travelbuddy.screens.TranslationScreen
+import com.example.travelbuddy.screens.TripPlanningScreen
 
 @Composable
 fun HomeScreen() {
