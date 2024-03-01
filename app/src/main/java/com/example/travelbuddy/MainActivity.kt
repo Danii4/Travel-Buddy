@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.travelbuddy.screens.BudgetTrackingScreen
+import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.screens.HomeScreen
 import com.example.travelbuddy.screens.TranslationScreen
 import com.example.travelbuddy.screens.TripPlanningScreen
@@ -78,10 +78,10 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         screen = Screen.TripPlanning,
     ),
     DrawerItem(
-        label = "Budget Tracking",
+        label = "Expenses",
         iconSelected = ImageType.Drawable(R.drawable.payment_filled_24),
         iconUnselected =  ImageType.Drawable(R.drawable.payment_outline_24),
-        screen = Screen.BudgetTracking,
+        screen = Screen.Expenses,
     ),
     DrawerItem(
         label = "Translation",
@@ -183,7 +183,7 @@ class MainActivity : ComponentActivity() {
                                 startDestination = Screen.Home.route,
                                 modifier = Modifier.padding(paddingValues)
                             ) {
-                                composable(Screen.BudgetTracking.route) { BudgetTrackingScreen() }
+                                composable(Screen.Expenses.route) { ExpensesView() }
                                 composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.Translation.route) { TranslationScreen() }
                                 composable(Screen.TripPlanning.route) { TripPlanningScreen() }
