@@ -1,11 +1,16 @@
 package com.example.travelbuddy.expenses.views
 
+import android.widget.Space
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +20,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
@@ -29,8 +36,13 @@ import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +54,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.travelbuddy.data.model.ExpenseModel
+import com.example.travelbuddy.expenses.ExpenseItem
 import com.example.travelbuddy.expenses.ExpensesViewModel
 
 
@@ -52,11 +65,12 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
             .fillMaxWidth()
             .padding(8.dp),
     ) {
-        Column(
+        Row(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(text = expense.name)
-            Text(text = "$${expense.amount}")
+            Spacer(Modifier.weight(1f))
+            Text(text = "\$%.2f".format(expense.amount))
         }
     }
 }
@@ -85,10 +99,28 @@ fun ExpensesView(
         expenseType = ExpenseModel.ExpenseType.FOOD,
         amount = 35.00
     )
+    val expense4 = ExpenseModel.Expense(
+        expenseId = "expense3",
+        name = "Dinner",
+        expenseType = ExpenseModel.ExpenseType.FOOD,
+        amount = 35.00
+    )
+    val expense5 = ExpenseModel.Expense(
+        expenseId = "expense3",
+        name = "Dinner",
+        expenseType = ExpenseModel.ExpenseType.FOOD,
+        amount = 35.00
+    )
+    val expense6 = ExpenseModel.Expense(
+        expenseId = "expense3",
+        name = "Dinner",
+        expenseType = ExpenseModel.ExpenseType.FOOD,
+        amount = 35.00
+    )
     val tripModel = object {
         val id = "test id"
         val name = "Test Trip"
-        val budgets = mutableMapOf<ExpenseModel.ExpenseType, Float>(
+        val budgets = mutableMapOf(
             ExpenseModel.ExpenseType.FLIGHT to 2000.00f,
             ExpenseModel.ExpenseType.ACCOMMODATION to 500.00f,
             ExpenseModel.ExpenseType.FOOD to 200.00f
@@ -98,7 +130,7 @@ fun ExpensesView(
             ExpenseModel.ExpenseType.ACCOMMODATION to 123.00f,
             ExpenseModel.ExpenseType.FOOD to 35.00f
         )
-        val expensesList = remember { mutableStateListOf(expense1, expense2, expense3) }
+        val expensesList = remember { mutableStateListOf(expense1, expense2, expense3, expense4, expense5, expense6) }
     }
     val viewModel = ExpensesViewModel()
 
@@ -115,7 +147,6 @@ fun ExpensesView(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize(),
         ) {
             Text(
                 text = tripModel.name,
@@ -169,17 +200,30 @@ fun ExpensesView(
                             textAlign = TextAlign.Right
                         )
                     }
+                    var progress by remember { mutableFloatStateOf(0f) }
+                    val progressAnimDuration = 1500
+                    val progressAnimation by animateFloatAsState(
+                        targetValue = progress,
+                        animationSpec = tween(durationMillis = progressAnimDuration, easing = FastOutSlowInEasing),
+                        label = ""
+                    )
                     LinearProgressIndicator(
-                        progress = budgetProgress,
+                        progress = progressAnimation,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(10.dp)
                             .padding(end = 16.dp),
                         color = budgetColor
                     )
+                    LaunchedEffect(budgetProgress) {
+                        progress = budgetProgress
+                    }
                 }
             }
-            LazyColumn {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                contentPadding = PaddingValues(10.dp, 20.dp),
+            ){
                 items(tripModel.expensesList) { expense ->
                     ExpenseList(expense = expense)
                 }
