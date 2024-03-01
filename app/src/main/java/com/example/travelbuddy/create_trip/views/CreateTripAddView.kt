@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,44 +30,48 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection.Dates
 @Composable
 fun CreateTripAddView() {
 
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        // Calendar Component
-        // From: https://www.youtube.com/watch?v=uAw87DdUnxg
-        val calendarState = rememberSheetState()
+    Scaffold (){paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Calendar Component
+            // From: https://www.youtube.com/watch?v=uAw87DdUnxg
+            val calendarState = rememberSheetState()
 
-        CalendarDialog(
-            state = calendarState,
-            config = CalendarConfig(
-                monthSelection = true,
-                yearSelection = true,
-            ),
-            selection = Dates{dates ->
-                Log.d("SelectedDate", "$dates")
+            CalendarDialog(
+                state = calendarState,
+                config = CalendarConfig(
+                    monthSelection = true,
+                    yearSelection = true,
+                ),
+                selection = Dates { dates ->
+                    Log.d("SelectedDate", "$dates")
+                }
+            )
+
+            Button(onClick = {
+                calendarState.show()
+            }) {
+                Text(text = "Pick Date Range")
             }
-        )
 
-        Button (onClick = {
-            calendarState.show()
-        }) {
-            Text (text = "Pick Date Range")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Trip Notes
+            // From: https://developer.android.com/jetpack/compose/text/user-input
+            var note by remember { mutableStateOf("Type Here") }
+
+            TextField(
+                value = note,
+                onValueChange = { note = it },
+                label = { Text("Enter Notes") },
+                maxLines = 2,
+                textStyle = TextStyle(color = Color.Black,),
+                modifier = Modifier.padding(20.dp)
+            )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Trip Notes
-        // From: https://developer.android.com/jetpack/compose/text/user-input
-        var note by remember { mutableStateOf("Type Here") }
-
-        TextField(
-            value = note,
-            onValueChange = { note = it },
-            label = { Text("Enter Notes") },
-            maxLines = 2,
-            textStyle = TextStyle(color = Color.Black,),
-            modifier = Modifier.padding(20.dp)
-        )
     }
 }
