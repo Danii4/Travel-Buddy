@@ -1,7 +1,7 @@
 package com.example.travelbuddy.create_trip.views
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.util.Range
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,24 +36,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection.Dates
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.core.util.toRange
 import com.example.travelbuddy.data.model.DestinationModel
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
 
 @Composable
-fun GenerateDestinationView(destination: DestinationModel.Metadata) {
+fun GenerateDestinationView(destination: DestinationModel.Destination) {
     ElevatedCard(
         modifier = Modifier
-        .fillMaxWidth()
-        .padding(4.dp)
-        .height(70.dp),
+            .fillMaxWidth()
+            .padding(4.dp)
+            .height(70.dp),
         shape = RoundedCornerShape(15)
     ) {
         Row(
@@ -89,7 +91,7 @@ fun GenerateDestinationView(destination: DestinationModel.Metadata) {
                         color = Color.Gray
                     )
                     Text(
-                        text = "To: ${destination.startDate}",
+                        text = "To: ${destination.endDate}",
                         style = TextStyle(
                             color = MaterialTheme.colorScheme.primary,
                         ),
@@ -112,24 +114,23 @@ fun CreateTripAddView() {
     var destBarActive by remember {
         mutableStateOf(false)
     }
-    val calendarState = rememberSheetState()
 
-    val dest1 = DestinationModel.Metadata(
+    val dest1 = DestinationModel.Destination(
         Name = "Sintra",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
-    val dest2 = DestinationModel.Metadata(
+    val dest2 = DestinationModel.Destination(
         Name = "Lisbon",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
-    val dest3 = DestinationModel.Metadata(
+    val dest3 = DestinationModel.Destination(
         Name = "Porto",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
-    val dest4 = DestinationModel.Metadata(
+    val dest4 = DestinationModel.Destination(
         Name = "Madeira",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
@@ -228,37 +229,56 @@ fun CreateTripAddView() {
                 ) {
 
                     // Calendar Component
-                    // From: https://www.youtube.com/watch?v=uAw87DdUnxg
+                    // From: https://github.com/maxkeppeler/sheets-compose-dialogs/blob/main/app/src/main/java/com/mk/sheets/compose/samples/CalendarSample3.kt
 
+                    val selectedRange = remember {
+                        val default = LocalDate.now().let { time -> time.plusDays(5)..time.plusDays(8) }
+                        mutableStateOf(default.toRange())
+                    }
+
+                    val calendarState = rememberUseCaseState(visible = true, true)
                     CalendarDialog(
                         state = calendarState,
                         config = CalendarConfig(
-                            monthSelection = true,
                             yearSelection = true,
+                            monthSelection = true,
+                            style = CalendarStyle.MONTH,
                         ),
-                        selection = Dates { dates ->
-                            Log.d("SelectedDate", "$dates")
-                        }
+                        selection = CalendarSelection.Period(
+                            selectedRange = selectedRange.value
+                        ) { startDate, endDate ->
+                            selectedRange.value = Range(startDate, endDate)
+                          },
                     )
 
                     Button(
-                        onClick = { calendarState.show() },
-                        shape = RoundedCornerShape(10.dp),
+                        onClick = {calendarState.show()}
                     ) {
-                        Text(text = "Pick Date Range")
+                        Text(text = "Pick a date range")
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Add Destination Button
                     Button(
-                        onClick = { /* Add Destination Logic */ },
+                        onClick = {
+                            destBarActive = false
+                            if (destBarText.isNotBlank()) {
+                                val newDestination = DestinationModel.Destination(
+                                    Name = destBarText,
+                                    startDate = selectedRange.value.lower,
+                                    endDate = selectedRange.value.upper
+                                )
+                                destList.add(newDestination)
+                                destBarText = ""
+                            }
+                        },
                         shape = RoundedCornerShape(10.dp),
                     ) {
                         Text("Add Destination")
                     }
                 }
-//
+
 //                    Spacer(modifier = Modifier.height(16.dp))
 //
 //                    // Trip Notes
