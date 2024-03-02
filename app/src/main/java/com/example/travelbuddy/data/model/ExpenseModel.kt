@@ -1,6 +1,7 @@
 package com.example.travelbuddy.data.model
 
 import androidx.compose.ui.graphics.Color
+import java.time.LocalDate
 
 class ExpenseModel {
     enum class ExpenseType(val stringValue: String, val colour: Color?) {
@@ -28,10 +29,11 @@ class ExpenseModel {
     }
 
     data class Expense(
-        val expenseId: String = "",
+        val id: String = "",
         val name: String = "",
-        val expenseType: ExpenseType,
+        val type: ExpenseType,
         val amount: Double,
+        val date: LocalDate
     )
 
 }
