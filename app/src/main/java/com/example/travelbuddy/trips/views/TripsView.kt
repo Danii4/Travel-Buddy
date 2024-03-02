@@ -54,11 +54,7 @@ fun TripCard(
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(8.dp))
-//            Text(
-//                text = "trip description",
-//                style = MaterialTheme.typography.bodyMedium
-//            )
-//            Spacer(modifier = Modifier.height(8.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -99,19 +95,11 @@ fun TripCard(
 }
 @Composable
 fun TripsView() {
-//    Surface(
-//        color = MaterialTheme.colorScheme.primary,
-//        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-//    ) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(24.dp)) {
-//            Text(text = "Trip ")
-//            Text(text = "View")
             TripCard(trip = "Barcelona")
             Spacer(modifier = Modifier.height(8.dp))
             TripCard(trip = "Madrid")
         }
-//    }
-
 }
