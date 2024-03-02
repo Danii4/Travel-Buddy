@@ -1,5 +1,6 @@
 package com.example.travelbuddy.create_trip.views
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,16 +13,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,8 +43,66 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection.Dates
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
+import com.example.travelbuddy.data.model.DestinationModel
+import java.time.LocalDate
 
+@Composable
+fun GenerateDestinationView(destination: DestinationModel.Metadata) {
+    ElevatedCard(
+        modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+        .height(70.dp),
+        shape = RoundedCornerShape(15)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    text = destination.Name,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column {
+                    Text(
+                        text = "From: ${destination.startDate}",
+                        style = TextStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                        ),
+                        modifier = Modifier.padding(4.dp),
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = "To: ${destination.startDate}",
+                        style = TextStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                        ),
+                        modifier = Modifier.padding(4.dp),
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+@SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTripAddView() {
@@ -51,17 +113,33 @@ fun CreateTripAddView() {
         mutableStateOf(false)
     }
     val calendarState = rememberSheetState()
-    var destNote by remember { mutableStateOf("Type Here") }
-    var destList = remember {
-        mutableStateListOf(
-            "Sintra",
-            "Lisbon",
-            "Porto",
-            "Madeira"
-        )
+
+    val dest1 = DestinationModel.Metadata(
+        Name = "Sintra",
+        startDate = LocalDate.now(),
+        endDate = LocalDate.now().plusDays(7)
+    )
+    val dest2 = DestinationModel.Metadata(
+        Name = "Lisbon",
+        startDate = LocalDate.now(),
+        endDate = LocalDate.now().plusDays(7)
+    )
+    val dest3 = DestinationModel.Metadata(
+        Name = "Porto",
+        startDate = LocalDate.now(),
+        endDate = LocalDate.now().plusDays(7)
+    )
+    val dest4 = DestinationModel.Metadata(
+        Name = "Madeira",
+        startDate = LocalDate.now(),
+        endDate = LocalDate.now().plusDays(7)
+    )
+
+    val destList = remember {
+        mutableStateListOf( dest1, dest2, dest3, dest4)
     }
 
-    Scaffold () { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -74,21 +152,11 @@ fun CreateTripAddView() {
                     .fillMaxWidth()
                     .fillMaxHeight(0.8f)
             ) {
-                Column(
-                    modifier = Modifier.padding(5.dp) // Add padding around the outside of the box
+                LazyColumn(
+                    modifier = Modifier.padding(5.dp)
                 ) {
-                    ElevatedCard(
-                        elevation = CardDefaults.cardElevation(
-                            defaultElevation = 6.dp
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                    ) {
-                        Text(
-                            text = "Elevated",
-                            textAlign = TextAlign.Center,
-                        )
+                    items(destList) { destination ->
+                        GenerateDestinationView(destination = destination)
                     }
                 }
             }
@@ -99,7 +167,9 @@ fun CreateTripAddView() {
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 // Destination Bar
+                // From: https://www.composables.com/material3/searchbar/examples
                 SearchBar(
                     modifier = Modifier.fillMaxWidth(),
                     query = destBarText,
@@ -143,7 +213,7 @@ fun CreateTripAddView() {
                                 imageVector = Icons.Default.Place,
                                 contentDescription = "Location"
                             )
-                            Text(text = it)
+                            Text(text = it.Name)
                         }
                     }
                 }
@@ -152,7 +222,9 @@ fun CreateTripAddView() {
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
                 ) {
 
                     // Calendar Component
