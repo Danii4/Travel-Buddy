@@ -2,12 +2,14 @@ package com.example.travelbuddy.create_trip.views
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
@@ -113,6 +115,29 @@ fun CreateTripAddView() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+            ) {
+                // Add Destination Button
+                Button(
+                    onClick = { /* Add Destination Logic */ },
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                ) {
+                    Text("Add Destination")
+                }
+
+                // Remove Destination Button
+                Button(
+                    onClick = { /* Remove Destination Logic */ },
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                ) {
+                    Text("Delete Destination")
+                }
+            }
+
             // Calendar Component
             // From: https://www.youtube.com/watch?v=uAw87DdUnxg
 
@@ -137,7 +162,6 @@ fun CreateTripAddView() {
 
             // Trip Notes
             // From: https://developer.android.com/jetpack/compose/text/user-input
-
             TextField(
                 value = destNote,
                 onValueChange = { destNote = it },
