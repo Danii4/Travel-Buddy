@@ -1,5 +1,6 @@
 package com.example.travelbuddy
 
+import HomeScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -49,7 +50,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.travelbuddy.expenses.views.ExpensesView
-import com.example.travelbuddy.screens.HomeScreen
 import com.example.travelbuddy.screens.TranslationScreen
 import com.example.travelbuddy.screens.TripPlanningScreen
 import com.example.travelbuddy.screens.UnitConversionScreen
