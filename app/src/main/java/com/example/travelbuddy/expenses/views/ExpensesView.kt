@@ -24,12 +24,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,26 +36,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImagePainter
-import coil.compose.ImagePainter
+import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
+import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
-import java.time.LocalDate
 
 
 @Composable
@@ -143,77 +137,15 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
 fun ExpensesView(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    navController: NavController,
+    trip: TripModel.Trip,
 ) {
-    val expense1 = ExpenseModel.Expense(
-        id = "expense1",
-        name = "Flight to Cancun",
-        type = ExpenseModel.ExpenseType.FLIGHT,
-        amount = 1500.23,
-        date = LocalDate.now()
-    )
-    val expense2 = ExpenseModel.Expense(
-        id = "expense2",
-        name = "Hotel",
-        type = ExpenseModel.ExpenseType.ACCOMMODATION,
-        amount = 123.00,
-        date = LocalDate.now()
-    )
-    val expense3 = ExpenseModel.Expense(
-        id = "expense3",
-        name = "Dinner",
-        type = ExpenseModel.ExpenseType.FOOD,
-        amount = 35.00,
-        date = LocalDate.now()
-    )
-    val expense4 = ExpenseModel.Expense(
-        id = "expense3",
-        name = "Dinner",
-        type = ExpenseModel.ExpenseType.FOOD,
-        amount = 35.00,
-        date = LocalDate.now()
-    )
-    val expense5 = ExpenseModel.Expense(
-        id = "expense3",
-        name = "Dinner",
-        type = ExpenseModel.ExpenseType.FOOD,
-        amount = 35.00,
-        date = LocalDate.now()
-    )
-    val expense6 = ExpenseModel.Expense(
-        id = "expense3",
-        name = "Dinner",
-        type = ExpenseModel.ExpenseType.FOOD,
-        amount = 35.00,
-        date = LocalDate.now()
-    )
-    val expense7 = ExpenseModel.Expense(
-        id = "expense3",
-        name = "Dinner",
-        type = ExpenseModel.ExpenseType.FOOD,
-        amount = 35.00,
-        date = LocalDate.now()
-    )
-    val tripModel = object {
-        val id = "test id"
-        val name = "Test Trip"
-        val budgets = mutableMapOf(
-            ExpenseModel.ExpenseType.FLIGHT to 2000.00f,
-            ExpenseModel.ExpenseType.ACCOMMODATION to 500.00f,
-            ExpenseModel.ExpenseType.FOOD to 250.00f
-        )
-        val totalExpenses = mutableMapOf(
-            ExpenseModel.ExpenseType.FLIGHT to 1500.23f,
-            ExpenseModel.ExpenseType.ACCOMMODATION to 123.00f,
-            ExpenseModel.ExpenseType.FOOD to 140.00f
-        )
-        val expensesList = remember { mutableStateListOf(expense1, expense2, expense3, expense4, expense5, expense6, expense7) }
-    }
     val viewModel = ExpensesViewModel()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.navigateToAddExpense() },
+                onClick = { viewModel.navigateToAddExpense(navController) },
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
@@ -226,7 +158,7 @@ fun ExpensesView(
         ) {
             item {
                 Text(
-                    text = tripModel.name,
+                    text = trip.name,
                     style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
 
                 )
@@ -234,21 +166,21 @@ fun ExpensesView(
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
-//                        .border(
-//                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-//                            shape = RoundedCornerShape(16.dp),
-//                        )
-//                        .background(
-//                            MaterialTheme.colorScheme.onBackground
-//                        )
+                        .border(
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                            shape = RoundedCornerShape(16.dp),
+                        )
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant
+                        )
                         .clickable { onClick() }
                         .padding(4.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    tripModel.budgets.forEach { budget ->
+                    trip.budgets.forEach { budget ->
                         val expenseType = budget.key
                         val budgetAmount = budget.value
-                        val budgetTotalExpense = tripModel.totalExpenses[expenseType] ?: 0.0
+                        val budgetTotalExpense = trip.totalExpenses[expenseType] ?: 0.0
                         val budgetProgress: Float =
                             (budgetTotalExpense.toFloat() / budgetAmount).coerceIn(0f, 1f)
 //                        val budgetColor: Color = when {
@@ -301,7 +233,7 @@ fun ExpensesView(
                     }
                 }
             }
-            items(tripModel.expensesList) { expense ->
+            items(trip.expensesList) { expense ->
                 ExpenseList(expense = expense)
             }
         }

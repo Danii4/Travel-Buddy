@@ -1,16 +1,18 @@
 package com.example.travelbuddy.expenses.add_edit_expense.model
 
+import android.annotation.SuppressLint
+import com.example.travelbuddy.data.model.ExpenseModel
 import java.time.LocalDate
 import java.time.LocalTime
 
-data class AddExpenseViewState(
-    val expenseName : String? = null,
-    val expenseAmount : Int? = null,
-    val expenseTime: LocalTime = LocalTime.now(),
-    val expenseDate: LocalDate = LocalDate.now(),
-//        val submitButtonUiState : UiComponentModel.ButtonUiState,
-//        val isAddProduce : Boolean = true,
-)
-class AddExpenseModel {
 
+@SuppressLint("NewApi")
+class AddEditExpenseModel {
+    data class AddEditExpenseViewState(
+        val expenseName : String = "",
+        val expenseAmount : Double = 0.00,
+        val expenseDate : LocalDate = LocalDate.now(),
+        val selectedExpense : ExpenseModel.Expense? = null,
+        val expenses : List<ExpenseModel.Expense> = listOf()
+    )
 }

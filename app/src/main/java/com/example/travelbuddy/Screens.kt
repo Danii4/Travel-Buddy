@@ -6,4 +6,5 @@ sealed class Screen(val route: String) {
     object Expenses: Screen("expenses")
     object Translation: Screen("translation")
     object UnitConversion: Screen("unit-conversion")
+    object AddEditExpense: Screen("add-edit-expense")
 }
