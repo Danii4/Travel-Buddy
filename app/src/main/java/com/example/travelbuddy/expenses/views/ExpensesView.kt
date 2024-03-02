@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +62,7 @@ import java.time.LocalDate
 
 @Composable
 fun ExpenseList(expense: ExpenseModel.Expense) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
@@ -89,10 +91,10 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
                     modifier = Modifier
                         .width(36.dp)
                         .height(36.dp),
-                    painter = painterResource(id = expense.type.icon),
+                    painter = rememberVectorPainter(expense.type.icon),
                     contentDescription = ""
                 )
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(40.dp))
                 Column(
                     modifier = Modifier
                         .width(140.dp)
@@ -112,9 +114,9 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
                     )
 
                 }
-                Spacer(Modifier.weight(1f))
+                Spacer(modifier = Modifier.width(40.dp))
                 Text(
-                    text = "$${expense.amount}",
+                    text = "\$${"%.2f".format(expense.amount)}",
                     textAlign = TextAlign.Left,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary)
@@ -211,7 +213,7 @@ fun ExpensesView(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onClick() },
+                onClick = { viewModel.navigateToAddExpense() },
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
@@ -232,13 +234,13 @@ fun ExpensesView(
                 Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
-                        .border(
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-                            shape = RoundedCornerShape(16.dp),
-                        )
-                        .background(
-                            MaterialTheme.colorScheme.onBackground
-                        )
+//                        .border(
+//                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+//                            shape = RoundedCornerShape(16.dp),
+//                        )
+//                        .background(
+//                            MaterialTheme.colorScheme.onBackground
+//                        )
                         .clickable { onClick() }
                         .padding(4.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -249,11 +251,11 @@ fun ExpensesView(
                         val budgetTotalExpense = tripModel.totalExpenses[expenseType] ?: 0.0
                         val budgetProgress: Float =
                             (budgetTotalExpense.toFloat() / budgetAmount).coerceIn(0f, 1f)
-                        val budgetColor: Color = when {
-                            budgetProgress >= 0.75 -> Color.Red
-                            budgetProgress >= 0.50 -> Color.Yellow
-                            else -> Color.Green
-                        }
+//                        val budgetColor: Color = when {
+//                            budgetProgress >= 0.75 -> Color.Red
+//                            budgetProgress >= 0.50 -> Color.Yellow
+//                            else -> Color.Green
+//                        }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
@@ -263,7 +265,7 @@ fun ExpensesView(
                                 fontSize = 14.sp,
                                 textAlign = TextAlign.Left
                             )
-                            Spacer(Modifier.weight(1f))
+                            Spacer(Modifier.weight(0.9f))
                             Text(
                                 text = "\$${
                                     "%.2f".format(
@@ -291,7 +293,7 @@ fun ExpensesView(
                                 .fillMaxWidth()
                                 .height(10.dp)
                                 .padding(end = 16.dp),
-                            color = budgetColor
+                            color = MaterialTheme.colorScheme.secondary
                         )
                         LaunchedEffect(budgetProgress) {
                             progress = budgetProgress

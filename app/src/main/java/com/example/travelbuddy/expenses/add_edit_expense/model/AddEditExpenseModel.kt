@@ -1,4 +1,4 @@
-package com.example.travelbuddy.expenses.add_expense.model
+package com.example.travelbuddy.expenses.add_edit_expense.model
 
 import java.time.LocalDate
 import java.time.LocalTime
