@@ -18,6 +18,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -37,6 +39,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection.Dates
 import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,7 +73,25 @@ fun CreateTripAddView() {
                     .background(Color.LightGray)
                     .fillMaxWidth()
                     .fillMaxHeight(0.8f)
-            ) {}
+            ) {
+                Column(
+                    modifier = Modifier.padding(5.dp) // Add padding around the outside of the box
+                ) {
+                    ElevatedCard(
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 6.dp
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                    ) {
+                        Text(
+                            text = "Elevated",
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
 
             Column(
                 modifier = Modifier
