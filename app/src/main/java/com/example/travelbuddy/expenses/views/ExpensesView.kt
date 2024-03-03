@@ -1,6 +1,7 @@
 package com.example.travelbuddy.expenses.views
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -36,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,15 +58,18 @@ import com.example.travelbuddy.expenses.ExpensesViewModel
 
 @Composable
 fun ExpenseList(expense: ExpenseModel.Expense) {
+    var expanded by remember { mutableStateOf(false) }
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
-            .height(70.dp),
+            .height(70.dp)
+            .animateContentSize(),
 //            .clickable {
 //                onTransactionNavigate(transaction.transactionId)
 //            },
         shape = RoundedCornerShape(15),
+        onClick = { expanded = !expanded }
     ) {
         Row(
             modifier = Modifier
