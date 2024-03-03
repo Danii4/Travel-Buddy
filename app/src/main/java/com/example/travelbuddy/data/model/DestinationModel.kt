@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 class DestinationModel {
     data class Destination(
-        val Name: String = "",
+        val name: String = "",
         val startDate: LocalDate,
         val endDate: LocalDate,
     )

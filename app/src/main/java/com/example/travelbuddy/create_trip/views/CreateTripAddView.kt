@@ -86,7 +86,7 @@ fun GenerateDestinationView(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = destination.Name,
+                    text = destination.name,
                     modifier = Modifier.padding(4.dp)
                 )
                 Text(
@@ -125,22 +125,22 @@ fun CreateTripAddView() {
     }
 
     val dest1 = DestinationModel.Destination(
-        Name = "Sintra",
+        name = "Sintra",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
     val dest2 = DestinationModel.Destination(
-        Name = "Lisbon",
+        name = "Lisbon",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
     val dest3 = DestinationModel.Destination(
-        Name = "Porto",
+        name = "Porto",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
     val dest4 = DestinationModel.Destination(
-        Name = "Madeira",
+        name = "Madeira",
         startDate = LocalDate.now(),
         endDate = LocalDate.now().plusDays(7)
     )
@@ -249,7 +249,7 @@ fun CreateTripAddView() {
                                     imageVector = Icons.Default.Place,
                                     contentDescription = "Location"
                                 )
-                                Text(text = it.Name)
+                                Text(text = it.name)
                             }
                         }
                     }
@@ -324,7 +324,7 @@ fun CreateTripAddView() {
                                     destBarActive = false
                                     if (destBarText.isNotBlank()) {
                                         val newDestination = DestinationModel.Destination(
-                                            Name = destBarText,
+                                            name = destBarText,
                                             startDate = selectedRange.value.lower,
                                             endDate = selectedRange.value.upper
                                         )
