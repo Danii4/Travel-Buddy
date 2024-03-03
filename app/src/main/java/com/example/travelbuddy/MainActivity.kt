@@ -48,13 +48,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.travelbuddy.data.Mock
+import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.screens.HomeScreen
 import com.example.travelbuddy.screens.TranslationScreen
 import com.example.travelbuddy.screens.TripPlanningScreen
+import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.screens.UnitConversionScreen
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 data class DrawerItem(
@@ -78,16 +82,22 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         screen = Screen.TripPlanning,
     ),
     DrawerItem(
+        label = "Trip Add Screen",
+        iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
+        iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
+        screen = Screen.TripAdd,
+    ),
+    DrawerItem(
         label = "Expenses",
         iconSelected = ImageType.Drawable(R.drawable.payment_filled_24),
         iconUnselected =  ImageType.Drawable(R.drawable.payment_outline_24),
         screen = Screen.Expenses,
     ),
     DrawerItem(
-        label = "Translation",
+        label = "Language Translation",
         iconSelected = ImageType.Vector(Icons.Filled.Phone),
         iconUnselected = ImageType.Vector(Icons.Outlined.Phone),
-        screen = Screen.Translation,
+        screen = Screen.LanguageTranslation,
     ),
     DrawerItem(
         label = "Unit Conversion",
@@ -97,6 +107,7 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
     ),
 )
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
@@ -183,11 +194,18 @@ class MainActivity : ComponentActivity() {
                                 startDestination = Screen.Home.route,
                                 modifier = Modifier.padding(paddingValues)
                             ) {
-                                composable(Screen.Expenses.route) { ExpensesView() }
+                                composable(Screen.Expenses.route) { ExpensesView(
+                                    navController = navController,
+                                    trip = Mock.trip
+                                ) }
                                 composable(Screen.Home.route) { HomeScreen() }
-                                composable(Screen.Translation.route) { TranslationScreen() }
+                                composable(Screen.LanguageTranslation.route) { TranslationScreen() }
                                 composable(Screen.TripPlanning.route) { TripPlanningScreen() }
+                                composable(Screen.TripAdd.route) { CreateTripAddView()}
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
+                                composable(Screen.AddEditExpense.route) { AddEditExpenseView(
+                                    navController = navController,
+                                    trip = Mock.trip) }
                             }
                         }
                     }
