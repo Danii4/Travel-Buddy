@@ -1,6 +1,5 @@
 package com.example.travelbuddy.languageTranslation
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -66,11 +65,9 @@ fun TranslationScreen() {
                         sourceLanguage = inputLanguageSelected,
                         targetLanguage = outputLanguageSelected,
                         onSuccess = { translation ->
-                            Log.v("Translator", "Translation successful")
                             translatedText = translation
                         },
                         onFailure = { error ->
-                            Log.v("Translator", "Translation ERROR")
                             translatedText = "Error: $error"
 
                         }

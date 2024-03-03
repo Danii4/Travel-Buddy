@@ -1,6 +1,5 @@
 package com.example.travelbuddy.languageTranslation
 
-import android.util.Log
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
@@ -28,8 +27,6 @@ object Translator {
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        Log.d("Translator", "Starting translation from $sourceLanguage to $targetLanguage")
-
 
         val sourceLangCode = mapLanguageToCode(sourceLanguage)
         val targetLangCode = mapLanguageToCode(targetLanguage)
@@ -49,7 +46,6 @@ object Translator {
                     onFailure("Error translating text: ${exception.localizedMessage}")
                 }
         }.addOnFailureListener { exception ->
-            Log.e("Translator", "ERROR DOWNLOADING MODEL")
             onFailure("Error downloading translation model: ${exception.localizedMessage}")
         }
     }
