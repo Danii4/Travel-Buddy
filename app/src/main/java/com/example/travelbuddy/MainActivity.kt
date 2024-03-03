@@ -84,10 +84,10 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         screen = Screen.Expenses,
     ),
     DrawerItem(
-        label = "Translation",
+        label = "Language Translation",
         iconSelected = ImageType.Vector(Icons.Filled.Phone),
         iconUnselected = ImageType.Vector(Icons.Outlined.Phone),
-        screen = Screen.Translation,
+        screen = Screen.LanguageTranslation,
     ),
     DrawerItem(
         label = "Unit Conversion",
@@ -185,7 +185,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 composable(Screen.Expenses.route) { ExpensesView() }
                                 composable(Screen.Home.route) { HomeScreen() }
-                                composable(Screen.Translation.route) { TranslationScreen() }
+                                composable(Screen.LanguageTranslation.route) { TranslationScreen() }
                                 composable(Screen.TripPlanning.route) { TripPlanningScreen() }
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
                             }
