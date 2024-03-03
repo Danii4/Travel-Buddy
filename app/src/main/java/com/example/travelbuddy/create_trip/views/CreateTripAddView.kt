@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -28,6 +28,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -55,8 +56,12 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
 
+
 @Composable
-fun GenerateDestinationView(destination: DestinationModel.Destination) {
+fun GenerateDestinationView(
+    destination: DestinationModel.Destination,
+    onDeleteClicked: () -> Unit
+) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,46 +80,38 @@ fun GenerateDestinationView(destination: DestinationModel.Destination) {
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
             )
-            Box(
-                modifier = Modifier
-                    .weight(0.6f)
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.CenterStart
+            Spacer(modifier = Modifier.width(8.dp))
+            Column(
+                modifier = Modifier.weight(0.6f),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = destination.Name,
                     modifier = Modifier.padding(4.dp)
                 )
+                Text(
+                    text = "Dates: ${destination.startDate} - ${destination.endDate}",
+                    style = TextStyle(
+                        color = MaterialTheme.colorScheme.primary,
+                    ),
+                    modifier = Modifier.padding(4.dp),
+                    color = Color.Gray
+                )
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .weight(0.4f)
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center
+            IconButton(
+                onClick = onDeleteClicked,
+                modifier = Modifier.align(Alignment.CenterVertically)
             ) {
-                Column {
-                    Text(
-                        text = "From: ${destination.startDate}",
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                        ),
-                        modifier = Modifier.padding(4.dp),
-                        color = Color.Gray
-                    )
-                    Text(
-                        text = "To: ${destination.endDate}",
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                        ),
-                        modifier = Modifier.padding(4.dp),
-                        color = Color.Gray
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = Color.Red
+                )
             }
         }
     }
 }
+
 
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -152,12 +149,18 @@ fun CreateTripAddView() {
         mutableStateListOf( dest1, dest2, dest3, dest4)
     }
 
+    fun deleteDestination(destination: DestinationModel.Destination) {
+        destList.remove(destination)
+    }
+
     Scaffold { paddingValues ->
         LazyColumn(
             modifier = Modifier.padding(paddingValues)
         ) {
             items(destList) { destination ->
-                GenerateDestinationView(destination = destination)
+                GenerateDestinationView(destination = destination) {
+                    deleteDestination(destination)
+                }
             }
         }
         val sheetState = rememberModalBottomSheetState()
