@@ -10,8 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.mlkit.nl.translate.TranslateLanguage
-import com.example.travelbuddy.languageTranslation.Translator
+
 
 /*
 * Notes for Prototype:
@@ -67,11 +66,11 @@ fun TranslationScreen() {
                         sourceLanguage = inputLanguageSelected,
                         targetLanguage = outputLanguageSelected,
                         onSuccess = { translation ->
-                            Log.d("Translator", "Translation successful")
+                            Log.v("Translator", "Translation successful")
                             translatedText = translation
                         },
                         onFailure = { error ->
-                            Log.d("Translator", "Translation ERROR")
+                            Log.v("Translator", "Translation ERROR")
                             translatedText = "Error: $error"
 
                         }

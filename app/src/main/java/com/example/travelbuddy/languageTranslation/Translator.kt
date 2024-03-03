@@ -6,8 +6,10 @@ import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
 
 
-// Helper function for translating text
+
 object Translator {
+
+    // maps languages to proper code
     private fun mapLanguageToCode(language: String): String {
         return when (language) {
             "English" -> TranslateLanguage.ENGLISH
@@ -18,6 +20,7 @@ object Translator {
         }
     }
 
+    // performs the translation
     fun performTranslation(
         inputText: String,
         sourceLanguage: String,
@@ -46,6 +49,7 @@ object Translator {
                     onFailure("Error translating text: ${exception.localizedMessage}")
                 }
         }.addOnFailureListener { exception ->
+            Log.e("Translator", "ERROR DOWNLOADING MODEL")
             onFailure("Error downloading translation model: ${exception.localizedMessage}")
         }
     }
