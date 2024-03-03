@@ -49,9 +49,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.travelbuddy.expenses.views.ExpensesView
-import com.example.travelbuddy.trips.views.TripsView
-//import com.example.travelbuddy.screens.HomeScreen
+import com.example.travelbuddy.screens.HomeScreen
 import com.example.travelbuddy.screens.TranslationScreen
+import com.example.travelbuddy.screens.TripPlanningScreen
 import com.example.travelbuddy.screens.UnitConversionScreen
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
@@ -72,10 +72,10 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         screen = Screen.Home,
     ),
     DrawerItem(
-        label = "Trips",
+        label = "Trip planning",
         iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
         iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
-        screen = Screen.Trips,
+        screen = Screen.TripPlanning,
     ),
     DrawerItem(
         label = "Expenses",
@@ -180,13 +180,13 @@ class MainActivity : ComponentActivity() {
                         ){ paddingValues ->
                             NavHost(
                                 navController = navController,
-                                startDestination = Screen.Trips.route,
+                                startDestination = Screen.Home.route,
                                 modifier = Modifier.padding(paddingValues)
                             ) {
                                 composable(Screen.Expenses.route) { ExpensesView() }
-                                composable(Screen.Trips.route) { TripsView() }
-//                                composable(Screen.Home.route) { HomeScreen() }
+                                composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.Translation.route) { TranslationScreen() }
+                                composable(Screen.TripPlanning.route) { TripPlanningScreen() }
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
                             }
                         }
