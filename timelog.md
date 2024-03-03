@@ -7,4 +7,5 @@
 | 2024/02/26 | 1     |1       |       | 1       |         |          | Discussed features, brainstormed work items and divided tasks |
 | 2024/02/27 |       |1       |       | 1       |         |          | Created structure with MVVM design pattern for features       |
 | 2024/02/29 |       |5     |  |    |     |     | Created features for home screen and design home screen components, finished d3 report for home screen section|
-| 2024/01/22 | 7     | | | | | | Created prototype for Language Translation Feature|
+| 2024/03/2 | 5     | | | | | | Created prototype for Language Translation Feature: UI |
+| 2024/03/3 | 6     | | | | | | Created prototype for Language Translation Feature: Translating Feature |
