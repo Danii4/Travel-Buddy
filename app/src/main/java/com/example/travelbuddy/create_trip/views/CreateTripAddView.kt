@@ -155,7 +155,8 @@ fun CreateTripAddView() {
 
     Scaffold { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            userScrollEnabled = true
         ) {
             items(destList) { destination ->
                 GenerateDestinationView(destination = destination) {
