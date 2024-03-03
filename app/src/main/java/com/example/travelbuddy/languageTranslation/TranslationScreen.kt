@@ -1,5 +1,6 @@
-package com.example.travelbuddy.screens
+package com.example.travelbuddy.languageTranslation
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.example.travelbuddy.languageTranslation.Translator
 
 /*
 * Notes for Prototype:
@@ -19,7 +22,6 @@ import androidx.compose.ui.unit.dp
 * RTL languages currently not supported
 * */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslationScreen() {
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
@@ -41,7 +43,7 @@ fun TranslationScreen() {
             onDropdownChange = { showInputDropdown = it },
         )
 
-        // Text box for input text
+        // Box for displaying input text
         OutlinedTextField(
             value = inputText,
             onValueChange = { inputText = it },
@@ -60,8 +62,20 @@ fun TranslationScreen() {
             // Translate button
             Button(
                 onClick = {
-                    // Placeholder for translation logic
-                    translatedText = "Translated text for \"${inputText.text}\""
+                    Translator.performTranslation(
+                        inputText = inputText.text,
+                        sourceLanguage = inputLanguageSelected,
+                        targetLanguage = outputLanguageSelected,
+                        onSuccess = { translation ->
+                            Log.d("Translator", "Translation successful")
+                            translatedText = translation
+                        },
+                        onFailure = { error ->
+                            Log.d("Translator", "Translation ERROR")
+                            translatedText = "Error: $error"
+
+                        }
+                    )
                 },
                 modifier = Modifier.weight(1f)
             ) {
