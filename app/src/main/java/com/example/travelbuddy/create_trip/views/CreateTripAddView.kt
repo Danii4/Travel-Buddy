@@ -2,14 +2,15 @@ package com.example.travelbuddy.create_trip.views
 
 import android.annotation.SuppressLint
 import android.util.Range
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,10 +24,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +44,9 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.core.util.toRange
@@ -148,92 +153,103 @@ fun CreateTripAddView() {
     }
 
     Scaffold { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues)
         ) {
-            Box(
-                modifier = Modifier
-                    .background(Color.LightGray)
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.8f)
-            ) {
-                LazyColumn(
-                    modifier = Modifier.padding(5.dp)
-                ) {
-                    items(destList) { destination ->
-                        GenerateDestinationView(destination = destination)
-                    }
-                }
+            items(destList) { destination ->
+                GenerateDestinationView(destination = destination)
             }
+        }
+        val sheetState = rememberModalBottomSheetState()
+        var isSheetOpen by rememberSaveable {
+            mutableStateOf(false)
+        }
 
-            Column(
+        Box (
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Button(
+                onClick = {
+                    isSheetOpen = true
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingValues),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(horizontal = 10.dp, vertical = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                     containerColor = Color(0xff5cb85c)
+                )
             ) {
-
-                // Destination Bar
-                // From: https://www.composables.com/material3/searchbar/examples
-                SearchBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    query = destBarText,
-                    onQueryChange = {
-                        destBarText = it
-                    },
-                    onSearch = {
-                        destBarActive = false
-                    },
-                    active = destBarActive,
-                    onActiveChange = {
-                        destBarActive = it
-                    },
-                    placeholder = {
-                        Text(text = "Search for destination ...")
-                    },
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
-                    },
-                    trailingIcon = {
-                        if (destBarActive) {
-                            Icon(
-                                modifier = Modifier.clickable {
-                                    if (destBarText.isNotEmpty()) {
-                                        destBarText = ""
-                                    } else {
-                                        destBarActive = false
-                                    }
-                                },
-                                imageVector = Icons.Default.Close,
-                                contentDescription = "Search Icon"
-                            )
-                        }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                ) {
-                    destList.forEach {
-                        Row(modifier = Modifier.padding(all = 14.dp)) {
-                            Icon(
-                                modifier = Modifier.padding(end = 10.dp),
-                                imageVector = Icons.Default.Place,
-                                contentDescription = "Location"
-                            )
-                            Text(text = it.Name)
-                        }
-                    }
+                Text(text = "+")
+            }
+        }
+        if (isSheetOpen) {
+            ModalBottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = {
+                    isSheetOpen = false
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+            )
+            {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
+                        .padding(paddingValues),
                 ) {
+
+                    // Destination Bar
+                    // From: https://www.composables.com/material3/searchbar/examples
+                    SearchBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 7.dp),
+                        query = destBarText,
+                        onQueryChange = {
+                            destBarText = it
+                        },
+                        onSearch = {
+                            destBarActive = false
+                        },
+                        active = destBarActive,
+                        onActiveChange = {
+                            destBarActive = it
+                        },
+                        placeholder = {
+                            Text(text = "Search for a destination ...")
+                        },
+                        leadingIcon = {
+                            Icon(imageVector = Icons.Default.Search, contentDescription = "Search Icon")
+                        },
+                        trailingIcon = {
+                            if (destBarActive) {
+                                Icon(
+                                    modifier = Modifier.clickable {
+                                        if (destBarText.isNotEmpty()) {
+                                            destBarText = ""
+                                        } else {
+                                            destBarActive = false
+                                        }
+                                    },
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "Search Icon"
+                                )
+                            }
+                        },
+                        shape = RoundedCornerShape(15.dp),
+                        windowInsets = WindowInsets(top = (-7).dp)
+                    ) {
+                        destList.forEach {
+                            Row(modifier = Modifier.padding(all = 14.dp)) {
+                                Icon(
+                                    modifier = Modifier.padding(end = 10.dp),
+                                    imageVector = Icons.Default.Place,
+                                    contentDescription = "Location"
+                                )
+                                Text(text = it.Name)
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     // Calendar Component
                     // From: https://github.com/maxkeppeler/sheets-compose-dialogs/blob/main/app/src/main/java/com/mk/sheets/compose/samples/CalendarSample3.kt
@@ -243,7 +259,7 @@ fun CreateTripAddView() {
                         mutableStateOf(default.toRange())
                     }
 
-                    val calendarState = rememberUseCaseState(visible = true, true)
+                    val calendarState = rememberUseCaseState(visible = false, true)
                     CalendarDialog(
                         state = calendarState,
                         config = CalendarConfig(
@@ -255,50 +271,86 @@ fun CreateTripAddView() {
                             selectedRange = selectedRange.value
                         ) { startDate, endDate ->
                             selectedRange.value = Range(startDate, endDate)
-                          },
+                        },
                     )
 
                     Button(
-                        onClick = {calendarState.show()}
-                    ) {
-                        Text(text = "Pick a date range")
+                        onClick = {calendarState.show()},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(7.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        ) {
+                        Text(text = "Select a date range")
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(5.dp))
 
-                    // Add Destination Button
-                    Button(
-                        onClick = {
-                            destBarActive = false
-                            if (destBarText.isNotBlank()) {
-                                val newDestination = DestinationModel.Destination(
-                                    Name = destBarText,
-                                    startDate = selectedRange.value.lower,
-                                    endDate = selectedRange.value.upper
-                                )
-                                destList.add(newDestination)
-                                destBarText = ""
-                            }
-                        },
-                        shape = RoundedCornerShape(10.dp),
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp)
                     ) {
-                        Text("Add Destination")
+
+                        // Cancel Destination Button
+                        Box(
+                            Modifier.weight(1f).padding(end = 8.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    isSheetOpen = false
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.Red
+                                )
+                            ) {
+                                Text("X")
+                            }
+                        }
+
+                        // Add Destination Button
+                        Box(
+                            Modifier.weight(1f).padding(start = 8.dp),
+                        ) {
+                            Button(
+                                onClick = {
+                                    destBarActive = false
+                                    if (destBarText.isNotBlank()) {
+                                        val newDestination = DestinationModel.Destination(
+                                            Name = destBarText,
+                                            startDate = selectedRange.value.lower,
+                                            endDate = selectedRange.value.upper
+                                        )
+                                        destList.add(newDestination)
+                                        destBarText = ""
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xff5cb85c)
+                                )
+                            ) {
+                                Text("Confirm")
+                            }
+                        }
                     }
                 }
-
-//                    Spacer(modifier = Modifier.height(16.dp))
-//
-//                    // Trip Notes
-//                    // From: https://developer.android.com/jetpack/compose/text/user-input
-//                    TextField(
-//                        value = destNote,
-//                        onValueChange = { destNote = it },
-//                        label = { Text("Enter Notes") },
-//                        maxLines = 2,
-//                        textStyle = TextStyle(color = Color.Black,),
-//                        modifier = Modifier.padding(20.dp)
-//                    )
             }
         }
     }
 }
+
+//// Trip Notes
+//// From: https://developer.android.com/jetpack/compose/text/user-input
+//TextField(
+//value = destNote,
+//onValueChange = { destNote = it },
+//label = { Text("Enter Notes") },
+//maxLines = 2,
+//textStyle = TextStyle(color = Color.Black,),
+//modifier = Modifier.padding(20.dp)
+//)
