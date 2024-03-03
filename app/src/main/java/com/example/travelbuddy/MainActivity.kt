@@ -54,6 +54,7 @@ import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseVie
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.screens.TranslationScreen
 import com.example.travelbuddy.screens.TripPlanningScreen
+import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.screens.UnitConversionScreen
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
@@ -79,6 +80,12 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
         iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
         screen = Screen.TripPlanning,
+    ),
+    DrawerItem(
+        label = "Trip Add Screen",
+        iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
+        iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
+        screen = Screen.TripAdd,
     ),
     DrawerItem(
         label = "Expenses",
@@ -194,6 +201,7 @@ class MainActivity : ComponentActivity() {
                                 composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.LanguageTranslation.route) { TranslationScreen() }
                                 composable(Screen.TripPlanning.route) { TripPlanningScreen() }
+                                composable(Screen.TripAdd.route) { CreateTripAddView()}
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
                                 composable(Screen.AddEditExpense.route) { AddEditExpenseView(
                                     navController = navController,
