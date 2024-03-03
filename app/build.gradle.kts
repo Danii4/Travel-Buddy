@@ -106,4 +106,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    // Translation
+    implementation("com.google.mlkit:translate:17.0.2")
 }
