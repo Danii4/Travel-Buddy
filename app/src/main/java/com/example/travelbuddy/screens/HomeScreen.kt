@@ -11,12 +11,13 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeScreen() {
     return Surface {
-        Text(modifier = Modifier.padding(20.dp),
+        Text(
+            modifier = Modifier.padding(20.dp),
             text = "Home Screen",
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium
         )
-        Column{
+        Column {
             Text(
                 modifier = Modifier.padding(20.dp),
                 text = "Welcome to TravelBuddy",
@@ -63,7 +64,7 @@ fun HomeScreen() {
     }
 }
 
-class Verifylogin{
+class Verifylogin {
 //    val response = OkHttpClient().newCall(request).execute()
 //    val json = response.body.string()
 }

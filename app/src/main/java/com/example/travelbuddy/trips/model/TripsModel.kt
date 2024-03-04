@@ -1,4 +1,4 @@
 package com.example.travelbuddy.trips.model
 
-class TripsModel {
+data class TripsModel(val id: Int, val title: String, val date: String) {
 }

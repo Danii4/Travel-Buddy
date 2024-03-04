@@ -51,14 +51,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.travelbuddy.data.Mock
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
+import com.example.travelbuddy.trips.views.TripsView
 //import com.example.travelbuddy.screens.HomeScreen
 import com.example.travelbuddy.screens.TranslationScreen
 import com.example.travelbuddy.screens.TripPlanningScreen
 import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.screens.UnitConversionScreen
+import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
-//import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 data class DrawerItem(
@@ -69,14 +70,14 @@ data class DrawerItem(
 )
 
 val DRAWER_ITEMS: List<DrawerItem> = listOf(
-//    DrawerItem(
-//        label = "Home",
-//        iconSelected = ImageType.Vector(Icons.Filled.Home),
-//        iconUnselected = ImageType.Vector(Icons.Outlined.Home),
-//        screen = Screen.Home,
-//    ),
     DrawerItem(
-        label = "Trip planning",
+        label = "Home",
+        iconSelected = ImageType.Vector(Icons.Filled.Home),
+        iconUnselected = ImageType.Vector(Icons.Outlined.Home),
+        screen = Screen.Home,
+    ),
+    DrawerItem(
+        label = "Trips",
         iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
         iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
         screen = Screen.Trips,
@@ -94,7 +95,7 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         screen = Screen.Expenses,
     ),
     DrawerItem(
-        label = "Language Translation",
+        label = "Translation",
         iconSelected = ImageType.Vector(Icons.Filled.Phone),
         iconUnselected = ImageType.Vector(Icons.Outlined.Phone),
         screen = Screen.LanguageTranslation,
@@ -107,7 +108,6 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
     ),
 )
 
-//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
@@ -191,6 +191,7 @@ class MainActivity : ComponentActivity() {
                         ){ paddingValues ->
                             NavHost(
                                 navController = navController,
+//                                startDestination = Screen.Home.route,
                                 startDestination = Screen.Trips.route,
                                 modifier = Modifier.padding(paddingValues)
                             ) {
@@ -200,7 +201,7 @@ class MainActivity : ComponentActivity() {
                                 ) }
 //                                composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.LanguageTranslation.route) { TranslationScreen() }
-                                composable(Screen.Trips.route) { TripPlanningScreen() }
+                                composable(Screen.Trips.route) { TripsView(navController) }
                                 composable(Screen.TripAdd.route) { CreateTripAddView()}
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
                                 composable(Screen.AddEditExpense.route) { AddEditExpenseView(
