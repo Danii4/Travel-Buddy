@@ -54,6 +54,7 @@ import com.example.travelbuddy.data.Mock
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.languageTranslation.TranslationScreen
+import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.screens.TripPlanningScreen
 import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
@@ -80,7 +81,7 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         label = "Trip planning",
         iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
         iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
-        screen = Screen.TripPlanning,
+        screen = Screen.Trips,
     ),
     DrawerItem(
         label = "Trip Add Screen",
@@ -155,7 +156,6 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         drawerState = drawerState
-
                     ) {
                         Scaffold(
                             modifier = Modifier
@@ -200,7 +200,7 @@ class MainActivity : ComponentActivity() {
                                 composable(Screen.Expenses.route) { ExpensesView(navController = navController, trip = Mock.trip) }
                                 composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.LanguageTranslation.route) { TranslationScreen() }
-                                composable(Screen.TripPlanning.route) { TripPlanningScreen() }
+                                composable(Screen.Trips.route) { TripsView(navController) }
                                 composable(Screen.TripAdd.route) { CreateTripAddView()}
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
                                 composable(Screen.AddEditExpense.route) { AddEditExpenseView(
