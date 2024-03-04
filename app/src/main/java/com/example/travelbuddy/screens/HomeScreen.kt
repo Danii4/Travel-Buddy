@@ -27,7 +27,7 @@ fun HomeScreen() {
             )
             Text(
                 modifier = Modifier.padding(20.dp),
-                text = "Home Screen is still a Work in Progress",
+                text = "Terms and Conditions of Use: ",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Medium
             )
