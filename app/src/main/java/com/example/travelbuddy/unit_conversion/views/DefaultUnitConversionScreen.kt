@@ -21,7 +21,7 @@ import com.example.travelbuddy.ui.theme.DarkGrey
 import com.example.travelbuddy.ui.theme.DarkOrange
 import com.example.travelbuddy.ui.theme.DarkPurple
 import com.example.travelbuddy.ui.theme.DarkRed
-import com.example.travelbuddy.unit_conversion.ScreenType
+import com.example.travelbuddy.unit_conversion.model.ScreenType
 import com.example.travelbuddy.util.ImageType
 
 @Composable

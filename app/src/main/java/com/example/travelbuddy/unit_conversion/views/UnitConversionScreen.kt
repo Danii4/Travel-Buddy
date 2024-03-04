@@ -1,21 +1,17 @@
 package com.example.travelbuddy.unit_conversion.views
 
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.travelbuddy.unit_conversion.ScreenData
-import com.example.travelbuddy.unit_conversion.ScreenType
 import com.example.travelbuddy.unit_conversion.UnitConversionViewModel
-import com.example.travelbuddy.unit_conversion.UpdateType
-
+import com.example.travelbuddy.unit_conversion.model.ScreenData
+import com.example.travelbuddy.unit_conversion.model.ScreenType
+import com.example.travelbuddy.unit_conversion.model.UpdateType
 
 @Composable
 fun UnitConversionScreen(viewModel: UnitConversionViewModel = viewModel()) {
 
     val state = viewModel.uiState.collectAsState()
-
     when(state.value.screenType){
         ScreenType.DEFAULT -> DefaultUnitConversionScreen(
             onClick = { screenType -> viewModel.clickEvent(screenType = screenType) }

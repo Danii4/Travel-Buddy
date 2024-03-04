@@ -18,12 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,21 +39,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.example.travelbuddy.ui.theme.LightGrey
-import com.example.travelbuddy.unit_conversion.ScreenData
+import com.example.travelbuddy.unit_conversion.model.ScreenColor
+import com.example.travelbuddy.unit_conversion.model.ScreenData
+import com.example.travelbuddy.unit_conversion.model.getColors
+import com.example.travelbuddy.unit_conversion.model.getTitle
 import java.text.DecimalFormat
 
 @Composable
 fun CustomDropdownSelector(
     isVisible: Boolean,
     selectedItem: String,
+    bgColor: Color,
+    scrollBarBgColor: Color,
     items: List<String>,
     onSelect: (item: String) -> Unit,
     hideDropdown: () -> Unit,
 ){
     val scrollState = rememberScrollState()
-
-    Row(modifier = Modifier.fillMaxSize()) {
+    Row(modifier = Modifier.fillMaxSize().background(bgColor)) {
         if (isVisible) {
             Popup(
                 alignment = Alignment.Center,
@@ -64,27 +67,26 @@ fun CustomDropdownSelector(
             ) {
                 Column(
                     modifier = Modifier
-                        .heightIn(max = 180.dp)
+                        .heightIn(max = 300.dp)
                         .verticalScroll(state = scrollState)
                         .padding(20.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .background(Color.LightGray)
-                        .border(2.dp, Color.Black),
+                        .background(bgColor),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Row (
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
+                    Column (
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.background(scrollBarBgColor).padding(20.dp)
                     ){
-
-                    }
                     items.onEachIndexed { index, item ->
-                        val bgColor = if(item == selectedItem) Color.LightGray else Color.White
+                        val bgColor = if(item == selectedItem) Color.White else bgColor
                         if (index != 0) {
-                            Divider(thickness = 1.dp, color = Color.LightGray)
+                            HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
                         }
                         Row(
                             modifier = Modifier
+                                .padding(5.dp)
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(bgColor)
                                 .padding(vertical = 20.dp, horizontal = 5.dp)
@@ -101,17 +103,19 @@ fun CustomDropdownSelector(
                             )
                         }
                     }
+                    }
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversionRowItem(
     amount: String,
     label: String,
+    buttonColor: Color,
+    textColor: Color,
     updateAmount: (String) -> Unit,
     onTypeClicked: () -> Unit,
 ){
@@ -120,16 +124,16 @@ fun ConversionRowItem(
         deciFormat.format(amount.toDouble())
     } else { amount }
 
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ){
         TextField(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth()
                 .padding(10.dp)
                 .height(90.dp)
                 .clip(RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp)),
@@ -139,29 +143,31 @@ fun ConversionRowItem(
                 imeAction = ImeAction.Done
             ),
             textStyle = LocalTextStyle.current.copy(fontSize = 28.sp),
-            shape = TextFieldDefaults.outlinedShape,
+            shape = OutlinedTextFieldDefaults.shape,
             singleLine = true,
             maxLines = 1,
             onValueChange = { change -> updateAmount(change) },
         )
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp))
-                .background(LightGrey)
+                .background(buttonColor)
                 .padding(vertical = 25.dp, horizontal = 10.dp)
-                .clickable { onTypeClicked() }
+                .clickable { onTypeClicked() },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
             ) {
             Text(
                 text = label,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black,
+                color = textColor,
                 textAlign = TextAlign.Center,
             )
         }
     }
 }
-
 
 @Composable
 fun ConversionScreen(
@@ -172,9 +178,10 @@ fun ConversionScreen(
     updateOutputType: (String) -> Unit,
     onBackPress: () -> Unit
 ){
+    val screenColors: ScreenColor = data.screenType.getColors()
+    val title: String = data.screenType.getTitle()
 
     Surface {
-
         var isDropdownInput = remember { mutableStateOf(false) }
         var selectedItem = remember { mutableStateOf("") }
         var tempStrings: List<String> = data.listOfData.map { it.label }
@@ -186,6 +193,8 @@ fun ConversionScreen(
         CustomDropdownSelector(
             selectedItem = selectedItem.value,
             items = tempStrings,
+            bgColor = screenColors.fgColor,
+            scrollBarBgColor = screenColors.bgbgColor,
             onSelect = { selected ->
                 if(isDropdownInput.value) { updateInputType(selected) } else { updateOutputType(selected) }
                 isDropdownVisible.value = false
@@ -196,29 +205,31 @@ fun ConversionScreen(
 
         Column(
             modifier = Modifier
-                .padding(5.dp)
-                .fillMaxHeight(),
+                .padding(15.dp)
+                .fillMaxHeight()
+                .background(screenColors.fgColor),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Temperature Converter:",
+                text = title,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
+                color = screenColors.bgColor,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(10.dp),
             )
-
             Column (
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 20.dp, horizontal = 10.dp),
-                verticalArrangement = Arrangement.Top,
+                    .padding(vertical = 10.dp),
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ConversionRowItem(
                     amount = data.inputAmount,
                     label = data.inputData.label,
+                    buttonColor = screenColors.bgColor,
+                    textColor = screenColors.textColor,
                     updateAmount = updateInputAmount,
                     onTypeClicked = {
                         isDropdownInput.value = true
@@ -226,10 +237,12 @@ fun ConversionScreen(
                         isDropdownVisible.value = true
                     }
                 )
-                Divider(thickness = 2.dp)
+                HorizontalDivider(thickness = 2.dp)
                 ConversionRowItem(
                     amount = data.outputAmount,
                     label = data.outputData.label,
+                    buttonColor = screenColors.bgColor,
+                    textColor = screenColors.textColor,
                     updateAmount = updateOutputAmount,
                     onTypeClicked = {
                         isDropdownInput.value = false
@@ -237,10 +250,7 @@ fun ConversionScreen(
                         isDropdownVisible.value = true
                     }
                 )
-
             }
-
         }
     }
-
 }
