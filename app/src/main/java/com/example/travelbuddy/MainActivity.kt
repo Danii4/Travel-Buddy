@@ -16,11 +16,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -100,6 +102,12 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         iconSelected = ImageType.Vector(Icons.Filled.ExitToApp),
         iconUnselected = ImageType.Vector(Icons.Outlined.ExitToApp),
         screen = Screen.UnitConversion,
+    ),
+    DrawerItem(
+        label = "Logout",
+        iconSelected = ImageType.Vector(Icons.Filled.Logout),
+        iconUnselected = ImageType.Vector(Icons.Outlined.Logout),
+        screen = Screen.Login,
     ),
 )
 
