@@ -109,10 +109,9 @@ sealed interface ScreenData {
                     if(isForward) conv.forwardConv(amount)
                     else conv.backwardConv(amount)
                 }
-
                 is ConvMethod.Equiv -> {
-                    if(isForward) amount/conv.amount
-                    else amount * conv.amount
+                    if(isForward) amount * conv.amount
+                    else amount / conv.amount
                 }
             }
         }

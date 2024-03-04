@@ -1,5 +1,6 @@
 package com.example.travelbuddy.unit_conversion
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.travelbuddy.unit_conversion.model.ScreenData
 import com.example.travelbuddy.unit_conversion.model.ScreenType
@@ -97,6 +98,7 @@ class UnitConversionViewModel : ViewModel() {
                             updateType = updateType,
                             convValue =  newOutputData
                         )
+                        Log.d("FAHAD", newInputAmount)
                     } else {
                         newInputAmount = currentState.screenData.inputAmount
                         newInputData = currentState.screenData.inputData

@@ -39,12 +39,12 @@ fun getLengthConversionData(): ScreenData.ConversionData {
         Default(conv = Equiv (304.8), label="Foot (ft)"), // Foot
         Default(conv = Equiv (914.4), label="Yard (yd)"), // Yard
         Default(conv = Equiv (1609344.0), label="Mile (mi)"), // Mile
-        Default(conv = Equiv (5029200.0), label="league"), // League
-        Default(conv = Equiv (201168.0), label="furlong"), // Furlong
-        Default(conv = Equiv (5029.2), label="chain"), // Chain
-        Default(conv = Equiv (1609.344), label="Nautical Mile (nmi)"), // Nautical Mile
-        Default(conv = Equiv (508.0), label="rod"), // Rod
-        Default(conv = Equiv (5.0292), label="link"), // Link
+        Default(conv = Equiv (5029200.0), label="League"), // League
+        Default(conv = Equiv (201168.0), label="Furlong"), // Furlong
+        Default(conv = Equiv (20116.8), label="Chain"), // Chain
+        Default(conv = Equiv (1852000.344), label="Nautical Mile (nmi)"), // Nautical Mile
+        Default(conv = Equiv (5029.2), label="Rod"), // Rod
+        Default(conv = Equiv (201.168), label="Link"), // Link
     )
 
     return ScreenData.ConversionData(
@@ -95,13 +95,13 @@ fun getWeightConversionData(): ScreenData.ConversionData {
         Default(conv = Equiv(28.3495), label="Ounce (oz)"), // Ounce
         Default(conv = Equiv(453.592), label="Pound (lb)"), // Pound
         Default(conv = Equiv(6350.29), label="Stone (st)"), // Stone
-        Default(conv = Equiv(1016046.91), label="US Ton (us ton)"), // US Ton
+        Default(conv = Equiv(907184.74), label="US Ton (us ton)"), // US Ton
         Default(conv = Equiv(907184.74), label="Imperial Ton (imp ton)"), // Imperial Ton
         Default(conv = Equiv(31.1035), label="Troy Ounce (oz t)"), // Troy Ounce
-        Default(conv = Equiv(3.21507), label="Pennyweight (dwt)"), // Pennyweight
+        Default(conv = Equiv(1.55517), label="Pennyweight (dwt)"), // Pennyweight
         Default(conv = Equiv(0.0647989), label="Grain (gr)"), // Grain
-        Default(conv = Equiv(5000.0), label="Metric Quintal (q)"), // Metric Quintal
-        Default(conv = Equiv(50.0), label="Carat (ct)"), // Carat
+        Default(conv = Equiv(100000.0), label="Metric Quintal (q)"), // Metric Quintal
+        Default(conv = Equiv(0.2), label="Carat (ct)"), // Carat
     )
 
     return ScreenData.ConversionData(
