@@ -84,12 +84,6 @@ val DRAWER_ITEMS: List<DrawerItem> = listOf(
         screen = Screen.Trips,
     ),
     DrawerItem(
-        label = "Trip Add Screen",
-        iconSelected = ImageType.Vector(Icons.Filled.LocationOn),
-        iconUnselected = ImageType.Vector(Icons.Outlined.LocationOn),
-        screen = Screen.TripAdd,
-    ),
-    DrawerItem(
         label = "Expenses",
         iconSelected = ImageType.Drawable(R.drawable.payment_filled_24),
         iconUnselected =  ImageType.Drawable(R.drawable.payment_outline_24),
