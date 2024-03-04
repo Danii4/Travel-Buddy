@@ -9,3 +9,4 @@
 | 2024/02/29 |       |5     |  |    |     |     | Created features for home screen and design home screen components, finished d3 report for home screen section|
 | 2024/03/2 | 5     | | | | | | Created prototype for Language Translation Feature: UI |
 | 2024/03/3 | 6     | | | | | | Created prototype for Language Translation Feature: Translating Feature |
+| 2024/03/3 |      |5 | | | | | Worked on home screen and authentication features|
