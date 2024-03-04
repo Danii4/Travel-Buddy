@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.travelbuddy.auth.LoginScreen
 import com.example.travelbuddy.data.Mock
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
@@ -154,6 +155,7 @@ class MainActivity : ComponentActivity() {
                             }
                         },
                         drawerState = drawerState
+
                     ) {
                         Scaffold(
                             modifier = Modifier
@@ -191,13 +193,11 @@ class MainActivity : ComponentActivity() {
                         ){ paddingValues ->
                             NavHost(
                                 navController = navController,
-                                startDestination = Screen.Home.route,
+                                startDestination = Screen.Login.route,
                                 modifier = Modifier.padding(paddingValues)
                             ) {
-                                composable(Screen.Expenses.route) { ExpensesView(
-                                    navController = navController,
-                                    trip = Mock.trip
-                                ) }
+                                composable(Screen.Login.route) { LoginScreen(navController = navController) }
+                                composable(Screen.Expenses.route) { ExpensesView(navController = navController, trip = Mock.trip) }
                                 composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.LanguageTranslation.route) { TranslationScreen() }
                                 composable(Screen.TripPlanning.route) { TripPlanningScreen() }

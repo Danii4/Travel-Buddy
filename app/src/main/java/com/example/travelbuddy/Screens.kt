@@ -1,6 +1,8 @@
 package com.example.travelbuddy
 
 sealed class Screen(val route: String) {
+    object Login: Screen("login")
+
     object Home: Screen("home")
     object TripPlanning: Screen("trip-planning")
     object TripAdd: Screen("trip-add")
