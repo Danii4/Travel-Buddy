@@ -179,7 +179,7 @@ fun CreateTripAddView(innerPadding: PaddingValues) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 10.dp),
+                .padding(innerPadding),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff5cb85c)
             )
