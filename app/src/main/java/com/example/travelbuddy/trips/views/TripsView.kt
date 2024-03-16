@@ -2,6 +2,7 @@
 
 package com.example.travelbuddy.trips.views
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +38,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -184,11 +186,11 @@ fun TripsView(
         }
         if (showPager) {
             val titlePage = TripAddPageModel(
-                page = {
+                page = {innerPadding ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp),
+                            .padding(innerPadding),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(text = "Enter Trip Name", modifier = Modifier.padding(bottom = 16.dp))
@@ -205,7 +207,9 @@ fun TripsView(
                 }
             )
             val addDestPage = TripAddPageModel(
-                page = { CreateTripAddView() }
+                page = { innerPadding ->
+                    CreateTripAddView(innerPadding)
+                }
             )
             val tripsAddScreenList = listOf(titlePage, addDestPage)
             GenerateTripAddViews(tripsAddScreenList)
@@ -277,15 +281,27 @@ fun TripsView(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GenerateTripAddViews(pages: List<TripAddPageModel>) {
     val pagerState = rememberPagerState(pageCount = { pages.size })
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(Color.White)
     ) {
         HorizontalPager(state = pagerState) { index ->
-            pages[index].page()
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = { Text(text = "String Test") })
+                },
+                bottomBar = {
+
+                },
+                content = {innerPadding ->
+                    pages[index].page(innerPadding)
+                }
+            )
         }
         Row(
             Modifier
