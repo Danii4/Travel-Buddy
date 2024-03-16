@@ -295,20 +295,32 @@ fun ModifiedRow(
             .fillMaxWidth()
 //            .align(Alignment.BottomCenter)
             .padding(bottom = 8.dp),
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Back button
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-//                .clickable { onBackClicked() }
-        ) {
-            Text("Back")
+        // Backward Nav
+        if (pagerState.canScrollBackward) {
+            Box(
+                modifier = Modifier
+                    .padding(15.dp)
+    //                .clickable { onBackClicked() }
+            ) {
+                Text("Back")
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(15.dp)
+                //                .clickable { onBackClicked() }
+            ) {
+                Text("Cancel")
+            }
         }
 
         // Indicators
         Row(
-            horizontalArrangement = Arrangement.Center
+//            horizontalArrangement = Arrangement.Center
+            modifier = Modifier
+                .padding(15.dp)
         ) {
             repeat(pagerState.pageCount) { iteration ->
                 val color =
@@ -318,18 +330,28 @@ fun ModifiedRow(
                         .padding(2.dp)
                         .clip(CircleShape)
                         .background(color)
-                        .size(16.dp)
+                        .size(10.dp)
                 )
             }
         }
 
-        // Next button
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-//                .clickable { onNextClicked() }
-        ) {
-            Text("Next")
+        // Forward Nav
+        if (pagerState.canScrollForward){
+            Box(
+                modifier = Modifier
+                    .padding(15.dp)
+    //                .clickable { onNextClicked() }
+            ) {
+                Text("Next")
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(15.dp)
+                //                .clickable { onNextClicked() }
+            ) {
+                Text("Done")
+            }
         }
     }
 }
@@ -351,26 +373,6 @@ fun GenerateTripAddViews(pages: List<TripAddPageModel>) {
                 },
                 bottomBar = {
                     ModifiedRow(pagerState)
-//                    Row(
-//                        Modifier
-//                            .wrapContentHeight()
-//                            .fillMaxWidth()
-//                            .align(Alignment.BottomCenter)
-//                            .padding(bottom = 8.dp),
-//                    horizontalArrangement = Arrangement.Center
-//                    ) {
-//                        repeat(pagerState.pageCount) { iteration ->
-//                            val color =
-//                                if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-//                            Box(
-//                                modifier = Modifier
-//                                    .padding(2.dp)
-//                                    .clip(CircleShape)
-//                                    .background(color)
-//                                    .size(16.dp)
-//                            )
-//                        }
-//                    }
                 },
                 content = {innerPadding ->
                     pages[index].page(innerPadding)
