@@ -184,22 +184,28 @@ fun TripsView(
         }
         if (showPager) {
             val titlePage = TripAddPageModel(
-                title = "Include Trip Name",
-                content = {
-                    ElevatedCard(
-                        modifier = Modifier.fillMaxWidth(0.5f)
+                page = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        TextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            value = tripTitle,
-                            onValueChange = { tripTitle = it },
-                        )
+                        Text(text = "Enter Trip Name", modifier = Modifier.padding(bottom = 16.dp))
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth(0.5f)
+                        ) {
+                            TextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = tripTitle,
+                                onValueChange = { tripTitle = it },
+                            )
+                        }
                     }
                 }
             )
             val addDestPage = TripAddPageModel(
-                title = "",
-                content = { CreateTripAddView() }
+                page = { CreateTripAddView() }
             )
             val tripsAddScreenList = listOf(titlePage, addDestPage)
             GenerateTripAddViews(tripsAddScreenList)
@@ -279,15 +285,7 @@ fun GenerateTripAddViews(pages: List<TripAddPageModel>) {
             .background(Color.White)
     ) {
         HorizontalPager(state = pagerState) { index ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(text = pages[index].title, modifier = Modifier.padding(bottom = 16.dp))
-                pages[index].content()
-            }
+            pages[index].page()
         }
         Row(
             Modifier
