@@ -5,6 +5,7 @@ package com.example.travelbuddy.trips.views
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -281,6 +283,58 @@ fun TripsView(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun ModifiedRow(
+    pagerState: PagerState,
+//    onNextClicked: () -> Unit,
+//    onBackClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+//            .align(Alignment.BottomCenter)
+            .padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        // Back button
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+//                .clickable { onBackClicked() }
+        ) {
+            Text("Back")
+        }
+
+        // Indicators
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color =
+                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(16.dp)
+                )
+            }
+        }
+
+        // Next button
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+//                .clickable { onNextClicked() }
+        ) {
+            Text("Next")
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GenerateTripAddViews(pages: List<TripAddPageModel>) {
@@ -296,32 +350,32 @@ fun GenerateTripAddViews(pages: List<TripAddPageModel>) {
                     TopAppBar(title = { Text(text = "String Test") })
                 },
                 bottomBar = {
-
+                    ModifiedRow(pagerState)
+//                    Row(
+//                        Modifier
+//                            .wrapContentHeight()
+//                            .fillMaxWidth()
+//                            .align(Alignment.BottomCenter)
+//                            .padding(bottom = 8.dp),
+//                    horizontalArrangement = Arrangement.Center
+//                    ) {
+//                        repeat(pagerState.pageCount) { iteration ->
+//                            val color =
+//                                if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+//                            Box(
+//                                modifier = Modifier
+//                                    .padding(2.dp)
+//                                    .clip(CircleShape)
+//                                    .background(color)
+//                                    .size(16.dp)
+//                            )
+//                        }
+//                    }
                 },
                 content = {innerPadding ->
                     pages[index].page(innerPadding)
                 }
             )
-        }
-        Row(
-            Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            repeat(pagerState.pageCount) { iteration ->
-                val color =
-                    if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                Box(
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                        .size(16.dp)
-                )
-            }
         }
     }
 }
