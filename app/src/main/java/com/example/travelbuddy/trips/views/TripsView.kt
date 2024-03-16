@@ -49,8 +49,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.create_trip.CreateTripAddViewModel
@@ -79,7 +77,6 @@ fun TripCard(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-//                .background(MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = trip,
