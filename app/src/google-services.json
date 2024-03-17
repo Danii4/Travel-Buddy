@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "379107089912",
+    "project_id": "travel-buddy-cs446",
+    "storage_bucket": "travel-buddy-cs446.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379107089912:android:25b506e37b378fb57c4a0d",
+        "android_client_info": {
+          "package_name": "com.example.travelbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379107089912-m6k7f3uaq4v31f97b4msnndtmjbucq2p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.travelbuddy",
+            "certificate_hash": "3f500c54be2b319c4f300c2449f85d4403bfc821"
+          }
+        },
+        {
+          "client_id": "379107089912-6cnc33dp9iom72232olr4gj2u99ltg1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtn91G4rjn2gnipujHlkL7Ho3Tb9irw0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379107089912-6cnc33dp9iom72232olr4gj2u99ltg1a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

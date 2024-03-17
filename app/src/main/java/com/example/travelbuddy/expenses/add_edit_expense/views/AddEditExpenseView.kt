@@ -1,7 +1,6 @@
 package com.example.travelbuddy.expenses.add_edit_expense.views
 
 import android.annotation.SuppressLint
-import android.widget.DatePicker
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -43,15 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.TripModel
-import com.example.travelbuddy.expenses.ExpensesViewModel
-import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
 import java.time.LocalDate
 
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
-    val viewModel = AddEditExpenseViewModel()
+//    val viewModel = AddEditExpenseViewModel()
 //    val viewModel = hiltViewModel<AddEditExpenseViewModel>()
 //    val state by viewModel.state.collectAsState()
     Scaffold(
@@ -226,7 +222,7 @@ fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
             ) {
                 Button(
                     onClick = {
-                        viewModel.navigatetoExpenses(navController)
+//                        viewModel.navigatetoExpenses(navController)
                     },
 //                    modifier = Modifier.
                 ) {
@@ -242,7 +238,7 @@ fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
                             date = expenseDate
                         )
                         trip.addExpense(newExpense)
-                        viewModel.navigatetoExpenses(navController)
+//                        viewModel.navigatetoExpenses(navController)
                     },
 //                    modifier = Modifier.
                 ) {

@@ -1,6 +1,5 @@
 package com.example.travelbuddy
 
-import HomeScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -48,18 +47,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.travelbuddy.auth.LoginScreen
-import com.example.travelbuddy.data.Mock
-import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
-import com.example.travelbuddy.expenses.views.ExpensesView
-import com.example.travelbuddy.languageTranslation.TranslationScreen
-import com.example.travelbuddy.trips.views.TripsView
-import com.example.travelbuddy.screens.TripPlanningScreen
-import com.example.travelbuddy.create_trip.views.CreateTripAddView
-import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
 import dagger.hilt.android.AndroidEntryPoint
@@ -193,22 +181,11 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                         ){ paddingValues ->
-                            NavHost(
-                                navController = navController,
-                                startDestination = Screen.Login.route,
-                                modifier = Modifier.padding(paddingValues)
-                            ) {
-                                composable(Screen.Login.route) { LoginScreen(navController = navController) }
-                                composable(Screen.Expenses.route) { ExpensesView(navController = navController, trip = Mock.trip) }
-                                composable(Screen.Home.route) { HomeScreen() }
-                                composable(Screen.LanguageTranslation.route) { TranslationScreen() }
-                                composable(Screen.Trips.route) { TripsView(navController) }
-                                composable(Screen.TripAdd.route) { CreateTripAddView()}
-                                composable(Screen.UnitConversion.route) { UnitConversionScreen() }
-                                composable(Screen.AddEditExpense.route) { AddEditExpenseView(
-                                    navController = navController,
-                                    trip = Mock.trip) }
-                            }
+                            Navigation(
+                                loggedIn = false,
+                                modifier = Modifier.padding(paddingValues),
+                                navController = navController
+                            )
                         }
                     }
                 }
