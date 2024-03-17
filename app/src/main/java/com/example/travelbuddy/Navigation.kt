@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.travelbuddy.components.NavigationDrawerWrapper
 import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.data.Mock
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
@@ -34,12 +35,37 @@ fun Navigation(
         composable(Screen.ResetPassword.route) { ResetPasswordScreen(navController = navController) }
 
         // Other Screens
-        composable(Screen.Home.route) { HomeScreen() }
-        composable(Screen.Expenses.route) { ExpensesView(navController = navController, trip = Mock.trip) }
-        composable(Screen.LanguageTranslation.route) { TranslationScreen() }
-        composable(Screen.Trips.route) { TripsView(navController) }
-        composable(Screen.TripAdd.route) { CreateTripAddView() }
-        composable(Screen.UnitConversion.route) { UnitConversionScreen() }
-        composable(Screen.AddEditExpense.route) { AddEditExpenseView(navController = navController, trip = Mock.trip) }
+        composable(Screen.Home.route) {
+            NavigationDrawerWrapper(navController = navController, children = { HomeScreen() }, itemIndex = Screen.Home.drawerItem)
+        }
+        composable(Screen.Expenses.route) {
+            NavigationDrawerWrapper(
+                navController = navController,
+                children = {  ExpensesView(navController = navController, trip = Mock.trip)},
+                itemIndex = Screen.Expenses.drawerItem
+            )
+        }
+        composable(Screen.LanguageTranslation.route) {
+            NavigationDrawerWrapper(navController = navController, children = { TranslationScreen() }, itemIndex = Screen.LanguageTranslation.drawerItem)
+        }
+        composable(Screen.Trips.route) {
+            NavigationDrawerWrapper (navController = navController, children = { TripsView(navController = navController) }, itemIndex = Screen.Trips.drawerItem)
+        }
+        composable(Screen.TripAdd.route) {
+            NavigationDrawerWrapper (navController = navController, children = { CreateTripAddView() }, itemIndex = Screen.TripAdd.drawerItem)
+        }
+        composable(Screen.UnitConversion.route) {
+            NavigationDrawerWrapper (navController = navController, children = { UnitConversionScreen() }, itemIndex = Screen.UnitConversion.drawerItem)
+        }
+        composable(Screen.AddEditExpense.route) {
+            NavigationDrawerWrapper (
+                navController = navController,
+                children = { AddEditExpenseView(
+                    navController = navController,
+                    trip = Mock.trip
+                ) },
+                itemIndex = Screen.AddEditExpense.drawerItem
+            )
+        }
     }
 }

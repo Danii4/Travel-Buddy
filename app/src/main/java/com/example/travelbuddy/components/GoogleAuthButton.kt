@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.travelbuddy.R
@@ -20,6 +21,7 @@ import com.example.travelbuddy.R
 @Composable
 fun GoogleAuthButton(
     text: String,
+    textSize: TextUnit = 20.sp,
     onClick: () -> Unit,
 ) {
     Button(
@@ -39,7 +41,7 @@ fun GoogleAuthButton(
             text = text,
             color = Color.Black,
             modifier = Modifier.padding(5.dp),
-            fontSize = 20.sp
+            fontSize = textSize
         )
     }
 }

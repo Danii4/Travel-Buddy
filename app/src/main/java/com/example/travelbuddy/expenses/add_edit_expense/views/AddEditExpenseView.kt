@@ -29,6 +29,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,18 +39,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
 import java.time.LocalDate
 
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
-//    val viewModel = AddEditExpenseViewModel()
-//    val viewModel = hiltViewModel<AddEditExpenseViewModel>()
-//    val state by viewModel.state.collectAsState()
+fun AddEditExpenseView(
+    navController: NavController,
+    trip: TripModel.Trip,
+    viewModel: AddEditExpenseViewModel = hiltViewModel()
+) {
+    var state = viewModel.state.collectAsState(initial = null)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

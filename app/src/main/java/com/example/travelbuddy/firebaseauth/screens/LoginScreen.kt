@@ -3,6 +3,7 @@ package com.example.travelbuddy.firebaseauth.screens
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.R
 import com.example.travelbuddy.Screen
-import com.example.travelbuddy.components.BottomAuthComponent
+import com.example.travelbuddy.components.GoogleAuthButton
 import com.example.travelbuddy.components.OutlinedPasswordInput
 import com.example.travelbuddy.components.OutlinedTextInput
 import com.example.travelbuddy.components.PrimaryButton
@@ -122,18 +123,22 @@ fun LoginScreen(
                     onClick = { scope.launch { viewModel.loginUser(email, password) } },
                     textSize=17.sp,
                 )
-                SecondaryButton(
-                    text = "Switch to Signup",
-                    onClick = { navController.navigate(Screen.Signup.route)},
+                Spacer(modifier = Modifier.height(10.dp))
+                GoogleAuthButton(
+                    text = "Login With Google",
+                    onClick = { scope.launch {  Toast.makeText(context, "TODO", Toast.LENGTH_SHORT) }},
                     textSize=17.sp,
                 )
             }
-            BottomAuthComponent(
-                primaryButtonText = "Forgot your Password",
-                primaryOnClick = { navController.navigate(Screen.ResetPassword.route)},
-                googleButtonText = "Login with Google",
-                googleOnClick = { scope.launch {  Toast.makeText(context, "TODO", Toast.LENGTH_SHORT) }}
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                SecondaryButton(
+                    text = "Switch to Signup",
+                    onClick = { navController.navigate(Screen.Signup.route)},
+                )
+            }
         }
     }
 }

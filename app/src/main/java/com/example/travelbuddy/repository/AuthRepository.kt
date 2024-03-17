@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    val user: FirebaseUser?
+    var user: FirebaseUser?
     fun login(email: String, password: String): Flow<Response<AuthResult>>
     fun signup(name: String, email: String, password: String): Flow<Response<AuthResult>>
 

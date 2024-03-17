@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 fun BottomAuthComponent(
     primaryButtonText: String,
     primaryOnClick: () -> Unit,
-    googleButtonText: String,
-    googleOnClick: () -> Unit,
+    secondaryButtonText: String,
+    secondaryOnClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -35,7 +35,7 @@ fun BottomAuthComponent(
             PrimaryButton(text = primaryButtonText, onClick = primaryOnClick)
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 HorizontalDivider(
@@ -56,9 +56,9 @@ fun BottomAuthComponent(
                     color = Color.Gray
                 )
             }
-            GoogleAuthButton(
-                text = googleButtonText,
-                onClick = googleOnClick,
+            SecondaryButton(
+                text = secondaryButtonText,
+                onClick = secondaryOnClick,
             )
         }
     }

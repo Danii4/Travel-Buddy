@@ -3,6 +3,7 @@ package com.example.travelbuddy.firebaseauth.screens
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -32,13 +34,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.R
 import com.example.travelbuddy.Screen
-import com.example.travelbuddy.components.BottomAuthComponent
+import com.example.travelbuddy.components.GoogleAuthButton
 import com.example.travelbuddy.components.OutlinedPasswordInput
 import com.example.travelbuddy.components.OutlinedTextInput
+import com.example.travelbuddy.components.PrimaryButton
+import com.example.travelbuddy.components.SecondaryButton
 import com.example.travelbuddy.components.StandardText
 import com.example.travelbuddy.firebaseauth.viewmodels.SignupViewModel
 import kotlinx.coroutines.launch
@@ -111,7 +116,7 @@ fun SignupScreen(
                 OutlinedTextInput(
                     value = name,
                     label = { Text("Name") },
-                    icon = Icons.Outlined.Email,
+                    icon = Icons.Outlined.Person,
                     onInputChange = { name = it }
                 )
                 OutlinedTextInput(
@@ -120,24 +125,33 @@ fun SignupScreen(
                     icon = Icons.Outlined.Email,
                     onInputChange = { email = it}
                 )
-                Spacer(modifier = Modifier.height(10.dp))
                 OutlinedPasswordInput(
                     value = password,
                     label = { Text("Password") },
                     icon = Icons.Outlined.Lock,
                     onInputChange = { password = it}
                 )
+                Spacer(modifier = Modifier.height(10.dp))
+                PrimaryButton(
+                    text = "Signup",
+                    onClick = { scope.launch { viewModel.signupUser(name, email, password) }},
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                GoogleAuthButton(
+                    text = "Signup With Google",
+                    onClick = { scope.launch {  Toast.makeText(context, "TODO", Toast.LENGTH_SHORT) }},
+                    textSize=17.sp,
+                )
             }
-            BottomAuthComponent(
-                primaryButtonText = "Signup",
-                primaryOnClick = { scope.launch {
-                    viewModel.signupUser(name, email, password)
-                }},
-                googleButtonText = "Signup with Google",
-                googleOnClick = { scope.launch {
-                    Toast.makeText(context, "TODO", Toast.LENGTH_SHORT)
-                }}
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                SecondaryButton(
+                    text = "Switch to Login",
+                    onClick = { navController.navigate(Screen.Login.route)},
+                )
+            }
         }
     }
 }
