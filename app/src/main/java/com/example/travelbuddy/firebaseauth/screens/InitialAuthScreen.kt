@@ -1,20 +1,14 @@
-package com.example.travelbuddy.auth
+package com.example.travelbuddy.firebaseauth.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,15 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.example.travelbuddy.R
-import com.example.travelbuddy.auth.components.BottomLoginComponent
-import com.example.travelbuddy.auth.components.OutlinedTextEntry
-import com.example.travelbuddy.auth.components.OutlinedTextPasswordEntry
-import com.example.travelbuddy.auth.components.StandardText
+import com.example.travelbuddy.Screen
+import com.example.travelbuddy.components.PrimaryButton
+import com.example.travelbuddy.components.SecondaryButton
+import com.example.travelbuddy.components.StandardText
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun InitialAuthScreen(
+    navController: NavController,
+) {
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -44,21 +40,29 @@ fun LoginScreen(navController: NavHostController) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                StandardText(value = "Howdy, welcome back")
+                StandardText(value = "Howdy, Welcome")
                 StandardText(value = "TravelBuddy")
+                StandardText(value = "The best travel tool")
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.travel_explore_24),
                     contentDescription = "App Logo",
-                    modifier = Modifier.height(30.dp).width(30.dp)
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
                 )
             }
             Spacer(modifier = Modifier.height(25.dp))
             Column {
-                OutlinedTextEntry(label = { Text("Email") }, icon = Icons.Outlined.Email)
-                Spacer(modifier = Modifier.height(10.dp))
-                OutlinedTextPasswordEntry(label = { Text("Password") }, icon = Icons.Outlined.Lock)
+                PrimaryButton(
+                    text = "Login",
+                    onClick = { navController.navigate(Screen.Login.route)}
+                )
+                Spacer(modifier = Modifier.height(25.dp))
+                SecondaryButton(
+                    text = "Signup",
+                    onClick = { navController.navigate(Screen.Signup.route)}
+                )
             }
-            BottomLoginComponent(navController)
         }
     }
 }
