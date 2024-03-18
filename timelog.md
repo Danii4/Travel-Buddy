@@ -18,4 +18,3 @@
 | 2024/03/03 |       | 5      |       |         |         |          | Worked on home screen and authentication features                                                             |
 | 2024/03/03 |       |        |       | 3       |         |          | Create Add Expense View                                                                                       |
 | 2024/03/03 |       |        |       |         |         | 2        | Improved add screen UI by including a bottomModal view and refactored/merged my commits                       |
-| 2024/03/11 |       | 5      |       |         |         |          | Worked D4 Architectural Style Analysis

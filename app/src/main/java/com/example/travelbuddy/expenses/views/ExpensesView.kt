@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.expenses.ExpensesViewModel
 
 
 @Composable
@@ -144,12 +145,12 @@ fun ExpensesView(
     navController: NavController,
     trip: TripModel.Trip,
 ) {
-//    val viewModel = ExpensesViewModel()
+    val viewModel = ExpensesViewModel()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = { viewModel.navigateToAddExpense(navController) },
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
