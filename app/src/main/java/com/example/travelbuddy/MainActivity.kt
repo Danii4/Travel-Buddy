@@ -118,6 +118,7 @@ class MainActivity : ComponentActivity() {
                                 composable(Screen.Home.route) { HomeScreen() }
                                 composable(Screen.LanguageTranslation.route) { TranslationScreen() }
                                 composable(Screen.Trips.route) { TripsView(navController) }
+                                composable(Screen.TripAdd.route) { CreateTripAddView()}
                                 composable(Screen.UnitConversion.route) { UnitConversionScreen() }
                                 composable(Screen.AddEditExpense.route) { AddEditExpenseView(
                                     navController = navController,
