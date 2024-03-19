@@ -31,13 +31,13 @@ class SignupViewModel @Inject constructor(
         } else {
             repo.signup(name, email, password).collect {
                 when(it) {
-                    is ResponseModel.Failure -> _signUpState.send(
-                        SignupState(error = it.msg, loading = false, success = "")
+                    is ResponseModel.ResponseWithData.Failure -> _signUpState.send(
+                        SignupState(error = it.error, loading = false, success = "")
                     )
-                    is ResponseModel.Loading -> _signUpState.send(
+                    is ResponseModel.ResponseWithData.Loading -> _signUpState.send(
                         SignupState(error = "", loading = true, success = "")
                     )
-                    is ResponseModel.Success -> _signUpState.send(
+                    is ResponseModel.ResponseWithData.Success -> _signUpState.send(
                         SignupState(error = "", loading = false, success = "Signup Successfully")
                     )
                 }
