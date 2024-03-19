@@ -27,8 +27,20 @@ fun HomeScreen() {
             )
             Text(
                 modifier = Modifier.padding(20.dp),
-                text = "Terms and Conditions of Use: ",
-                fontSize = 25.sp,
+                text = "Terms and Conditions of Use: by continuing to use our platform you agree to the privacy policies listed below.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+              Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Your personal information will be stored in our system and your spending habits will be shared with those that you choose to share with.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+                Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Your browsing preferences and data will also be stored in the system",
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
         }
