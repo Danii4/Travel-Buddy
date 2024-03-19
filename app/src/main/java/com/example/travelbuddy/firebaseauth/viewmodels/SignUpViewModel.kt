@@ -2,7 +2,7 @@ package com.example.travelbuddy.firebaseauth.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.travelbuddy.domain.model.Response
+import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -31,13 +31,13 @@ class SignupViewModel @Inject constructor(
         } else {
             repo.signup(name, email, password).collect {
                 when(it) {
-                    is Response.Failure -> _signUpState.send(
+                    is ResponseModel.Failure -> _signUpState.send(
                         SignupState(error = it.msg, loading = false, success = "")
                     )
-                    is Response.Loading -> _signUpState.send(
+                    is ResponseModel.Loading -> _signUpState.send(
                         SignupState(error = "", loading = true, success = "")
                     )
-                    is Response.Success -> _signUpState.send(
+                    is ResponseModel.Success -> _signUpState.send(
                         SignupState(error = "", loading = false, success = "Signup Successfully")
                     )
                 }
