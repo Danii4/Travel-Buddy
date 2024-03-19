@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +27,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Route
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -39,7 +41,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -195,16 +196,27 @@ fun TripsView(
         }
         if (showPager) {
             val titlePage = TripAddPageModel(
-                page = {innerPadding ->
+                page = { innerPadding ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text(text = "Enter Trip Name", modifier = Modifier.padding(bottom = 16.dp))
+                        Box(modifier = Modifier.padding(vertical = 90.dp)){
+                            Icon(
+                                imageVector = Icons.Default.Route,
+                                contentDescription = "Info Icon",
+                                modifier = Modifier
+                                    .size(100.dp)
+                            )
+                        }
+                        Text(
+                            text = "Enter Trip Name",
+                            modifier = Modifier.padding(10.dp)
+                        )
                         ElevatedCard(
-                            modifier = Modifier.fillMaxWidth(0.5f)
+                            modifier = Modifier.fillMaxWidth(0.75f)
                         ) {
                             TextField(
                                 modifier = Modifier.fillMaxWidth(),
@@ -433,9 +445,6 @@ fun GenerateTripAddViews(pages: List<TripAddPageModel>, navController: NavContro
     ) {
         HorizontalPager(state = pagerState) { index ->
             Scaffold(
-                topBar = {
-                    TopAppBar(title = { Text(text = "String Test") })
-                },
                 bottomBar = {
                     ModifiedRow(pagerState, coroutineScope, navController)
                 },
