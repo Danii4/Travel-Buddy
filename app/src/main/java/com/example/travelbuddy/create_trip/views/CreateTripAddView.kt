@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,6 +55,7 @@ import com.example.travelbuddy.data.model.DestinationModel
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
+import com.example.travelbuddy.create_trip.model.DestinationPageModel
 
 
 @Composable
@@ -146,19 +146,19 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         endDate = LocalDate.now().plusDays(7)
     )
 
-    val destList = remember {
-        mutableStateListOf( dest1, dest2, dest3, dest4)
-    }
+    val destList = DestinationPageModel.DestinationViewState(
+        destinationList = remember { mutableStateListOf(dest1, dest2, dest3, dest4) }
+    )
 
     fun deleteDestination(destination: DestinationModel.Destination) {
-        destList.remove(destination)
+        destList.destinationList.remove(destination)
     }
 
     LazyColumn(
         modifier = Modifier.padding(innerPadding),
         userScrollEnabled = true
     ) {
-        items(destList) { destination ->
+        items(destList.destinationList) { destination ->
             GenerateDestinationView(destination = destination) {
                 deleteDestination(destination)
             }
@@ -242,7 +242,7 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                     shape = RoundedCornerShape(15.dp),
                     windowInsets = WindowInsets(top = (-7).dp)
                 ) {
-                    destList.forEach {
+                    destList.destinationList.forEach {
                         Row(modifier = Modifier.padding(all = 14.dp)) {
                             Icon(
                                 modifier = Modifier.padding(end = 10.dp),
@@ -299,7 +299,9 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
 
                     // Cancel Destination Button
                     Box(
-                        Modifier.weight(1f).padding(end = 8.dp)
+                        Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     ) {
                         Button(
                             onClick = {
@@ -317,7 +319,9 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
 
                     // Add Destination Button
                     Box(
-                        Modifier.weight(1f).padding(start = 8.dp),
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp),
                     ) {
                         Button(
                             onClick = {
@@ -328,7 +332,7 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                         startDate = selectedRange.value.lower,
                                         endDate = selectedRange.value.upper
                                     )
-                                    destList.add(newDestination)
+                                    destList.destinationList.add(newDestination)
                                     destBarText = ""
                                 }
                             },
