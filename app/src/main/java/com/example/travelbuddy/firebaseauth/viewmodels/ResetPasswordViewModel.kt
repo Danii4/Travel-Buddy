@@ -2,7 +2,7 @@ package com.example.travelbuddy.firebaseauth.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.travelbuddy.domain.model.Response
+import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -27,13 +27,13 @@ class ResetPasswordViewModel @Inject constructor(
         _resetPasswordState.send(ResetPasswordState(loading = true))
         repo.sendPasswordResetEmail(email).collect {
             when(it) {
-                is Response.Failure -> _resetPasswordState.send(
+                is ResponseModel.Failure -> _resetPasswordState.send(
                     ResetPasswordState(error = it.msg, loading = false, success = "")
                 )
-                is Response.Loading -> _resetPasswordState.send(
+                is ResponseModel.Loading -> _resetPasswordState.send(
                     ResetPasswordState(error = "", loading = true, success = "")
                 )
-                is Response.Success -> _resetPasswordState.send(
+                is ResponseModel.Success -> _resetPasswordState.send(
                     ResetPasswordState(error = "", loading = false, success = "Sent email Successfully")
                 )
             }

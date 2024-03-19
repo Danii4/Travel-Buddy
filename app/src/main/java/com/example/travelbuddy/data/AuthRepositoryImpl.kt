@@ -1,7 +1,7 @@
 package com.example.travelbuddy.data
 
-import com.example.travelbuddy.domain.model.Response
-import com.example.travelbuddy.domain.types.User
+import com.example.travelbuddy.data.model.ResponseModel
+import com.example.travelbuddy.data.model.UserModel
 import com.example.travelbuddy.repository.AuthRepository
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -20,20 +20,20 @@ class AuthRepositoryImpl @Inject constructor(
 
     override var user = firebaseAuth.currentUser
 
-    override fun login(email: String, password: String): Flow<Response<AuthResult>> {
+    override fun login(email: String, password: String): Flow<ResponseModel<AuthResult>> {
         return flow {
-            emit(Response.Loading())
+            emit(ResponseModel.Loading())
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            emit(Response.Success(data = result))
+            emit(ResponseModel.Success(data = result))
         }.catch {
-            emit(Response.Failure(data = null, msg = it.message.toString()))
+            emit(ResponseModel.Failure(data = null, msg = it.message.toString()))
         }
     }
 
     override fun signup(name: String, email: String, password: String
-    ): Flow<Response<AuthResult>> {
+    ): Flow<ResponseModel<AuthResult>> {
         return flow {
-            emit(Response.Loading())
+            emit(ResponseModel.Loading())
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
 
             val user = hashMapOf("uid" to result.user?.uid, "name" to name, "email" to email)
@@ -41,15 +41,15 @@ class AuthRepositoryImpl @Inject constructor(
             result.user?.uid?.let {
                 val firestoreDb = Firebase.firestore
                 firestoreDb.collection("users").document(result.user?.uid!!).set(user)
-                emit(Response.Success(result))
-            } ?: emit(Response.Failure(msg = "Error adding value to Database"))
+                emit(ResponseModel.Success(result))
+            } ?: emit(ResponseModel.Failure(msg = "Error adding value to Database"))
 
         }.catch {
-            emit(Response.Failure(msg = it.message.toString()))
+            emit(ResponseModel.Failure(msg = it.message.toString()))
         }
     }
 
-    override suspend fun getUserInfo(uid: String): Response<User> {
+    override suspend fun getUserInfo(uid: String): ResponseModel<UserModel.User> {
         return try {
             val firestoreDb = Firebase.firestore
             val userSnapshot = firestoreDb.collection("users").document(uid).get().await()
@@ -58,28 +58,28 @@ class AuthRepositoryImpl @Inject constructor(
                 val userData = userSnapshot.data
 
                 userData?.let {
-                    val user = User(
+                    val user = UserModel.User(
                         userData["id"] as String,
                         userData["email"] as String,
                         userData["name"] as String,
                     )
-                    Response.Success(user)
-                } ?: Response.Failure(msg = "Failed to convert document to User")
+                    ResponseModel.Success(user)
+                } ?: ResponseModel.Failure(msg = "Failed to convert document to User")
             } else {
-                Response.Failure(msg = "User document does not exist")
+                ResponseModel.Failure(msg = "User document does not exist")
             }
         } catch (e: Exception) {
-            Response.Failure(msg = e.message.toString())
+            ResponseModel.Failure(msg = e.message.toString())
         }
     }
 
-    override fun sendPasswordResetEmail(email: String): Flow<Response<Boolean>> {
+    override fun sendPasswordResetEmail(email: String): Flow<ResponseModel<Boolean>> {
         return flow {
-            emit(Response.Loading())
+            emit(ResponseModel.Loading())
             val result = firebaseAuth.sendPasswordResetEmail(email).await()
-            emit(Response.Success(true))
+            emit(ResponseModel.Success(true))
         }.catch {
-            emit(Response.Failure(data = null, msg = it.message.toString()))
+            emit(ResponseModel.Failure(data = null, msg = it.message.toString()))
         }
     }
 
