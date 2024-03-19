@@ -57,7 +57,6 @@ import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseVie
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.languageTranslation.TranslationScreen
 import com.example.travelbuddy.trips.views.TripsView
-import com.example.travelbuddy.screens.TripPlanningScreen
 import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme

@@ -117,7 +117,7 @@ fun GenerateDestinationView(
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTripAddView(innerPadding: PaddingValues) {
+fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
     var destBarText by remember {
         mutableStateOf("")
     }
