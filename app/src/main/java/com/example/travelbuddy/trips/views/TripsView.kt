@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.create_trip.CreateTripAddViewModel
@@ -82,7 +83,7 @@ fun TripCard(
     return Card(modifier = Modifier
         .padding(4.dp),) {
         val expenseViewModel = AddEditExpenseViewModel()
-        val addTripViewModel = CreateTripAddViewModel()
+//        val addTripViewModel = hiltViewModel<CreateTripAddViewModel>()
 
 
         Column(
@@ -99,7 +100,8 @@ fun TripCard(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 AssistChip(
-                    onClick = { addTripViewModel.navigateToCreateTripAdd(navController) },
+//                    onClick = { addTripViewModel.navigateToCreateTripAdd(navController) },
+                    onClick = {  },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
