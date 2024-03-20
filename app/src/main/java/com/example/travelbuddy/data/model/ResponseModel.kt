@@ -2,7 +2,7 @@ package com.example.travelbuddy.data.model
 
 class ResponseModel {
     sealed class Response(val error : String? = null) {
-        class Success : Response()
+        object Success : Response()
         class Failure(error : String): Response(error = error)
         class Loading : Response()
     }
