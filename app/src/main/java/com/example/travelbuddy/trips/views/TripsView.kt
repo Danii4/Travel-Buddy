@@ -83,7 +83,7 @@ fun TripCard(
     return Card(modifier = Modifier
         .padding(4.dp),) {
         val expenseViewModel = AddEditExpenseViewModel()
-//        val addTripViewModel = hiltViewModel<CreateTripAddViewModel>()
+        val addTripViewModel = hiltViewModel<CreateTripAddViewModel>()
 
 
         Column(
@@ -100,8 +100,7 @@ fun TripCard(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 AssistChip(
-//                    onClick = { addTripViewModel.navigateToCreateTripAdd(navController) },
-                    onClick = {  },
+                    onClick = { addTripViewModel.navigateToCreateTripAdd(navController) },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
