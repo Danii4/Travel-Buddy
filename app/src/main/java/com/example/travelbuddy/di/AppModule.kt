@@ -1,7 +1,9 @@
 package com.example.travelbuddy.di
 
 import com.example.travelbuddy.data.AuthRepositoryImpl
+import com.example.travelbuddy.data.DestinationRepositoryImpl
 import com.example.travelbuddy.repository.AuthRepository
+import com.example.travelbuddy.repository.DestinationRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -23,4 +25,9 @@ object AppModule {
         return AuthRepositoryImpl(firebaseAuth)
     }
 
+    @Provides
+    @Singleton
+    fun providesDestinationRepositoryImpl(): DestinationRepository {
+        return DestinationRepositoryImpl()
+    }
 }
