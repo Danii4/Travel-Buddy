@@ -21,10 +21,6 @@ class DestinationRepositoryImpl @Inject constructor() :  DestinationRepository {
                 "startDate" to destination.startDate,
                 "endDate" to destination.endDate,
             )
-            Log.d("destination loaded", destinationLoad.toString())
-//            val destinationDB = db.collection("destinations").add(
-//                destinationLoad
-//            ).await()
             val firestoreDb = Firebase.firestore
             firestoreDb.collection("destinations").add(
                 destinationLoad
