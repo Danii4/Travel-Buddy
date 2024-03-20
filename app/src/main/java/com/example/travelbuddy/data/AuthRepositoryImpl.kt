@@ -62,6 +62,7 @@ class AuthRepositoryImpl @Inject constructor(
                         userData["id"] as String,
                         userData["email"] as String,
                         userData["name"] as String,
+                        userData["trips"] as List<String>
                     )
                     ResponseModel.ResponseWithData.Success(user)
                 } ?: ResponseModel.ResponseWithData.Failure(error = "Failed to convert document to User")
