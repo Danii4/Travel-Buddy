@@ -20,3 +20,5 @@
 | 2024/03/03 |       |        |       |         |         | 2        | Improved add screen UI by including a bottomModal view and refactored/merged my commits                       |
 | 2024/03/11 |       | 5      |       |         |         |          | Worked on D4 Architectural Style Analysis
 | 2024/03/19 |       | 2      |       |         |         |          | Worked on D4 Architectural Style Analysis
+| 2024/03/20 |       | 2      |       |         |         |          | work on home page brainstorm and ideas
+
