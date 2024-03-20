@@ -100,7 +100,9 @@ fun TripCard(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 AssistChip(
-                    onClick = { addTripViewModel.navigateToCreateTripAdd(navController) },
+                    onClick = {
+//                        addTripViewModel.navigateToCreateTripAdd(navController)
+                              },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
@@ -116,7 +118,9 @@ fun TripCard(
                 )
                 Spacer(modifier = Modifier.width(100.dp))
                 AssistChip(
-                    onClick = { expenseViewModel.navigatetoExpenses(navController) },
+                    onClick = {
+//                        expenseViewModel.navigatetoExpenses(navController)
+                              },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),

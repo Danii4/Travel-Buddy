@@ -3,6 +3,7 @@ package com.example.travelbuddy.data
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 
 class ExpenseRepository {
@@ -10,7 +11,7 @@ class ExpenseRepository {
 
     suspend fun addExpense(expense: ExpenseModel.Expense): ResponseModel.Response {
         return try {
-            val colRef = db.collection("expense").add(
+            val colRef = db.collection("expenses").add(
                 mapOf(
                     "name" to expense.name,
                     "type" to expense.type,
@@ -26,5 +27,12 @@ class ExpenseRepository {
         }
     }
 
-
+//    suspend fun getExpenses() : ResponseModel.ResponseWithData<List<ExpenseModel.Expense>> {
+//        val items: QuerySnapshot = authRepository.getTripId()?.let { id ->
+//
+//        }
+//        return try {
+//            db.collection('expenses').
+//        }
+//    }
 }
