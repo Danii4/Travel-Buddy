@@ -51,7 +51,7 @@ import java.time.LocalDate
 @Composable
 fun AddEditExpenseView(
     navController: NavController,
-    trip: TripModel.Trip,
+//    trip: TripModel.Trip,
     viewModel: AddEditExpenseViewModel = hiltViewModel()
 ) {
     var state = viewModel.state.collectAsState(initial = null)
@@ -243,7 +243,7 @@ fun AddEditExpenseView(
                             amount = expenseAmount,
                             date = expenseDate
                         )
-                        trip.addExpense(newExpense)
+//                        trip.addExpense(newExpense)
 //                        viewModel.navigatetoExpenses(navController)
                     },
 //                    modifier = Modifier.
