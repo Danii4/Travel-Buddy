@@ -27,13 +27,13 @@ class ResetPasswordViewModel @Inject constructor(
         _resetPasswordState.send(ResetPasswordState(loading = true))
         repo.sendPasswordResetEmail(email).collect {
             when(it) {
-                is ResponseModel.Failure -> _resetPasswordState.send(
-                    ResetPasswordState(error = it.msg, loading = false, success = "")
+                is ResponseModel.ResponseWithData.Failure -> _resetPasswordState.send(
+                    ResetPasswordState(error = it.error, loading = false, success = "")
                 )
-                is ResponseModel.Loading -> _resetPasswordState.send(
+                is ResponseModel.ResponseWithData.Loading -> _resetPasswordState.send(
                     ResetPasswordState(error = "", loading = true, success = "")
                 )
-                is ResponseModel.Success -> _resetPasswordState.send(
+                is ResponseModel.ResponseWithData.Success -> _resetPasswordState.send(
                     ResetPasswordState(error = "", loading = false, success = "Sent email Successfully")
                 )
             }

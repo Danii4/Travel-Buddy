@@ -20,20 +20,20 @@ class AuthRepositoryImpl @Inject constructor(
 
     override var user = firebaseAuth.currentUser
 
-    override fun login(email: String, password: String): Flow<ResponseModel<AuthResult>> {
+    override fun login(email: String, password: String): Flow<ResponseModel.ResponseWithData<AuthResult>> {
         return flow {
-            emit(ResponseModel.Loading())
+            emit(ResponseModel.ResponseWithData.Loading())
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            emit(ResponseModel.Success(data = result))
+            emit(ResponseModel.ResponseWithData.Success(data = result))
         }.catch {
-            emit(ResponseModel.Failure(data = null, msg = it.message.toString()))
+            emit(ResponseModel.ResponseWithData.Failure(data = null, error = it.message.toString()))
         }
     }
 
     override fun signup(name: String, email: String, password: String
-    ): Flow<ResponseModel<AuthResult>> {
+    ): Flow<ResponseModel.ResponseWithData<AuthResult>> {
         return flow {
-            emit(ResponseModel.Loading())
+            emit(ResponseModel.ResponseWithData.Loading())
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
 
             val user = hashMapOf("uid" to result.user?.uid, "name" to name, "email" to email)
@@ -41,15 +41,15 @@ class AuthRepositoryImpl @Inject constructor(
             result.user?.uid?.let {
                 val firestoreDb = Firebase.firestore
                 firestoreDb.collection("users").document(result.user?.uid!!).set(user)
-                emit(ResponseModel.Success(result))
-            } ?: emit(ResponseModel.Failure(msg = "Error adding value to Database"))
+                emit(ResponseModel.ResponseWithData.Success(result))
+            } ?: emit(ResponseModel.ResponseWithData.Failure(error = "Error adding value to Database"))
 
         }.catch {
-            emit(ResponseModel.Failure(msg = it.message.toString()))
+            emit(ResponseModel.ResponseWithData.Failure(error = it.message.toString()))
         }
     }
 
-    override suspend fun getUserInfo(uid: String): ResponseModel<UserModel.User> {
+    override suspend fun getUserInfo(uid: String): ResponseModel.ResponseWithData<UserModel.User> {
         return try {
             val firestoreDb = Firebase.firestore
             val userSnapshot = firestoreDb.collection("users").document(uid).get().await()
@@ -63,23 +63,23 @@ class AuthRepositoryImpl @Inject constructor(
                         userData["email"] as String,
                         userData["name"] as String,
                     )
-                    ResponseModel.Success(user)
-                } ?: ResponseModel.Failure(msg = "Failed to convert document to User")
+                    ResponseModel.ResponseWithData.Success(user)
+                } ?: ResponseModel.ResponseWithData.Failure(error = "Failed to convert document to User")
             } else {
-                ResponseModel.Failure(msg = "User document does not exist")
+                ResponseModel.ResponseWithData.Failure(error = "User document does not exist")
             }
         } catch (e: Exception) {
-            ResponseModel.Failure(msg = e.message.toString())
+            ResponseModel.ResponseWithData.Failure(error = e.message.toString())
         }
     }
 
-    override fun sendPasswordResetEmail(email: String): Flow<ResponseModel<Boolean>> {
+    override fun sendPasswordResetEmail(email: String): Flow<ResponseModel.ResponseWithData<Boolean>> {
         return flow {
-            emit(ResponseModel.Loading())
+            emit(ResponseModel.ResponseWithData.Loading())
             val result = firebaseAuth.sendPasswordResetEmail(email).await()
-            emit(ResponseModel.Success(true))
+            emit(ResponseModel.ResponseWithData.Success(true))
         }.catch {
-            emit(ResponseModel.Failure(data = null, msg = it.message.toString()))
+            emit(ResponseModel.ResponseWithData.Failure(data = null, error = it.message.toString()))
         }
     }
 

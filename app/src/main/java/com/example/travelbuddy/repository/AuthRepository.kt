@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.Flow
 interface AuthRepository {
 
     var user: FirebaseUser?
-    fun login(email: String, password: String): Flow<ResponseModel<AuthResult>>
-    fun signup(name: String, email: String, password: String): Flow<ResponseModel<AuthResult>>
+    fun login(email: String, password: String): Flow<ResponseModel.ResponseWithData<AuthResult>>
+    fun signup(name: String, email: String, password: String): Flow<ResponseModel.ResponseWithData<AuthResult>>
 
-    fun sendPasswordResetEmail(email: String): Flow<ResponseModel<Boolean>>
-    suspend fun getUserInfo(uid: String): ResponseModel<UserModel.User>
+    fun sendPasswordResetEmail(email: String): Flow<ResponseModel.ResponseWithData<Boolean>>
+    suspend fun getUserInfo(uid: String): ResponseModel.ResponseWithData<UserModel.User>
     fun signOut()
 }

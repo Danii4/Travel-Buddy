@@ -27,13 +27,13 @@ class LogInViewModel @Inject constructor(
         _logInState.send(LoginState(loading = true))
         repo.login(email, password).collect {
             when(it) {
-                is ResponseModel.Failure -> _logInState.send(
-                    LoginState(error = it.msg.toString(), loading = false, success = null)
+                is ResponseModel.ResponseWithData.Failure -> _logInState.send(
+                    LoginState(error = it.error.toString(), loading = false, success = null)
                 )
-                is ResponseModel.Loading -> _logInState.send(
+                is ResponseModel.ResponseWithData.Loading -> _logInState.send(
                     LoginState(error = null, loading = true, success = null)
                 )
-                is ResponseModel.Success -> _logInState.send(
+                is ResponseModel.ResponseWithData.Success -> _logInState.send(
                     LoginState(error = null, loading = false, success = "Log-in Successfully")
                 )
             }
