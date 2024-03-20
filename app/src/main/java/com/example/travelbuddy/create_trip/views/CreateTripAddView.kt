@@ -51,11 +51,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.core.util.toRange
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.create_trip.CreateTripAddViewModel
 import com.example.travelbuddy.data.model.DestinationModel
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
 import com.example.travelbuddy.create_trip.model.DestinationPageModel
+import com.example.travelbuddy.data.DestinationRepositoryImpl
 
 
 @Composable
@@ -118,6 +121,7 @@ fun GenerateDestinationView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
+    val viewModel = hiltViewModel<CreateTripAddViewModel>()
     var destBarText by remember {
         mutableStateOf("")
     }
@@ -332,6 +336,7 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                         startDate = selectedRange.value.lower,
                                         endDate = selectedRange.value.upper
                                     )
+                                    viewModel.submitDestination(newDestination)
                                     destList.destinationList.add(newDestination)
                                     destBarText = ""
                                 }
