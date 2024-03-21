@@ -83,6 +83,7 @@ dependencies {
 
     //Hilt
     implementation("com.google.dagger:hilt-android:2.44")
+    implementation("com.google.android.engage:engage-core:1.4.0")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
 
@@ -127,6 +128,8 @@ dependencies {
     implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
     // Expenses
     implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-svg:2.0.0")
+
     implementation("androidx.compose.material:material-icons-extended:1.6.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     // Translation

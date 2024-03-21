@@ -1,8 +1,8 @@
 package com.example.travelbuddy.unit_conversion.views
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -30,9 +30,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,6 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.SvgDecoder
+import coil.request.ImageRequest
+import coil.size.Size
 import com.example.travelbuddy.unit_conversion.model.ScreenColor
 import com.example.travelbuddy.unit_conversion.model.ScreenData
 import com.example.travelbuddy.unit_conversion.model.getColors
@@ -53,11 +56,13 @@ fun CustomDropdownSelector(
     selectedItem: String,
     bgColor: Color,
     scrollBarBgColor: Color,
-    items: List<String>,
+    itemText: List<String>,
+    itemIcon: List<String?>,
     onSelect: (item: String) -> Unit,
     hideDropdown: () -> Unit,
 ){
     val scrollState = rememberScrollState()
+
     Row(modifier = Modifier.fillMaxSize().background(bgColor)) {
         if (isVisible) {
             Popup(
@@ -81,8 +86,17 @@ fun CustomDropdownSelector(
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.background(scrollBarBgColor).padding(20.dp)
                     ){
-                    items.onEachIndexed { index, item ->
-                        val bgColor = if(item == selectedItem) Color.White else bgColor
+                    itemText.onEachIndexed { index, textLabel ->
+
+                        val painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .decoderFactory(SvgDecoder.Factory())
+                                .data(itemIcon[index])
+                                .size(Size(height=20, width=10))
+                                .build()
+                        )
+
+                        val bgColor = if(textLabel == selectedItem) Color.White else bgColor
                         if (index != 0) {
                             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
                         }
@@ -93,12 +107,19 @@ fun CustomDropdownSelector(
                                 .background(bgColor)
                                 .padding(vertical = 20.dp, horizontal = 5.dp)
                                 .fillMaxWidth()
-                                .clickable { onSelect(items[index]) },
+                                .clickable { onSelect(itemText[index]) },
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
+                            itemIcon[index]?.let{
+                                Image(
+                                    painter = painter,
+                                    contentDescription = textLabel,
+                                    modifier = Modifier.size(40.dp).padding(horizontal = 10.dp)
+                                )
+                            }
                             Text(
-                                text = item,
+                                text = textLabel,
                                 textAlign = TextAlign.Center,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Medium,
@@ -116,6 +137,7 @@ fun CustomDropdownSelector(
 fun ConversionRowItem(
     amount: String,
     label: String,
+    icon: String?,
     buttonColor: Color,
     textColor: Color,
     updateAmount: (String) -> Unit,
@@ -125,6 +147,14 @@ fun ConversionRowItem(
     val textFieldDisp = if(amount.toDoubleOrNull() != null){
         deciFormat.format(amount.toDouble())
     } else { amount }
+
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .decoderFactory(SvgDecoder.Factory())
+            .data(icon)
+            .size(Size(height=20, width=10))
+            .build()
+    )
 
     Column(
         modifier = Modifier
@@ -160,6 +190,13 @@ fun ConversionRowItem(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
             ) {
+            icon?.let{
+                Image(
+                    painter = painter,
+                    contentDescription = label,
+                    modifier = Modifier.size(40.dp).padding(horizontal = 10.dp)
+                )
+            }
             Text(
                 text = label,
                 fontSize = 24.sp,
@@ -186,15 +223,20 @@ fun ConversionScreen(
     Surface {
         var isDropdownInput = remember { mutableStateOf(false) }
         var selectedItem = remember { mutableStateOf("") }
-        var tempStrings: List<String> = data.listOfData.map { it.label }
         var isDropdownVisible = remember { mutableStateOf(false) }
 
         // Pressing back should go to selection page.
         BackHandler(enabled = true) {  onBackPress() }
 
+        val itemText: List<String> = data.listOfData.map { it.label }
+        val itemIcon: List<String?> = data.listOfData.map {
+            (it as? ScreenData.ConvValue.Country)?.icon
+        }
+
         CustomDropdownSelector(
             selectedItem = selectedItem.value,
-            items = tempStrings,
+            itemText = itemText,
+            itemIcon = itemIcon,
             bgColor = screenColors.fgColor,
             scrollBarBgColor = screenColors.bgbgColor,
             onSelect = { selected ->
@@ -204,7 +246,6 @@ fun ConversionScreen(
             isVisible = isDropdownVisible.value,
             hideDropdown = { isDropdownVisible.value = false }
         )
-
         Column(
             modifier = Modifier
                 .padding(15.dp)
@@ -230,6 +271,7 @@ fun ConversionScreen(
                 ConversionRowItem(
                     amount = data.inputAmount,
                     label = data.inputData.label,
+                    icon = (data.inputData as? ScreenData.ConvValue.Country)?.icon,
                     buttonColor = screenColors.bgColor,
                     textColor = screenColors.textColor,
                     updateAmount = updateInputAmount,
@@ -243,6 +285,7 @@ fun ConversionScreen(
                 ConversionRowItem(
                     amount = data.outputAmount,
                     label = data.outputData.label,
+                    icon = (data.outputData as? ScreenData.ConvValue.Country)?.icon,
                     buttonColor = screenColors.bgColor,
                     textColor = screenColors.textColor,
                     updateAmount = updateOutputAmount,
