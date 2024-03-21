@@ -7,16 +7,6 @@ import com.example.travelbuddy.unit_conversion.model.ScreenData.ConvValue.Defaul
 import com.example.travelbuddy.unit_conversion.model.ScreenType
 
 
-fun ScreenType.getConversionData(): ScreenData.ConversionData {
-    return when(this) {
-        ScreenType.DEFAULT -> getDefaultConversionData()
-        ScreenType.CURRENCY -> getDefaultConversionData()
-        ScreenType.LENGTHS ->  getLengthConversionData()
-        ScreenType.TEMPERATURE -> getTemperatureConversionData()
-        ScreenType.WEIGHT -> getWeightConversionData()
-        ScreenType.VOLUME -> getVolumeConversionData()
-    }
-}
 fun getDefaultConversionData(): ScreenData.ConversionData {
     return ScreenData.ConversionData(
         screenType = ScreenType.LENGTHS,
