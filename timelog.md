@@ -1,24 +1,29 @@
-| Date       | Dania | Rachel | Fahad | Abbiram | Suvasan | Pranavan | Task                                                                                                          |
-|------------|-------|--------|-------|---------|---------|----------|---------------------------------------------------------------------------------------------------------------|
-| 2024/01/22 | 3     | 3      | 3     | 3       | 3       | 3        | Discussed D1,Setup Github                                                                                     |
-| 2024/01/24 | 3     | 3      | 1     |         |         |          | Worked on D1 Proposal Document                                                                                |
-| 2024/01/29 | 3     | 3      | 2     | 3       | 3       | 3        | Finished D1 Proposal Document                                                                                 |
-| 2024/02/06 | 1     | 3      | 1     | 0.5     |         | 1        | Worked on D2 Buddy Team Evaluation                                                                            |
-| 2024/02/26 | 1     | 1      | 1     | 1       |         | 1        | Discussed features, brainstormed work items and divided tasks                                                 |
-| 2024/02/27 |       | 1      | 2     | 1       |         | 1        | Created structure with MVVM design pattern for features                                                       |
-| 2024/02/29 |       | 5      |       |         |         |          | Created features for home screen and design home screen components, finished d3 report for home screen section |
-| 2024/03/01 |       |        |       |         |         | 3        | Initializated trip add screen layout UI                                                                       |
-| 2024/03/01 |       |        |       | 5       |         |          | Create Expense View page and add Budget progress                                                              |
-| 2024/03/01 |       |        |       |         |         | 4        | Created date picker and search bar components to search and add a destination                                 |
-| 2024/03/02 |       |        |       |         |         | 3        | Created a data model for destinations and created card layout for each destination                            |
-| 2024/03/02 |       |        | 6     |         |         | 3        | Setup Conversion Components for all conversions apart from currency                                           |
-| 2024/03/02 | 5     |        |       |         |         |          | Created prototype for Language Translation Feature: UI                                                        |
-| 2024/03/02 |       |        |       | 4       |         |          | Add list of expenses and mock data                                                                            |
-| 2024/03/03 | 6     |        |       |         |         |          | Created prototype for Language Translation Feature: Translating Feature                                       |
-| 2024/03/03 |       | 5      |       |         |         |          | Worked on home screen and authentication features                                                             |
-| 2024/03/03 |       |        |       | 3       |         |          | Create Add Expense View                                                                                       |
-| 2024/03/03 |       |        |       |         |         | 2        | Improved add screen UI by including a bottomModal view and refactored/merged my commits                       |
-| 2024/03/11 |       | 5      |       |         |         |          | Worked on D4 Architectural Style Analysis
-| 2024/03/19 |       | 2      |       |         |         |          | Worked on D4 Architectural Style Analysis
-| 2024/03/20 |       | 2      |       |         |         |          | work on home page brainstorm and ideas
+| Date       | Dania | Rachel | Fahad | Abbiram | Suvasan | Pranavan | Task                                                                                                           |
+|------------|-------|------|-------|---------|---------|----------|----------------------------------------------------------------------------------------------------------------|
+| 2024/01/22 | 3     | 3    | 3     | 3       | 3       | 3        | Discussed D1,Setup Github                                                                                      |
+| 2024/01/24 | 3     | 3    | 1     |         |         |          | Worked on D1 Proposal Document                                                                                 |
+| 2024/01/29 | 3     | 3    | 2     | 3       | 3       | 3        | Finished D1 Proposal Document                                                                                  |
+| 2024/02/06 | 1     | 3    | 1     | 0.5     |         | 1        | Worked on D2 Buddy Team Evaluation                                                                             |
+| 2024/02/26 | 1     | 1    | 1     | 1       |         | 1        | Discussed features, brainstormed work items and divided tasks                                                  |
+| 2024/02/27 |       | 1    | 2     | 1       |         | 1        | Created structure with MVVM design pattern for features                                                        |
+| 2024/02/29 |       | 5    |       |         |         |          | Created features for home screen and design home screen components, finished d3 report for home screen section |
+| 2024/03/01 |       |      |       |         |         | 3        | Initializated trip add screen layout UI                                                                        |
+| 2024/03/01 |       |      |       | 5       |         |          | Create Expense View page and add Budget progress                                                               |
+| 2024/03/01 |       |      |       |         |         | 4        | Created date picker and search bar components to search and add a destination                                  |
+| 2024/03/02 |       |      |       |         |         | 3        | Created a data model for destinations and created card layout for each destination                             |
+| 2024/03/02 |       |      | 6     |         |         | 3        | Setup Conversion Components for all conversions apart from currency                                            |
+| 2024/03/02 | 5     |      |       |         |         |          | Created prototype for Language Translation Feature: UI                                                         |
+| 2024/03/02 |       |      |       | 4       |         |          | Add list of expenses and mock data                                                                             |
+| 2024/03/03 | 6     |      |       |         |         |          | Created prototype for Language Translation Feature: Translating Feature                                        |
+| 2024/03/03 |       | 5    |       |         |         |          | Worked on home screen and authentication features                                                              |
+| 2024/03/03 |       |      |       | 3       |         |          | Create Add Expense View                                                                                        |
+| 2024/03/03 |       |      |       |         |         | 2        | Improved add screen UI by including a bottomModal view and refactored/merged my commits                        |
+| 2024/03/11 |       | 5    |       |         |         |          | Worked on D4 Architectural Style Analysis                                                                      |
+| 2024/03/19 |       | 2    |       |         |         |          | Worked on D4 Architectural Style Analysis                                                                      |
+| 2024/03/19 |       |      | 3     |         |         |          | Work on D4 Architectural Style Analysis                                                                        |                    
+| 2024/03/19 |       |      | 4     |         |         |          | Implement Repository Pattern throughout app adding in Hilt for Dependency Injection                            |                                                                      
+| 2024/03/20 |       |      | 3     |         |         |          | Implement Firebaase Auth                                                                                       |                                                                               
+| 2024/03/21 |       | 2    |       |         |         |          | work on home page brainstorm and ideas                                                                         |
+| 2024/03/20 |       |      | 3     |         |         |          | Implement Currency Conversion Screen accessing two APIs to get conversion rate and contry flags                |                                                                               
+
 
