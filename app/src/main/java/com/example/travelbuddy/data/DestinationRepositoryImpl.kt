@@ -31,19 +31,5 @@ class DestinationRepositoryImpl @Inject constructor(
                 ResponseModel.Response.Failure(e.message ?: "Error adding destination")
             }
         }
-//        return try {
-//            val destinationLoad = hashMapOf(
-//                "name" to destination.name,
-//                "startDate" to destination.startDate,
-//                "endDate" to destination.endDate,
-//            )
-//            val firestoreDb = Firebase.firestore
-//            firestoreDb.collection("destinations").add(
-//                destinationLoad
-//            ).await()
-//            ResponseModel.Response.Success
-//        } catch (e: Exception){
-//            ResponseModel.Response.Failure(e.message ?: "Error adding destination")
-//        }
     }
 }
