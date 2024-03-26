@@ -35,7 +35,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesDestinationRepositoryImpl(): DestinationRepository {
-        return DestinationRepositoryImpl()
+    fun providesDestinationRepositoryImpl(
+        authRepository: AuthRepository
+    ): DestinationRepository {
+        return DestinationRepositoryImpl(
+            authRepository = authRepository
+        )
     }
 }
