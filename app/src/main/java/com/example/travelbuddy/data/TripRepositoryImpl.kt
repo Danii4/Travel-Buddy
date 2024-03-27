@@ -1,16 +1,15 @@
 package com.example.travelbuddy.data
 
-import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.repository.TripRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-class TripRepository(
-//    private val AuthRepositoryImpl: AuthRepositoryImpl
-) {
+class TripRepositoryImpl(
+) : TripRepository{
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    suspend fun addTrip(trip: TripModel.Trip) : ResponseModel.Response {
+    override suspend fun addTrip(trip: TripModel.Trip) : ResponseModel.Response {
         return try {
             // add trip to Trip table
             val colRef = db.collection("trip").add(
@@ -22,11 +21,6 @@ class TripRepository(
                     "destinationList" to trip.destinationList
                 )
             ).await()
-
-//            // add Trip ID to current User entry
-//            userRepository.getUserId()?.let {
-//                db.collection("user")
-//            }
 
             ResponseModel.Response.Success
         }
