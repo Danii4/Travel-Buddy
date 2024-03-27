@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.travelbuddy.components.NavigationDrawerWrapper
-import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.firebaseauth.screens.InitialAuthScreen
@@ -45,9 +44,6 @@ fun Navigation(
         }
         composable(Screen.Trips.route) {
             NavigationDrawerWrapper (navController = navController, children = { TripsView(navController = navController) }, itemIndex = Screen.Trips.drawerItem)
-        }
-        composable(Screen.TripAdd.route) {
-            NavigationDrawerWrapper (navController = navController, children = { CreateTripAddView() }, itemIndex = Screen.TripAdd.drawerItem)
         }
         composable(Screen.UnitConversion.route) {
             NavigationDrawerWrapper (navController = navController, children = { UnitConversionScreen() }, itemIndex = Screen.UnitConversion.drawerItem)
