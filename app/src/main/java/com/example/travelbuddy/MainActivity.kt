@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.travelbuddy.ui.theme.TravelBuddyTheme
 import com.example.travelbuddy.util.ImageType
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 data class DrawerItem(
     val label: String,
@@ -25,6 +26,8 @@ data class DrawerItem(
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var navWrapper: NavWrapper
 
     private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +46,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+                    navWrapper.setNavController(navController)
+
                     Navigation(
                         loggedIn = loggedIn,
                         modifier = Modifier.padding(),

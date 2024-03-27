@@ -15,4 +15,6 @@ interface AuthRepository {
     fun sendPasswordResetEmail(email: String): Flow<ResponseModel.ResponseWithData<Boolean>>
     suspend fun getUserInfo(uid: String): ResponseModel.ResponseWithData<UserModel.User>
     fun signOut()
+
+    fun getUserId(): String?
 }

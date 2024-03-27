@@ -1,6 +1,5 @@
 package com.example.travelbuddy.unit_conversion.model
 
-import android.graphics.drawable.Icon
 import androidx.compose.ui.graphics.Color
 import com.example.travelbuddy.ui.theme.DarkBlue
 import com.example.travelbuddy.ui.theme.DarkGreen
@@ -18,7 +17,6 @@ import com.example.travelbuddy.ui.theme.LightOrange
 import com.example.travelbuddy.ui.theme.LightPurple
 import com.example.travelbuddy.ui.theme.LightRed
 import com.example.travelbuddy.unit_conversion.repository.getDefaultConversionData
-import com.example.travelbuddy.unit_conversion.repository.getTemperatureConversionData
 
 enum class ScreenType {
     DEFAULT,
@@ -81,7 +79,7 @@ sealed interface ScreenData {
         data class Country(
             override val conv: ConvMethod,
             override val label: String,
-            val icon: Icon,
+            val icon: String?,
         ): ConvValue
     }
 

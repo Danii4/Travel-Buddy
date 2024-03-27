@@ -2,29 +2,75 @@ package com.example.travelbuddy.unit_conversion
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.travelbuddy.data.model.CurrencyCountryResponse
+import com.example.travelbuddy.data.model.ResponseModel
+import com.example.travelbuddy.data.model.getFlagUrlByCountryCode
+import com.example.travelbuddy.repository.CurrencyExchangeRepository
 import com.example.travelbuddy.unit_conversion.model.ScreenData
 import com.example.travelbuddy.unit_conversion.model.ScreenType
 import com.example.travelbuddy.unit_conversion.model.UnitConversionUiState
 import com.example.travelbuddy.unit_conversion.model.UpdateType
-import com.example.travelbuddy.unit_conversion.repository.getConversionData
+import com.example.travelbuddy.unit_conversion.repository.getDefaultConversionData
+import com.example.travelbuddy.unit_conversion.repository.getLengthConversionData
+import com.example.travelbuddy.unit_conversion.repository.getTemperatureConversionData
+import com.example.travelbuddy.unit_conversion.repository.getVolumeConversionData
+import com.example.travelbuddy.unit_conversion.repository.getWeightConversionData
+import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UnitConversionViewModel : ViewModel() {
+
+data class CurrencyExchangeState(
+    val loading: Boolean = false,
+    val success: String? = null,
+    val error: String? = null
+)
+
+@HiltViewModel
+class UnitConversionViewModel @Inject constructor(
+    private val repo: CurrencyExchangeRepository
+): ViewModel() {
 
     // Expose screen UI state
     private val _uiState = MutableStateFlow(UnitConversionUiState())
     val uiState: StateFlow<UnitConversionUiState> = _uiState.asStateFlow()
 
+    private val _currencyExchangeData = MutableStateFlow<ScreenData.ConversionData?>(null)
+    private val currencyExchangeData = _currencyExchangeData.asStateFlow()
+
+
+    fun getConversionData(screenType: ScreenType): ScreenData {
+        return when (screenType) {
+            ScreenType.DEFAULT -> getDefaultConversionData()
+            ScreenType.CURRENCY -> getDefaultConversionData()
+            ScreenType.LENGTHS -> getLengthConversionData()
+            ScreenType.TEMPERATURE -> getTemperatureConversionData()
+            ScreenType.WEIGHT -> getWeightConversionData()
+            ScreenType.VOLUME -> getVolumeConversionData()
+        }
+    }
+
+
     fun clickEvent(screenType: ScreenType) {
-        _uiState.update { currentState ->
-            // Over here make fetch request to get data for that screenType:
-            currentState.copy(
-                screenType = screenType,
-                screenData = screenType.getConversionData(),
-            )
+        when(screenType) {
+            ScreenType.CURRENCY -> {
+                viewModelScope.launch { fetchCurrencyExchangeData() }
+            }
+            else -> {
+                // Immediately available data
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        screenType = screenType,
+                        screenData = getConversionData(screenType),
+                    )
+                }
+            }
         }
     }
 
@@ -78,6 +124,62 @@ class UnitConversionViewModel : ViewModel() {
         }
     }
 
+    private fun fetchCurrencyExchangeData() = viewModelScope.launch {
+        repo.getCountryFlags().collect { countryFlags ->
+            repo.getExchangeRates().collect {
+                when (it) {
+                    is ResponseModel.ResponseWithData.Failure -> {
+                        Log.d("ERROR", "error fetching exchange rates")
+                    }
+                    is ResponseModel.ResponseWithData.Loading -> {
+                        Log.d("LOADING", "waiting to fetch exchange rates")
+                    }
+                    is ResponseModel.ResponseWithData.Success -> {
+
+                        val countryData: List<CurrencyCountryResponse>? =
+                            if(countryFlags is ResponseModel.ResponseWithData.Success) {
+                                countryFlags.data
+                            } else {
+                                Log.d("ERROR GETTING COUNTRY FLAGS", countryFlags.error.toString())
+                                null
+                            }
+
+                        it.data?.let { currencyData ->
+
+                            Log.d("SUCCESS", "fetching exchange rate data")
+                            Log.d("DATA COUNTRY", countryData.toString())
+
+                            val listData: List<ScreenData.ConvValue> =
+                                it.data.conversion_rates?.map { (label, conv) ->
+                                    ScreenData.ConvValue.Country(
+                                        conv = ScreenData.ConvMethod.Equiv(1 / conv),
+                                        label = label,
+                                        icon = getFlagUrlByCountryCode(label, countryData) ?: null
+                                    )
+                                }.orEmpty()
+
+                            val data = ScreenData.ConversionData(
+                                screenType = ScreenType.CURRENCY,
+                                inputAmount = "0",
+                                outputAmount = "0",
+                                inputData = listData[1],
+                                outputData = listData[2],
+                                listOfData = listData,
+                            )
+                            Log.d("DEBUG-FAHAD", Gson().toJson(listData))
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    screenType = ScreenType.CURRENCY,
+                                    screenData = data,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun updateType(updateType: UpdateType, newType: String) {
         _uiState.update { currentState ->
             when(currentState.screenData) {
@@ -98,7 +200,6 @@ class UnitConversionViewModel : ViewModel() {
                             updateType = updateType,
                             convValue =  newOutputData
                         )
-                        Log.d("FAHAD", newInputAmount)
                     } else {
                         newInputAmount = currentState.screenData.inputAmount
                         newInputData = currentState.screenData.inputData

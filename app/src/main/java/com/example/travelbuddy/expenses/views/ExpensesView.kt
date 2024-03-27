@@ -50,9 +50,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.expenses.ExpensesViewModel
 
 
 @Composable
@@ -141,15 +143,13 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
 fun ExpensesView(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    navController: NavController,
-    trip: TripModel.Trip,
 ) {
-//    val viewModel = ExpensesViewModel()
+    val viewModel = hiltViewModel<ExpensesViewModel>()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = { viewModel.navigateToAddEditExpense() },
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
@@ -161,11 +161,11 @@ fun ExpensesView(
                 .padding(paddingValues)
         ) {
             item {
-                Text(
-                    text = trip.name,
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
-
-                )
+//                Text(
+//                    text = trip.name,
+//                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
+//
+//                )
                 Spacer(modifier = Modifier.height(10.dp))
                 Column(
                     modifier = Modifier
@@ -181,37 +181,37 @@ fun ExpensesView(
                         .padding(4.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    trip.budgets.forEach { budget ->
-                        val expenseType = budget.key
-                        val budgetAmount = budget.value
-                        val budgetTotalExpense = trip.totalExpenses[expenseType] ?: 0.0
-                        val budgetProgress: Float =
-                            (budgetTotalExpense.toFloat() / budgetAmount).coerceIn(0f, 1f)
-//                        val budgetColor: Color = when {
-//                            budgetProgress >= 0.75 -> Color.Red
-//                            budgetProgress >= 0.50 -> Color.Yellow
-//                            else -> Color.Green
-//                        }
+//                    trip.budgets.forEach { budget ->
+//                        val expenseType = budget.key
+//                        val budgetAmount = budget.value
+//                        val budgetTotalExpense = trip.totalExpenses[expenseType] ?: 0.0
+//                        val budgetProgress: Float =
+//                            (budgetTotalExpense.toFloat() / budgetAmount).coerceIn(0f, 1f)
+////                        val budgetColor: Color = when {
+////                            budgetProgress >= 0.75 -> Color.Red
+////                            budgetProgress >= 0.50 -> Color.Yellow
+////                            else -> Color.Green
+////                        }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Text(
-                                text = expenseType.toString(),
-                                overflow = TextOverflow.Ellipsis,
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Left
-                            )
-                            Spacer(Modifier.weight(0.9f))
-                            Text(
-                                text = "\$${
-                                    "%.2f".format(
-                                        budgetTotalExpense
-                                    )
-                                } / \$${"%.2f".format(budgetAmount)}",
-                                overflow = TextOverflow.Ellipsis,
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Right
-                            )
+//                            Text(
+//                                text = expenseType.toString(),
+//                                overflow = TextOverflow.Ellipsis,
+//                                fontSize = 14.sp,
+//                                textAlign = TextAlign.Left
+//                            )
+//                            Spacer(Modifier.weight(0.9f))
+//                            Text(
+//                                text = "\$${
+//                                    "%.2f".format(
+//                                        budgetTotalExpense
+//                                    )
+//                                } / \$${"%.2f".format(budgetAmount)}",
+//                                overflow = TextOverflow.Ellipsis,
+//                                fontSize = 14.sp,
+//                                textAlign = TextAlign.Right
+//                            )
                         }
                         var progress by remember { mutableFloatStateOf(0f) }
                         val progressAnimDuration = 1500
@@ -231,15 +231,15 @@ fun ExpensesView(
                                 .padding(end = 16.dp),
                             color = MaterialTheme.colorScheme.secondary
                         )
-                        LaunchedEffect(budgetProgress) {
-                            progress = budgetProgress
-                        }
+//                        LaunchedEffect(budgetProgress) {
+//                            progress = budgetProgress
+//                        }
                     }
                 }
             }
-            items(trip.expensesList) { expense ->
-                ExpenseList(expense = expense)
-            }
+//            items(trip.expensesList) { expense ->
+//                ExpenseList(expense = expense)
+//            }
         }
     }
-}
+//}

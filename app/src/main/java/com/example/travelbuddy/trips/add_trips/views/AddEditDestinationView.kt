@@ -1,4 +1,4 @@
-package com.example.travelbuddy.create_trip.views
+package com.example.travelbuddy.trips.add_trips.views
 
 import android.annotation.SuppressLint
 import android.util.Range
@@ -32,7 +32,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,16 +46,17 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.core.util.toRange
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.data.model.DestinationModel
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
-
 
 @Composable
 fun GenerateDestinationView(
@@ -117,7 +117,10 @@ fun GenerateDestinationView(
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
+fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
+    val viewModel = hiltViewModel<AddTripsViewModel>()
+    val state by viewModel.state.collectAsState()
+
     var destBarText by remember {
         mutableStateOf("")
     }
@@ -125,42 +128,13 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         mutableStateOf(false)
     }
 
-    val dest1 = DestinationModel.Destination(
-        name = "Sintra",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-    val dest2 = DestinationModel.Destination(
-        name = "Lisbon",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-    val dest3 = DestinationModel.Destination(
-        name = "Porto",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-    val dest4 = DestinationModel.Destination(
-        name = "Madeira",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-
-    val destList = remember {
-        mutableStateListOf( dest1, dest2, dest3, dest4)
-    }
-
-    fun deleteDestination(destination: DestinationModel.Destination) {
-        destList.remove(destination)
-    }
-
     LazyColumn(
         modifier = Modifier.padding(innerPadding),
         userScrollEnabled = true
     ) {
-        items(destList) { destination ->
+        items(state.destinationList) { destination ->
             GenerateDestinationView(destination = destination) {
-                deleteDestination(destination)
+                viewModel.deleteDestination(destination)
             }
         }
     }
@@ -242,7 +216,7 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                     shape = RoundedCornerShape(15.dp),
                     windowInsets = WindowInsets(top = (-7).dp)
                 ) {
-                    destList.forEach {
+                    state.destinationList.forEach {
                         Row(modifier = Modifier.padding(all = 14.dp)) {
                             Icon(
                                 modifier = Modifier.padding(end = 10.dp),
@@ -299,7 +273,9 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
 
                     // Cancel Destination Button
                     Box(
-                        Modifier.weight(1f).padding(end = 8.dp)
+                        Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     ) {
                         Button(
                             onClick = {
@@ -317,7 +293,9 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
 
                     // Add Destination Button
                     Box(
-                        Modifier.weight(1f).padding(start = 8.dp),
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 8.dp),
                     ) {
                         Button(
                             onClick = {
@@ -328,7 +306,7 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                         startDate = selectedRange.value.lower,
                                         endDate = selectedRange.value.upper
                                     )
-                                    destList.add(newDestination)
+                                    viewModel.addDestination(newDestination)
                                     destBarText = ""
                                 }
                             },
@@ -346,14 +324,3 @@ fun CreateTripAddView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         }
     }
 }
-
-//// Trip Notes
-//// From: https://developer.android.com/jetpack/compose/text/user-input
-//TextField(
-//value = destNote,
-//onValueChange = { destNote = it },
-//label = { Text("Enter Notes") },
-//maxLines = 2,
-//textStyle = TextStyle(color = Color.Black,),
-//modifier = Modifier.padding(20.dp)
-//)

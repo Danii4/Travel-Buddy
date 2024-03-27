@@ -19,12 +19,14 @@ fun HomeScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize().padding(20.dp)
         ){
+            //the title and welcome message for our app name
             Text(
                 modifier = Modifier.padding(20.dp),
                 text = "Welcome to TravelBuddy",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Medium
             )
+            //provides the user with the terms and conditions of our app, to improve trust and transparency
             Text(
                 modifier = Modifier.padding(20.dp),
                 text = "Terms and Conditions of Use: by continuing to use our platform you agree to the privacy policies listed below.",

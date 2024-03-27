@@ -50,11 +50,10 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AddEditExpenseView(
-    navController: NavController,
-    trip: TripModel.Trip,
-    viewModel: AddEditExpenseViewModel = hiltViewModel()
 ) {
-    var state = viewModel.state.collectAsState(initial = null)
+    val viewModel = hiltViewModel<AddEditExpenseViewModel>()
+
+//    var state = viewModel.state.collectAsState(initial = null)
 
     Scaffold(
         topBar = {
@@ -228,9 +227,8 @@ fun AddEditExpenseView(
             ) {
                 Button(
                     onClick = {
-//                        viewModel.navigatetoExpenses(navController)
+                        viewModel.navigateToExpenses()
                     },
-//                    modifier = Modifier.
                 ) {
                     Text(text = "Cancel")
                 }
@@ -243,17 +241,13 @@ fun AddEditExpenseView(
                             amount = expenseAmount,
                             date = expenseDate
                         )
-                        trip.addExpense(newExpense)
-//                        viewModel.navigatetoExpenses(navController)
+                        viewModel.submitExpense(newExpense)
+                        viewModel.navigateToExpenses()
                     },
-//                    modifier = Modifier.
                 ) {
                     Text(text = "Save")
                 }
             }
-            // Button to save the expense
-
-
             Spacer(modifier = Modifier.height(20.dp))
             Divider(modifier = Modifier.fillMaxWidth())
         }
