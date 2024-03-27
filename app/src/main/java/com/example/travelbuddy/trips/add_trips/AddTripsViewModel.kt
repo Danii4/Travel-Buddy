@@ -2,9 +2,10 @@ package com.example.travelbuddy.trips.add_trips
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
+import com.example.travelbuddy.NavWrapper
 import com.example.travelbuddy.Screen
 import com.example.travelbuddy.data.DestinationRepositoryImpl
+import com.example.travelbuddy.data.TripRepositoryImpl
 import com.example.travelbuddy.data.model.DestinationModel
 import com.example.travelbuddy.trips.add_trips.model.AddTripsPageModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTripsViewModel @Inject constructor(
-    private val destinationRepositoryImpl: DestinationRepositoryImpl
+    private val destinationRepositoryImpl: DestinationRepositoryImpl,
+    private val tripRepositoryImpl: TripRepositoryImpl,
+    private val navWrapper: NavWrapper
 ) : ViewModel() {
     private val _state = MutableStateFlow(AddTripsPageModel.AddTripViewState())
     val state: StateFlow<AddTripsPageModel.AddTripViewState>
@@ -42,11 +45,6 @@ class AddTripsViewModel @Inject constructor(
 
 
     fun addDestination(destination: DestinationModel.Destination) {
-//        viewModelScope.launch {
-//            destinationRepositoryImpl.addDestination(
-//                destination
-//            )
-//        }
         destinationList.value += destination
     }
 
@@ -58,7 +56,22 @@ class AddTripsViewModel @Inject constructor(
         tripName.value = name
     }
 
-    fun navigateToCreateTripAdd(navController: NavController) {
-        navController.navigate(Screen.TripAdd.route)
+    fun submitDestination(){
+        viewModelScope.launch {
+            val destIDList = mutableListOf<String>()
+            destinationList.value.forEach { destination ->
+                val resp = destinationRepositoryImpl.addDestination(destination)
+                destIDList.add(resp?.data.toString())
+            }
+            tripRepositoryImpl.addTrip(
+                tripName= tripName.value,
+                destIDList = destIDList,
+            )
+
+        }
+    }
+
+    fun navigateToTrips() {
+        navWrapper.getNavController().navigate(Screen.Trips.route)
     }
 }
