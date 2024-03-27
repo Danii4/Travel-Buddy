@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.travelbuddy.components.NavigationDrawerWrapper
 //import com.example.travelbuddy.data.Mock
-import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.firebaseauth.screens.InitialAuthScreen
