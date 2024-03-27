@@ -4,10 +4,10 @@ class TripModel {
     data class Trip(
         val id: String = "",
         val name: String = "",
-        var budgets: MutableMap<ExpenseModel.ExpenseType, Float>,
-        var totalExpenses: MutableMap<ExpenseModel.ExpenseType, Float>,
-        var expensesList: List<String>,
-        var destinationList: List<String>
+//        var budgets: MutableMap<ExpenseModel.ExpenseType, Float>,
+//        var totalExpenses: MutableMap<ExpenseModel.ExpenseType, Float>,
+//        var expensesList: List<String>,
+//        var destinationList: List<String>
     ) {
 //        fun addExpense(newExpense: ExpenseModel.Expense) {
 //            this.expensesList.add(newExpense)

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.navigation.NavController
+import com.example.travelbuddy.data.TripRepository
 import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.model.TripAddPageModel
 import kotlinx.coroutines.CoroutineScope
@@ -140,7 +141,7 @@ fun ModifiedRow(
                 modifier = Modifier
                     .padding(horizontal = 15.dp, vertical = 10.dp)
                     .clickable {
-                        TripsViewModel().navigateToTrips(navController)
+                        TripsViewModel(TripRepository()).navigateToTrips(navController)
                     }
             ) {
                 Text("Cancel")
@@ -173,7 +174,7 @@ fun ModifiedRow(
                 modifier = Modifier
                     .padding(horizontal = 15.dp, vertical = 10.dp)
                     .clickable {
-                        TripsViewModel().navigateToTrips(navController)
+                        TripsViewModel(TripRepository()).navigateToTrips(navController)
                     }
             ) {
                 Text("Done")
