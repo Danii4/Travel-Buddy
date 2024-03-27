@@ -27,4 +27,20 @@ class TripRepositoryImpl @Inject constructor() : TripRepository{
             return ResponseModel.Response.Failure(e.message?:"Error adding a trip. Please try again.")
         }
     }
+
+    override suspend fun getExpenseIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>> {
+        val tripRef = db.collection("trips").document(tripId)
+        return try {
+            val documentSnapshot  = tripRef.get().await()
+            if (documentSnapshot.exists()) {
+                val tripData = documentSnapshot.data?.get("expensesList") as MutableList<String>
+                ResponseModel.ResponseWithData.Success(tripData)
+            }
+            else {
+                ResponseModel.ResponseWithData.Failure(error = "Trip does not exist")
+            }
+        } catch (e: Exception) {
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting expense ids")
+        }
+    }
 }

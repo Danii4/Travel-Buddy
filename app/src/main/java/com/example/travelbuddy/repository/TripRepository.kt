@@ -5,4 +5,6 @@ import com.example.travelbuddy.data.model.TripModel
 
 interface TripRepository {
     suspend fun addTrip(tripName: String, destIDList: List<String>) : ResponseModel.Response
+
+    suspend fun getExpenseIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>>
 }

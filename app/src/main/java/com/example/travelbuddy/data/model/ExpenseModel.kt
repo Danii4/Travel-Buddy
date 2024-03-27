@@ -10,8 +10,7 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.travelbuddy.R
-import java.time.LocalDate
+import java.util.Date
 
 class ExpenseModel {
     enum class ExpenseType(val stringValue: String, val colour: Color?, val icon: ImageVector) {
@@ -42,8 +41,9 @@ class ExpenseModel {
         val id: String = "",
         val name: String = "",
         val type: ExpenseType,
-        val amount: Float,
-        val date: LocalDate
+        val amount: Double,
+        val date: Date
+//        val currency: Currency
     )
 
 }
