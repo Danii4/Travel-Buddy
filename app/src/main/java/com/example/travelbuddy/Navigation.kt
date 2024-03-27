@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.travelbuddy.components.NavigationDrawerWrapper
 //import com.example.travelbuddy.data.Mock
+import com.example.travelbuddy.create_trip.views.CreateTripAddView
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
 import com.example.travelbuddy.firebaseauth.screens.InitialAuthScreen
@@ -38,7 +39,7 @@ fun Navigation(
             NavigationDrawerWrapper(navController = navController, children = { HomeScreen() }, itemIndex = Screen.Home.drawerItem)
         }
         composable(Screen.Expenses.route) {
-            NavigationDrawerWrapper(navController = navController, children = {  ExpensesView(navController = navController)}, itemIndex = Screen.Expenses.drawerItem)
+            NavigationDrawerWrapper(navController = navController, children = {  ExpensesView()}, itemIndex = Screen.Expenses.drawerItem)
         }
         composable(Screen.LanguageTranslation.route) {
             NavigationDrawerWrapper(navController = navController, children = { TranslationScreen() }, itemIndex = Screen.LanguageTranslation.drawerItem)
@@ -50,8 +51,8 @@ fun Navigation(
             NavigationDrawerWrapper (navController = navController, children = { UnitConversionScreen() }, itemIndex = Screen.UnitConversion.drawerItem)
         }
         composable(Screen.AddEditExpense.route) {
-            NavigationDrawerWrapper (navController = navController, children = { AddEditExpenseView(navController = navController) }, itemIndex = Screen.AddEditExpense.drawerItem
-            )
+            //NavigationDrawerWrapper (navController = navController, children = { AddEditExpenseView() }, itemIndex = Screen.AddEditExpense.drawerItem)
+            AddEditExpenseView()
         }
     }
 }

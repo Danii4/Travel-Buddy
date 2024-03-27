@@ -39,6 +39,16 @@ import androidx.navigation.NavController
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
+import com.example.travelbuddy.trips.model.TripAddPageModel
+import com.example.travelbuddy.create_trip.views.CreateTripAddView
+import com.example.travelbuddy.expenses.ExpensesViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
+
+class TripsViewModel : ViewModel() {
+    var trips = mutableStateListOf<String>()
+}
 
 @Composable
 fun TripCard(
@@ -47,7 +57,7 @@ fun TripCard(
 ) {
     return Card(modifier = Modifier
         .padding(4.dp),) {
-        val expenseViewModel = AddEditExpenseViewModel()
+        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
         val addTripViewModel = hiltViewModel<AddTripsViewModel>()
 
 
@@ -65,7 +75,9 @@ fun TripCard(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 AssistChip(
-                    onClick = { addTripViewModel.navigateToCreateTripAdd(navController) },
+                    onClick = {
+//                        addTripViewModel.navigateToCreateTripAdd(navController)
+                              },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
@@ -81,7 +93,9 @@ fun TripCard(
                 )
                 Spacer(modifier = Modifier.width(100.dp))
                 AssistChip(
-                    onClick = { expenseViewModel.navigatetoExpenses(navController) },
+                    onClick = {
+//                        expenseViewModel.navigatetoExpenses(navController)
+                              },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
