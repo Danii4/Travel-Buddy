@@ -4,7 +4,7 @@ class UserModel {
     data class User(
         val id: String,
         val email: String,
-        val name: String
-//        val defaultCurrency: Currency
+        val name: String,
+        val tripsIdList: MutableList<String> = emptyList<String>().toMutableList()
     )
 }
