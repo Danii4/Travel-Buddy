@@ -50,9 +50,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.expenses.ExpensesViewModel
 
 
 @Composable
@@ -141,14 +143,13 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
 fun ExpensesView(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    navController: NavController,
 ) {
-//    val viewModel = ExpensesViewModel()
+    val viewModel = hiltViewModel<ExpensesViewModel>()
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = { viewModel.navigateToAddEditExpense() },
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")

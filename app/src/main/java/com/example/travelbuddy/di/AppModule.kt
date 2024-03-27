@@ -1,8 +1,10 @@
 package com.example.travelbuddy.di
 
+import com.example.travelbuddy.NavWrapper
 import com.example.travelbuddy.data.AuthRepositoryImpl
 import com.example.travelbuddy.data.CurrencyExchangeRepositoryImpl
 import com.example.travelbuddy.data.DestinationRepositoryImpl
+import com.example.travelbuddy.data.ExpenseRepository
 import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.CurrencyExchangeRepository
 import com.example.travelbuddy.repository.DestinationRepository
@@ -25,6 +27,18 @@ object AppModule {
     @Singleton
     fun providesAuthRepositoryImpl(firebaseAuth: FirebaseAuth): AuthRepository {
         return AuthRepositoryImpl(firebaseAuth)
+    }
+
+    @Provides
+    @Singleton
+    fun providesExpenseRepository(): ExpenseRepository {
+        return ExpenseRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun providesNavWrapper(): NavWrapper {
+        return NavWrapper()
     }
 
     @Provides
