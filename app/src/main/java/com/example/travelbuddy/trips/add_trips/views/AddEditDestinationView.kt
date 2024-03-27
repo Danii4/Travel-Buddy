@@ -46,7 +46,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -57,7 +57,6 @@ import com.example.travelbuddy.data.model.DestinationModel
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
-import com.example.travelbuddy.trips.add_trips.model.DestinationPageModel
 
 @Composable
 fun GenerateDestinationView(
@@ -120,6 +119,8 @@ fun GenerateDestinationView(
 @Composable
 fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
     val viewModel = hiltViewModel<AddTripsViewModel>()
+    val state by viewModel.state.collectAsState()
+
     var destBarText by remember {
         mutableStateOf("")
     }
@@ -127,42 +128,13 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         mutableStateOf(false)
     }
 
-    val dest1 = DestinationModel.Destination(
-        name = "Sintra",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-    val dest2 = DestinationModel.Destination(
-        name = "Lisbon",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-    val dest3 = DestinationModel.Destination(
-        name = "Porto",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-    val dest4 = DestinationModel.Destination(
-        name = "Madeira",
-        startDate = LocalDate.now(),
-        endDate = LocalDate.now().plusDays(7)
-    )
-
-    val destList = DestinationPageModel.DestinationViewState(
-        destinationList = remember { mutableStateListOf(dest1, dest2, dest3, dest4) }
-    )
-
-    fun deleteDestination(destination: DestinationModel.Destination) {
-        destList.destinationList.remove(destination)
-    }
-
     LazyColumn(
         modifier = Modifier.padding(innerPadding),
         userScrollEnabled = true
     ) {
-        items(destList.destinationList) { destination ->
+        items(state.destinationList) { destination ->
             GenerateDestinationView(destination = destination) {
-                deleteDestination(destination)
+                viewModel.deleteDestination(destination)
             }
         }
     }
@@ -244,7 +216,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                     shape = RoundedCornerShape(15.dp),
                     windowInsets = WindowInsets(top = (-7).dp)
                 ) {
-                    destList.destinationList.forEach {
+                    state.destinationList.forEach {
                         Row(modifier = Modifier.padding(all = 14.dp)) {
                             Icon(
                                 modifier = Modifier.padding(end = 10.dp),
@@ -334,8 +306,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                         startDate = selectedRange.value.lower,
                                         endDate = selectedRange.value.upper
                                     )
-                                    viewModel.submitDestination(newDestination)
-                                    destList.destinationList.add(newDestination)
+                                    viewModel.addDestination(newDestination)
                                     destBarText = ""
                                 }
                             },
