@@ -74,4 +74,8 @@ class AddTripsViewModel @Inject constructor(
     fun navigateToTrips() {
         navWrapper.getNavController().navigate(Screen.Trips.route)
     }
+
+    fun navigateToItinerary() {
+        navWrapper.getNavController().navigate(Screen.Itinerary.route)
+    }
 }

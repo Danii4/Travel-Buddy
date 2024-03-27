@@ -54,6 +54,7 @@ import androidx.core.util.toRange
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.data.model.DestinationModel
+import com.example.travelbuddy.itinerary.model.ItineraryModel
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
@@ -219,7 +220,10 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                     state.destinationList.forEach {
                         Row(modifier = Modifier.padding(all = 14.dp)) {
                             Icon(
-                                modifier = Modifier.padding(end = 10.dp),
+                                modifier = Modifier.padding(end = 10.dp)
+                                    .clickable{
+                                              viewModel.navigateToItinerary()
+                                    },
                                 imageVector = Icons.Default.Place,
                                 contentDescription = "Location"
                             )
@@ -304,7 +308,8 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                     val newDestination = DestinationModel.Destination(
                                         name = destBarText,
                                         startDate = selectedRange.value.lower,
-                                        endDate = selectedRange.value.upper
+                                        endDate = selectedRange.value.upper,
+//                                        itinerary = ItineraryModel(0,)
                                     )
                                     viewModel.addDestination(newDestination)
                                     destBarText = ""

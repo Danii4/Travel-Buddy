@@ -199,7 +199,7 @@ fun ItineraryView(
 ////                        val budgetColor: Color = when {
 ////                            budgetProgress >= 0.75 -> Color.Red
 ////                            budgetProgress >= 0.50 -> Color.Yellow
-////                            else -> Color.Gree
+////                            else -> Color.Green
                     val title = item.title
                     val date = item.date
 //                        }
