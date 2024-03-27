@@ -4,5 +4,5 @@ import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.data.model.TripModel
 
 interface TripRepository {
-    suspend fun addTrip(trip: TripModel.Trip) : ResponseModel.Response
+    suspend fun addTrip(tripName: String, destIDList: List<String>) : ResponseModel.Response
 }

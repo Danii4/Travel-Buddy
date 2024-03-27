@@ -1,24 +1,23 @@
 package com.example.travelbuddy.data
 
 import com.example.travelbuddy.data.model.ResponseModel
-import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.repository.TripRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class TripRepositoryImpl(
-) : TripRepository{
+class TripRepositoryImpl @Inject constructor() : TripRepository{
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    override suspend fun addTrip(trip: TripModel.Trip) : ResponseModel.Response {
+    override suspend fun addTrip(tripName: String, destIDList: List<String>) : ResponseModel.Response {
         return try {
             // add trip to Trip table
-            val colRef = db.collection("trip").add(
+            val tripID = db.collection("trips").add(
                 mapOf(
-                    "name" to trip.name,
-                    "budgets" to trip.budgets,
-                    "totalExpenses" to trip.totalExpenses,
-                    "expensesList" to trip.expensesList,
-                    "destinationList" to trip.destinationList
+                    "name" to tripName,
+                    "budgets" to null,
+                    "totalExpenses" to null,
+                    "expensesList" to null,
+                    "destinationList" to destIDList
                 )
             ).await()
 
