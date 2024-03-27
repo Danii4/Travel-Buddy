@@ -5,5 +5,6 @@ class UserModel {
         val id: String,
         val email: String,
         val name: String
+//        val defaultCurrency: Currency
     )
 }

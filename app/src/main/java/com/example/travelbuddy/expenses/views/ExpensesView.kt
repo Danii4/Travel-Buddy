@@ -34,7 +34,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,13 +47,9 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
-import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
 
 
@@ -145,6 +141,7 @@ fun ExpensesView(
     onClick: () -> Unit = {},
 ) {
     val viewModel = hiltViewModel<ExpensesViewModel>()
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         floatingActionButton = {
@@ -236,10 +233,10 @@ fun ExpensesView(
 //                        }
                     }
                 }
+                items(state.expensesList) { expense ->
+                    ExpenseList(expense = expense)
+                }
             }
-//            items(trip.expensesList) { expense ->
-//                ExpenseList(expense = expense)
-//            }
+
         }
     }
-//}
