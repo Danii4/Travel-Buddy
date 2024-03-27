@@ -20,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,8 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.trips.TripsViewModel
+import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.model.TripAddPageModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -115,6 +119,8 @@ fun ModifiedRow(
     coroutineScope: CoroutineScope,
     navController: NavController
 ) {
+    val viewModel = hiltViewModel<AddTripsViewModel>()
+
     Row(
         modifier = Modifier
             .wrapContentHeight()
@@ -173,7 +179,8 @@ fun ModifiedRow(
                 modifier = Modifier
                     .padding(horizontal = 15.dp, vertical = 10.dp)
                     .clickable {
-                        TripsViewModel().navigateToTrips(navController)
+                        viewModel.submitDestination()
+                        viewModel.navigateToTrips()
                     }
             ) {
                 Text("Done")
