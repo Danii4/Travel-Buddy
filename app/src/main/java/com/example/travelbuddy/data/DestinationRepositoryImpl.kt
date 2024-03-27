@@ -13,23 +13,19 @@ import com.google.firebase.ktx.Firebase
 
 class DestinationRepositoryImpl @Inject constructor(
     private val authRepository: AuthRepository
-) :  DestinationRepository {
+) : DestinationRepository {
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    override suspend fun addDestination(destination: DestinationModel.Destination) : ResponseModel.Response? {
-        return authRepository.getUserId()?.let { uid ->
-            val destinationLoad = hashMapOf(
-                "name" to destination.name,
-                "startDate" to destination.startDate,
-                "endDate" to destination.endDate,
-                "uid" to uid,
-            )
-            val firestoreDb = Firebase.firestore
-            try {
-                firestoreDb.collection("destinations").add(destinationLoad).await()
-                ResponseModel.Response.Success
-            } catch (e: Exception){
-                ResponseModel.Response.Failure(e.message ?: "Error adding destination")
-            }
+    override suspend fun addDestination(destination: DestinationModel.Destination): ResponseModel.ResponseWithData<String>? {
+        val destinationLoad = hashMapOf(
+            "name" to destination.name,
+            "startDate" to destination.startDate,
+            "endDate" to destination.endDate,
+        )
+        return try {
+            val destID = db.collection("destinations").add(destinationLoad).await().id
+            ResponseModel.ResponseWithData.Success(destID)
+        } catch (e: Exception) {
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error adding destination")
         }
     }
 }
