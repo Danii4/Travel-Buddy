@@ -146,7 +146,7 @@ fun ModifiedRow(
                 modifier = Modifier
                     .padding(horizontal = 15.dp, vertical = 10.dp)
                     .clickable {
-                        TripsViewModel().navigateToTrips(navController)
+                        viewModel.navigateToTrips()
                     }
             ) {
                 Text("Cancel")
