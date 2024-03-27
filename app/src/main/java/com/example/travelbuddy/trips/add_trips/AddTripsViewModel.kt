@@ -23,16 +23,16 @@ class AddTripsViewModel @Inject constructor(
         get() = _state
 
     private val destinationList: MutableStateFlow<List<DestinationModel.Destination>> = MutableStateFlow(listOf())
-    private val dummy : MutableStateFlow<Boolean> = MutableStateFlow(_state.value.dummy)
+    private val tripName: MutableStateFlow<String> = MutableStateFlow(_state.value.tripName)
 
     init {
         viewModelScope.launch {
-            combine(destinationList, dummy) {
+            combine(destinationList, tripName) {
                     destinationList: List<DestinationModel.Destination>,
-                    dummy: Boolean ->
+                    tripName: String ->
                 AddTripsPageModel.AddTripViewState(
                     destinationList = destinationList,
-                    dummy = dummy,
+                    tripName = tripName,
                 )
             }.collect {
                 _state.value = it
@@ -53,6 +53,11 @@ class AddTripsViewModel @Inject constructor(
     fun deleteDestination(destination: DestinationModel.Destination){
         destinationList.value -= destination
     }
+
+    fun setTripName(name: String){
+        tripName.value = name
+    }
+
     fun navigateToCreateTripAdd(navController: NavController) {
         navController.navigate(Screen.TripAdd.route)
     }
