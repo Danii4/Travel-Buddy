@@ -67,7 +67,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesTripRepositoryImpl(): TripRepository {
-        return TripRepositoryImpl()
+    fun providesTripRepositoryImpl(
+        authRepository: AuthRepository
+    ): TripRepository {
+        return TripRepositoryImpl(
+            authRepository = authRepository
+        )
     }
 }
