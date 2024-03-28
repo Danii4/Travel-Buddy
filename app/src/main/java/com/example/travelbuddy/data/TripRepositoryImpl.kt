@@ -1,14 +1,18 @@
 package com.example.travelbuddy.data
 
 import com.example.travelbuddy.data.model.ResponseModel
+import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.TripRepository
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class TripRepositoryImpl @Inject constructor() : TripRepository{
+class TripRepositoryImpl @Inject constructor(
+    private val authRepository: AuthRepository
+) : TripRepository{
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    override suspend fun addTrip(tripName: String, destIDList: List<String>) : ResponseModel.Response {
+    override suspend fun addTrip(tripName: String, destIdList: List<String>) : ResponseModel.ResponseWithData<String> {
         return try {
             // add trip to Trip table
             val tripID = db.collection("trips").add(
@@ -17,14 +21,22 @@ class TripRepositoryImpl @Inject constructor() : TripRepository{
                     "budgets" to null,
                     "totalExpenses" to null,
                     "expensesList" to null,
-                    "destinationList" to destIDList
+                    "destinationList" to destIdList
                 )
-            ).await()
+            ).await().id
 
-            ResponseModel.Response.Success
+            ResponseModel.ResponseWithData.Success(tripID)
         }
         catch (e: Exception) {
-            return ResponseModel.Response.Failure(e.message?:"Error adding a trip. Please try again.")
+            return ResponseModel.ResponseWithData.Failure(error=e.message?:"Error adding a trip. Please try again.")
+        }
+    }
+
+    override suspend fun addTripIdToUser(Id: String){
+        authRepository.getUserId().let {
+            db.collection("users").document(it!!).update(
+                "tripsIdList", FieldValue.arrayUnion(Id)
+            )
         }
     }
 
