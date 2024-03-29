@@ -7,19 +7,22 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddEditDestinationView
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationRow(sheetState: SheetState) {
+fun NavigationRow() {
+    val viewModel = hiltViewModel<TripsViewModel>()
+    val scope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
             .wrapContentHeight()
@@ -30,26 +33,29 @@ fun NavigationRow(sheetState: SheetState) {
         Box(
             modifier = Modifier
                 .padding(horizontal = 15.dp, vertical = 10.dp)
-                .clickable {}
+                .clickable {
+                    viewModel.navigateToTrips()
+                }
         ) {
             Text("Cancel")
         }
         Box(
             modifier = Modifier
                 .padding(horizontal = 15.dp, vertical = 10.dp)
-                .clickable {}
+                .clickable {
+                    viewModel.navigateToTrips()
+                }
         ) {
             Text("Done")
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DestinationView(sheetState: SheetState) {
+fun DestinationView() {
     Scaffold(
         topBar = {
-            NavigationRow(sheetState)
+            NavigationRow()
         },
         content = { innerPadding ->
             AddEditDestinationView(innerPadding)

@@ -46,7 +46,7 @@ import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
 @Composable
 fun TripCard(
     trip: String,
-    navController: NavController
+    navController: NavController,
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
 //        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
@@ -121,7 +121,7 @@ fun TripCard(
                     destSheetTripId = null
                 },
                 content = {
-                    DestinationView(sheetState)
+                    DestinationView()
                 }
             )
         }
