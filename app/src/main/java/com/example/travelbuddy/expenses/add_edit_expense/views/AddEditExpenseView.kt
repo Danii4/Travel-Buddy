@@ -41,8 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
+import com.example.travelbuddy.util.Money
+import java.math.BigDecimal
 import java.time.Instant
-import java.time.LocalDate
 import java.util.Date
 
 @SuppressLint("NewApi")
@@ -70,7 +71,7 @@ fun AddEditExpenseView(
     ) { paddingValues ->
         var expenseName by remember { mutableStateOf("") }
         var expenseType by remember { mutableStateOf(ExpenseModel.ExpenseType.MISCELLANEOUS) }
-        var expenseAmount by remember { mutableStateOf(0.0) }
+        var expenseAmount by remember { mutableStateOf(Money(amount = BigDecimal(0.00), currencyCode = "USD", displayAmount = null)) }
         var expenseDate by remember { mutableStateOf(Date.from(Instant.now())) }
         var expanded by remember { mutableStateOf(false) }
 
@@ -140,8 +141,8 @@ fun AddEditExpenseView(
             // Text field for entering expense amount
             TextField(
                 label = { Text(text = "Amount ($)") },
-                value = expenseAmount.toString(),
-                onValueChange = { expenseAmount = it.toDoubleOrNull() ?: 0.0 },
+                value = expenseAmount.amount.toString(),
+                onValueChange = { expenseAmount.amount = it.toBigDecimal()},
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -237,7 +238,7 @@ fun AddEditExpenseView(
                         val newExpense = ExpenseModel.Expense(
                             name = expenseName,
                             type = expenseType,
-                            amount = expenseAmount,
+                            money = expenseAmount,
                             date = expenseDate
                         )
                         viewModel.submitExpense(newExpense)
