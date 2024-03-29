@@ -1,5 +1,6 @@
 package com.example.travelbuddy.trips.views
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,8 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,22 +38,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
-import com.example.travelbuddy.expenses.ExpensesViewModel
 
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripCard(
     trip: String,
     navController: NavController
 ) {
-    return Card(modifier = Modifier
-        .padding(4.dp),) {
-        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
-        val addTripViewModel = hiltViewModel<AddTripsViewModel>()
+    return Card(modifier = Modifier.padding(4.dp)) {
+//        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
+//        val addTripViewModel = hiltViewModel<AddTripsViewModel>()
 
+        val sheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = true
+        )
+        var destSheetOpen by rememberSaveable {
+            mutableStateOf(false)
+        }
+        var destSheetTripId: String? by rememberSaveable {
+            mutableStateOf(null)
+        }
 
         Column(
             modifier = Modifier
@@ -66,8 +77,9 @@ fun TripCard(
             ) {
                 AssistChip(
                     onClick = {
-//                        addTripViewModel.navigateToCreateTripAdd(navController)
-                              },
+                        destSheetOpen = true
+                        destSheetTripId = ""
+                    },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
@@ -84,7 +96,7 @@ fun TripCard(
                 Spacer(modifier = Modifier.width(100.dp))
                 AssistChip(
                     onClick = {
-                        expenseViewModel.navigateToAddEditExpense()
+//                        expenseViewModel.navigateToAddEditExpense()
                               },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -100,6 +112,18 @@ fun TripCard(
                     }
                 )
             }
+        }
+        if (destSheetOpen){
+            ModalBottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = {
+                    destSheetOpen = false
+                    destSheetTripId = null
+                },
+                content = {
+                    DestinationView(sheetState)
+                }
+            )
         }
     }
 }
