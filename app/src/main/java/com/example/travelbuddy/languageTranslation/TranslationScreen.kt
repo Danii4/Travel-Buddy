@@ -2,6 +2,8 @@ package com.example.travelbuddy.languageTranslation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -164,11 +166,21 @@ fun LanguageSelectionDropdown(
         Text(text = "$label: ")
 
         Box(modifier = Modifier.weight(2f)) {
-            Text(
-                text = selectedLanguage,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clickable { onDropdownChange(true) }
-            )
+                    .padding(end = 8.dp)
+            ){
+                Text(
+                    text = selectedLanguage,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "Dropdown Arrow"
+                )
+            }
             DropdownMenu(
                 expanded = showDropdown,
                 onDismissRequest = { onDropdownChange(false) }
