@@ -1,6 +1,5 @@
 package com.example.travelbuddy.languageTranslation
 
-import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.nl.translate.Translation
 
@@ -8,18 +7,44 @@ import com.google.mlkit.nl.translate.Translation
 
 object Translator {
 
-    // maps languages to proper code
+    // Maps languages to proper code
     private fun mapLanguageToCode(language: String): String {
         return when (language) {
-            "English" -> TranslateLanguage.ENGLISH
-            "French" -> TranslateLanguage.FRENCH
-            "Spanish" -> TranslateLanguage.SPANISH
-            "German" -> TranslateLanguage.GERMAN
-            else -> TranslateLanguage.ENGLISH // Default
+            "Arabic" -> "ar"
+            "Bengali" -> "bn"
+            "Chinese" -> "zh"
+            "English" -> "en"
+            "French" -> "fr"
+            "German" -> "de"
+            "Hindi" -> "hi"
+            "Indonesian" -> "id"
+            "Italian" -> "it"
+            "Japanese" -> "ja"
+            "Korean" -> "ko"
+            "Malay" -> "ms"
+            "Marathi" -> "mr"
+            "Persian" -> "fa"
+            "Polish" -> "pl"
+            "Portuguese" -> "pt"
+            "Russian" -> "ru"
+            "Spanish" -> "es"
+            "Swahili" -> "sw"
+            "Tamil" -> "ta"
+            "Telugu" -> "te"
+            "Thai" -> "th"
+            "Turkish" -> "tr"
+            "Urdu" -> "ur"
+            "Vietnamese" -> "vi"
+            "Dutch" -> "nl"
+            "Greek" -> "el"
+            "Hungarian" -> "hu"
+            "Romanian" -> "ro"
+            "Swedish" -> "sv"
+            else -> "Unsupported Language"
         }
     }
 
-    // performs the translation
+    // Performs the translation
     fun performTranslation(
         inputText: String,
         sourceLanguage: String,
