@@ -6,6 +6,7 @@ import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.TripRepository
+import com.example.travelbuddy.util.Money
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
+import java.math.BigDecimal
 
 class ExpenseRepository(
     private val tripRepository: TripRepository,
@@ -28,7 +30,7 @@ class ExpenseRepository(
                 mapOf(
                     "name" to expense.name,
                     "type" to expense.type,
-                    "amount" to expense.amount,
+                    "money" to expense.money,
                     "date" to expense.date
                 )
             ).await()
@@ -66,11 +68,12 @@ class ExpenseRepository(
         val expenseList = mutableListOf<ExpenseModel.Expense>()
         for (expense in expenseData) {
             val timestamp = expense.get("date") as Timestamp
+            val money = expense.get("money") as HashMap<*, *>
             ExpenseModel.Expense(
                 id = expense.id,
                 name = expense.get("name") as String,
                 type = ExpenseModel.ExpenseType.valueOf(expense.get("type") as String),
-                amount = expense.getDouble("amount") as Double,
+                money = Money(amount = BigDecimal(money["amount"] as String), currencyCode = money["currencyCode"] as String),
                 date = timestamp.toDate()
             )
                 .let { expenseList.add(it) }
