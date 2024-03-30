@@ -150,7 +150,7 @@ class AddTripsViewModel @Inject constructor(
                 destIdList.add(response?.data.toString())
             }
             val tripId = tripRepository.addTrip(
-                tripName= tripName.value,
+                tripName = tripName.value,
                 destIdList = destIdList,
                 budgets = budgets.value,
                 defaultCurrency = "CAD"

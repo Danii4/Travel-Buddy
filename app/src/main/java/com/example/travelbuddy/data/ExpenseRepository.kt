@@ -43,14 +43,14 @@ class ExpenseRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getExpenses(tripId : String): Flow<ResponseModel.ResponseWithData<List<ExpenseModel.Expense>>> {
+    suspend fun getExpenses(tripId: String): Flow<ResponseModel.ResponseWithData<List<ExpenseModel.Expense>>> {
         return flow {
-            emit(getExpenseData(tripId))
+            emit(getExpensesData(tripId))
         }.flowOn(Dispatchers.IO)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun getExpenseData(tripId: String): ResponseModel.ResponseWithData<List<ExpenseModel.Expense>> {
+    private suspend fun getExpensesData(tripId: String): ResponseModel.ResponseWithData<List<ExpenseModel.Expense>> {
         val expenseIds = tripRepository.getExpenseIds(tripId)
         if (expenseIds.error != null) {
             return ResponseModel.ResponseWithData.Failure(error = expenseIds.error)
@@ -61,7 +61,9 @@ class ExpenseRepository(
             try {
                 expenseData.add(db.collection("expenses").document(it).get().await())
             } catch (e: Exception) {
-                return ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting expenses")
+                return ResponseModel.ResponseWithData.Failure(
+                    error = e.message ?: "Error getting expenses"
+                )
             }
         }
 
@@ -80,5 +82,32 @@ class ExpenseRepository(
                 .let { expenseList.add(it) }
         }
         return ResponseModel.ResponseWithData.Success(expenseList)
+    }
+
+    suspend fun getExpenseData(expenseId: String): ResponseModel.ResponseWithData<ExpenseModel.Expense> {
+        try {
+            val expense = db.collection("expenses").document(expenseId).get().await()
+            val timestamp = expense.get("date") as Timestamp
+            val amount = expense.get("amount") as String
+            val expenseData = ExpenseModel.Expense(
+                id = expense.id,
+                name = expense.get("name") as String,
+                type = ExpenseModel.ExpenseType.valueOf(expense.get("type") as String),
+                amount = BigDecimal(amount),
+                date = timestamp.toDate(),
+                currencyCode = expense.get("currencyCode") as String
+            )
+            return ResponseModel.ResponseWithData.Success(expenseData)
+        } catch (e: Exception) {
+            return ResponseModel.ResponseWithData.Failure(
+                error = e.message ?: "Error getting expense with id"
+            )
+        }
+    }
+
+    suspend fun getExpense(expenseId: String) : Flow<ResponseModel.ResponseWithData<ExpenseModel.Expense>> {
+        return flow {
+            emit(getExpenseData(expenseId))
+        }.flowOn(Dispatchers.IO)
     }
 }

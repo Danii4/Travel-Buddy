@@ -4,8 +4,10 @@ import HomeScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.travelbuddy.components.NavigationDrawerWrapper
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
@@ -48,9 +50,14 @@ fun Navigation(
         composable(Screen.UnitConversion.route) {
             NavigationDrawerWrapper (navController = navController, children = { UnitConversionScreen() }, itemIndex = Screen.UnitConversion.drawerItem)
         }
-        composable(Screen.AddEditExpense.route) {
-            //NavigationDrawerWrapper (navController = navController, children = { AddEditExpenseView() }, itemIndex = Screen.AddEditExpense.drawerItem)
-            AddEditExpenseView()
+        composable(
+            route = Screen.AddEditExpense.route + "?expenseId={expenseId}",
+            arguments = listOf(navArgument("expenseId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ){
+                AddEditExpenseView()
         }
     }
 }

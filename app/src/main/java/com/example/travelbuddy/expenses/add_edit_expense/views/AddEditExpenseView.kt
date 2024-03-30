@@ -29,6 +29,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,10 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
-import com.example.travelbuddy.util.Money
 import java.math.BigDecimal
-import java.time.Instant
-import java.util.Date
 
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -52,8 +51,11 @@ import java.util.Date
 fun AddEditExpenseView(
 ) {
     val viewModel = hiltViewModel<AddEditExpenseViewModel>()
-
-//    var state = viewModel.state.collectAsState(initial = null)
+    val state by viewModel.state.collectAsState()
+    
+//    LaunchedEffect(Unit) {
+//        viewModel.getData()
+//    }
 
     Scaffold(
         topBar = {
@@ -69,11 +71,11 @@ fun AddEditExpenseView(
             )
         }
     ) { paddingValues ->
-        var expenseName by remember { mutableStateOf("") }
-        var expenseType by remember { mutableStateOf(ExpenseModel.ExpenseType.MISCELLANEOUS) }
-        var expenseAmount by remember { mutableStateOf(BigDecimal(0.00)) }
-        var expenseDate by remember { mutableStateOf(Date.from(Instant.now())) }
-        var currencyCode by remember { mutableStateOf("CAD") }
+//        var expenseName by remember { mutableStateOf(state.value.name) }
+//        var expenseType by remember { mutableStateOf(state.value.type) }
+//        var expenseAmount by remember { mutableStateOf(state.value.amount) }
+//        var expenseDate by remember { mutableStateOf(state.value.date) }
+//        var currencyCode by remember { mutableStateOf(state.value.currencyCode) }
         var expanded by remember { mutableStateOf(false) }
 
         Column(
@@ -85,11 +87,10 @@ fun AddEditExpenseView(
             verticalArrangement = Arrangement.Top,
         ) {
 
-            expenseName.let {
                 TextField(
                     label = { Text(text = "Name") },
-                    value = it,
-                    onValueChange = { expenseName = it },
+                    value = state.name,
+                    onValueChange = { viewModel.setExpenseName(it) },
                     colors = TextFieldDefaults.textFieldColors(
                         cursorColor = MaterialTheme.colorScheme.primary,
                         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
@@ -98,7 +99,6 @@ fun AddEditExpenseView(
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )
-            }
 
             Spacer(modifier = Modifier.height(20.dp))
             // Dropdown menu for selecting expense type
@@ -109,7 +109,7 @@ fun AddEditExpenseView(
                 },
                 modifier = Modifier.fillMaxWidth()) {
                 TextField(
-                    value = expenseType.stringValue,
+                    value = state.type.stringValue,
                     onValueChange = {},
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -124,7 +124,7 @@ fun AddEditExpenseView(
                         DropdownMenuItem(
                             text = { Text(text = type.stringValue) },
                             onClick = {
-                                expenseType = type
+                                viewModel.setExpenseType(type)
                                 expanded = false
                             })
                     }
@@ -133,7 +133,7 @@ fun AddEditExpenseView(
 
             // Display the selected expense type
             Text(
-                text = "Type: ${expenseType.name}",
+                text = "Type: ${state.type.name}",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
@@ -142,8 +142,8 @@ fun AddEditExpenseView(
             // Text field for entering expense amount
             TextField(
                 label = { Text(text = "Amount ($)") },
-                value = expenseAmount.toString(),
-                onValueChange = { expenseAmount = it.toBigDecimal()},
+                value = state.amount,
+                onValueChange = { viewModel.setExpenseAmount(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -190,7 +190,7 @@ fun AddEditExpenseView(
 //                )
 //            }
 
-            val state = rememberDatePickerState()
+            val dateState = rememberDatePickerState()
             val openDialog = remember { mutableStateOf(false) }
 
             if (openDialog.value) {
@@ -218,7 +218,7 @@ fun AddEditExpenseView(
                     }
                 ) {
                     DatePicker(
-                        state = state
+                        state = dateState
                     )
                 }
             }
@@ -237,11 +237,11 @@ fun AddEditExpenseView(
                 Button(
                     onClick = {
                         val newExpense = ExpenseModel.Expense(
-                            name = expenseName,
-                            type = expenseType,
-                            amount = expenseAmount,
-                            date = expenseDate,
-                            currencyCode = currencyCode
+                            name = state.name,
+                            type = state.type,
+                            amount = BigDecimal(state.amount),
+                            date = state.date,
+                            currencyCode = state.currencyCode
                         )
                         viewModel.submitExpense(newExpense)
                         viewModel.navigateToExpenses()
