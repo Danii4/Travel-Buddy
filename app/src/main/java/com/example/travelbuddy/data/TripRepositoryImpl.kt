@@ -1,14 +1,12 @@
 package com.example.travelbuddy.data
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.repository.TripRepository
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -125,11 +123,11 @@ class TripRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDestinationIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>> {
-        val tripRef = db.collection("trips").document(tripId)
+    override suspend fun getDestinationIds(tripId: String?): ResponseModel.ResponseWithData<MutableList<String>> {
+        val tripRef = tripId.let { db.collection("trips").document(it.toString()) }
         return try {
-            val documentSnapshot  = tripRef.get().await()
-            if (documentSnapshot.exists()) {
+            val documentSnapshot  = tripRef?.get()?.await()
+            if (documentSnapshot?.exists() == true) {
                 val tripData = documentSnapshot.data?.get("destinationList") as MutableList<String>
                 ResponseModel.ResponseWithData.Success(tripData)
             }
@@ -141,9 +139,9 @@ class TripRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateDestinationIds(tripId: String, destIdList: List<String>): ResponseModel.Response {
+    override suspend fun updateDestinationIds(tripId: String?, destIdList: List<String>): ResponseModel.Response {
         return try {
-            db.collection("trips").document(tripId).update("destinationList", destIdList)
+            tripId?.let { db.collection("trips").document(it).update("destinationList", destIdList) }
             ResponseModel.Response.Success
         } catch (e: Exception) {
             ResponseModel.Response.Failure(error = e.message ?: "Error updating destination")

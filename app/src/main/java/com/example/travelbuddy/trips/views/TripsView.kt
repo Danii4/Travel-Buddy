@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.trips.TripsViewModel
+import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
 import com.example.travelbuddy.trips.add_trips.views.DestinationView
 
@@ -57,16 +58,13 @@ fun TripCard(
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
 //        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
-//        val addTripViewModel = hiltViewModel<AddTripsViewModel>()
+        val addTripsViewModel = hiltViewModel<AddTripsViewModel>()
 
         val sheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
         )
         var destSheetOpen by rememberSaveable {
             mutableStateOf(false)
-        }
-        var destSheetTripId: String? by rememberSaveable {
-            mutableStateOf(null)
         }
 
         Column(
@@ -85,7 +83,7 @@ fun TripCard(
                 AssistChip(
                     onClick = {
                         destSheetOpen = true
-                        destSheetTripId = "6DNpnjh2xcZjgCVKfxxk"
+                        addTripsViewModel.setTripId(trip.id)
                     },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -125,10 +123,9 @@ fun TripCard(
                 sheetState = sheetState,
                 onDismissRequest = {
                     destSheetOpen = false
-                    destSheetTripId = null
                 },
                 content = {
-                    DestinationView(destSheetTripId)
+                    DestinationView()
                 }
             )
         }

@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.flowOn
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 
-
 class DestinationRepositoryImpl @Inject constructor(
     private val tripRepository: TripRepository
     ) : DestinationRepository {
@@ -36,14 +35,14 @@ class DestinationRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteDestination(destinationId: String, tripId: String): ResponseModel.Response {
+    override suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.Response {
         try {
             db.collection("transactions").document(destinationId).delete()
         } catch (e: Exception) {
             return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting destination")
         }
         return try {
-            db.collection("trips").document(tripId).update("destinationList", FieldValue.arrayRemove(destinationId))
+            tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayRemove(destinationId)) }
             ResponseModel.Response.Success
         } catch (e: Exception) {
             ResponseModel.Response.Failure(e.message ?: "Unknown message while updating farm")
@@ -51,14 +50,14 @@ class DestinationRepositoryImpl @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getDestinations(tripId: String): Flow<ResponseModel.ResponseWithData<List<DestinationModel.Destination>>>{
+    override suspend fun getDestinations(tripId: String?): Flow<ResponseModel.ResponseWithData<List<DestinationModel.Destination>>>{
         return flow {
             emit(getDestinationData(tripId))
         }.flowOn(Dispatchers.IO)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun getDestinationData(tripId: String): ResponseModel.ResponseWithData<List<DestinationModel.Destination>> {
+    private suspend fun getDestinationData(tripId: String?): ResponseModel.ResponseWithData<List<DestinationModel.Destination>> {
         val destinationIds = tripRepository.getDestinationIds(tripId)
         if (destinationIds.error != null) {
             return ResponseModel.ResponseWithData.Failure(error = destinationIds.error)
