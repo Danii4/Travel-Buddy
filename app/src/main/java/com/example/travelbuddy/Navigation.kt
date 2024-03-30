@@ -13,7 +13,7 @@ import com.example.travelbuddy.firebaseauth.screens.InitialAuthScreen
 import com.example.travelbuddy.firebaseauth.screens.LoginScreen
 import com.example.travelbuddy.firebaseauth.screens.ResetPasswordScreen
 import com.example.travelbuddy.firebaseauth.screens.SignupScreen
-import com.example.travelbuddy.languageTranslation.TranslationScreen
+import com.example.travelbuddy.languageTranslation.views.TranslationScreen
 import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 

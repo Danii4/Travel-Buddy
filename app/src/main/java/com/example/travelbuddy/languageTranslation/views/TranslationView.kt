@@ -1,4 +1,4 @@
-package com.example.travelbuddy.languageTranslation
+package com.example.travelbuddy.languageTranslation.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,18 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-
-/*
-* Notes for Prototype:
-* Currently only supports text input. Voice will be added later
-* History feature currently not supported
-* */
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.languageTranslation.TranslationViewModel
 
 @Composable
 fun TranslationScreen() {
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
-    var translatedText by remember { mutableStateOf("") }
+    val viewModel = hiltViewModel<TranslationViewModel>()
+    val translatedText by viewModel.translatedText.collectAsState()
     var inputLanguageSelected by remember { mutableStateOf("English") }
     var outputLanguageSelected by remember { mutableStateOf("French") }
     var languageHistory by remember { mutableStateOf(listOf<String>()) }
@@ -70,7 +66,6 @@ fun TranslationScreen() {
             showDropdown = showInputDropdown,
             onLanguageSelected = {  language ->
                 inputLanguageSelected = language
-                // Update MRU languages upon selection
                 languageHistory = updateLanguagesHistory(language, languageHistory)
                 showInputDropdown = false },
             onDropdownChange = { showInputDropdown = it },
@@ -96,18 +91,7 @@ fun TranslationScreen() {
             // Translate button
             Button(
                 onClick = {
-                    Translator.performTranslation(
-                        inputText = inputText.text,
-                        sourceLanguage = inputLanguageSelected,
-                        targetLanguage = outputLanguageSelected,
-                        onSuccess = { translation ->
-                            translatedText = translation
-                        },
-                        onFailure = { error ->
-                            translatedText = "Error: $error"
-
-                        }
-                    )
+                    viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
                 },
                 modifier = Modifier.weight(1f)
             ) {
@@ -121,7 +105,6 @@ fun TranslationScreen() {
                     inputLanguageSelected = outputLanguageSelected
                     outputLanguageSelected = tempLanguage
                     inputText = TextFieldValue(translatedText)
-                    translatedText = ""
                 },
                 modifier = Modifier.weight(1f)
             ) {
@@ -137,7 +120,6 @@ fun TranslationScreen() {
             showDropdown = showOutputDropdown,
             onLanguageSelected = {  language ->
                 outputLanguageSelected = language
-                // Update MRU languages upon selection
                 languageHistory = updateLanguagesHistory(language, languageHistory)
                 showOutputDropdown = false },
             onDropdownChange = { showOutputDropdown = it },
