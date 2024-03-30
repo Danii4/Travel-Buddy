@@ -54,7 +54,7 @@ fun NavigationRow() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DestinationView(destSheetTripId: String?) {
+fun DestinationView() {
     Scaffold(
         topBar = {
             NavigationRow()
