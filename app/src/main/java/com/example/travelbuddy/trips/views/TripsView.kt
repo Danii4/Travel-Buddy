@@ -1,6 +1,8 @@
 package com.example.travelbuddy.trips.views
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.outlined.AttachMoney
@@ -28,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,14 +40,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.travelbuddy.data.model.ResponseModel
+import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.trips.TripsViewModel
+import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import androidx.compose.foundation.lazy.items
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripCard(
-    trip: String,
+    trip: TripModel.Trip,
     navController: NavController,
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
@@ -67,7 +79,7 @@ fun TripCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = trip,
+                text = trip.name,
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -128,26 +140,24 @@ fun TripCard(
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TripsView(
     navController: NavController
 ) {
 
-    val trip1 = "Grad Trip"
-    val trip2 = "Month in Europe"
+    val viewModel = hiltViewModel<TripsViewModel>()
+    val state by viewModel.state.collectAsState()
 
-    val tripList = remember {
-        mutableStateListOf(trip1, trip2)
-    }
-
-    Scaffold { paddingValues ->
+    Scaffold {
         LazyColumn(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(bottom = 25.dp),
             userScrollEnabled = true
         ) {
-            items(tripList) { trip: String ->
+            items(state.tripsList) { trip: TripModel.Trip ->
                 TripCard(trip = trip, navController)
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
         var isSheetOpen by rememberSaveable {

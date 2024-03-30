@@ -1,5 +1,7 @@
 package com.example.travelbuddy.trips.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +20,7 @@ import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddEditDestinationView
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavigationRow() {
     val viewModel = hiltViewModel<TripsViewModel>()
@@ -51,6 +54,7 @@ fun NavigationRow() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DestinationView() {
     Scaffold(
