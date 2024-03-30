@@ -43,6 +43,7 @@ fun NavigationRow() {
             modifier = Modifier
                 .padding(horizontal = 15.dp, vertical = 10.dp)
                 .clickable {
+                    viewModel.updateDestination()
                     viewModel.navigateToTrips()
                 }
         ) {
