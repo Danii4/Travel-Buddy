@@ -19,6 +19,8 @@ fun TranslationScreen() {
     var inputLanguageSelected by remember { mutableStateOf("English") }
     var outputLanguageSelected by remember { mutableStateOf("French") }
     val languageHistory by viewModel.languageHistory.collectAsState()
+    val recentInputs by viewModel.recentInputs.collectAsState()
+
     val languages = listOf(
         "Arabic",
         "Bengali",
@@ -134,6 +136,18 @@ fun TranslationScreen() {
                 .padding(bottom = 16.dp),
             label = { Text("Translated Text") }
         )
+
+        Column {
+            Text("Recent Inputs")
+            recentInputs.forEach { recentInput ->
+                TextButton(onClick = {
+                    inputText = TextFieldValue(recentInput)
+                    viewModel.setInputText(recentInput)
+                }) {
+                    Text(recentInput)
+                }
+            }
+        }
 
 
     }

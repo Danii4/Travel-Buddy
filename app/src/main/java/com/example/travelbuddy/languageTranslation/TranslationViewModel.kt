@@ -11,13 +11,24 @@ import javax.inject.Inject
 class TranslationViewModel @Inject constructor(
     private val translationModel: TranslationModel
 ) : ViewModel() {
+
+    private val _inputText = MutableStateFlow("")
+
     private val _translatedText = MutableStateFlow("")
     val translatedText = _translatedText.asStateFlow()
 
     private val _languageHistory = MutableStateFlow<List<String>>(emptyList())
     val languageHistory = _languageHistory.asStateFlow()
 
+    private val _recentInputs = MutableStateFlow<List<String>>(emptyList())
+    val recentInputs = _recentInputs.asStateFlow()
+
+    fun setInputText(inputText: String) {
+        _inputText.value = inputText
+        addRecentInput(inputText)
+    }
     fun translateText(inputText: String, sourceLanguage: String, targetLanguage: String) {
+        addRecentInput(inputText)
         translationModel.performTranslation(inputText, sourceLanguage, targetLanguage,
             onSuccess = { translatedText ->
                 _translatedText.value = translatedText
@@ -31,5 +42,13 @@ class TranslationViewModel @Inject constructor(
         updatedList.remove(selectedLanguage)
         updatedList.add(0, selectedLanguage)
         _languageHistory.value = updatedList.take(3)
+    }
+
+    fun addRecentInput(inputText: String) {
+        if (_recentInputs.value.firstOrNull() != inputText) {
+            val updatedInputs = _recentInputs.value.toMutableList()
+            updatedInputs.add(0, inputText)
+            _recentInputs.value = updatedInputs.take(3)
+        }
     }
 }
