@@ -15,11 +15,8 @@ import androidx.compose.ui.unit.dp
 
 /*
 * Notes for Prototype:
-* Swap is not fully functional
 * Currently only supports text input. Voice will be added later
-* Dropdown will be enhanced for more clarity
 * History feature currently not supported
-* RTL languages currently not supported
 * */
 
 @Composable
@@ -28,6 +25,7 @@ fun TranslationScreen() {
     var translatedText by remember { mutableStateOf("") }
     var inputLanguageSelected by remember { mutableStateOf("English") }
     var outputLanguageSelected by remember { mutableStateOf("French") }
+    var languageHistory by remember { mutableStateOf(listOf<String>()) }
     val languages = listOf(
         "Arabic",
         "Bengali",
@@ -70,8 +68,13 @@ fun TranslationScreen() {
             selectedLanguage = inputLanguageSelected,
             languages = languages,
             showDropdown = showInputDropdown,
-            onLanguageSelected = { inputLanguageSelected = it },
+            onLanguageSelected = {  language ->
+                inputLanguageSelected = language
+                // Update MRU languages upon selection
+                languageHistory = updateLanguagesHistory(language, languageHistory)
+                showInputDropdown = false },
             onDropdownChange = { showInputDropdown = it },
+            languageHistory = languageHistory
         )
 
         // Box for displaying input text
@@ -132,8 +135,13 @@ fun TranslationScreen() {
             selectedLanguage = outputLanguageSelected,
             languages = languages,
             showDropdown = showOutputDropdown,
-            onLanguageSelected = { outputLanguageSelected = it },
-            onDropdownChange = { showOutputDropdown = it }
+            onLanguageSelected = {  language ->
+                outputLanguageSelected = language
+                // Update MRU languages upon selection
+                languageHistory = updateLanguagesHistory(language, languageHistory)
+                showOutputDropdown = false },
+            onDropdownChange = { showOutputDropdown = it },
+            languageHistory = languageHistory
         )
 
         // Box for displaying translated text
@@ -150,14 +158,21 @@ fun TranslationScreen() {
     }
 }
 
+fun updateLanguagesHistory(selectedLanguage: String, languageHistory: List<String>): List<String> {
+    val updatedList = mutableListOf(selectedLanguage)
+    updatedList.addAll(languageHistory.filterNot { it == selectedLanguage })
+    return updatedList.take(3)
+}
 @Composable
+
 fun LanguageSelectionDropdown(
     label: String,
     selectedLanguage: String,
     languages: List<String>,
     showDropdown: Boolean,
     onLanguageSelected: (String) -> Unit,
-    onDropdownChange: (Boolean) -> Unit
+    onDropdownChange: (Boolean) -> Unit,
+    languageHistory: List<String>
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -185,7 +200,23 @@ fun LanguageSelectionDropdown(
                 expanded = showDropdown,
                 onDismissRequest = { onDropdownChange(false) }
             ) {
-                languages.forEach { language ->
+                //Displaying the language history first followed by border
+                languageHistory.forEach { language ->
+                    DropdownMenuItem(
+                        text = { Text(language) },
+                        onClick = {
+                            onLanguageSelected(language)
+                            onDropdownChange(false)
+                        }
+                    )
+                }
+
+                if (languageHistory.isNotEmpty()) {
+                    HorizontalDivider()
+                }
+
+                // Displaying the rest of the languages
+                (languages - languageHistory).forEach { language ->
                     DropdownMenuItem(
                         text = { Text(language) },
                         onClick = {
