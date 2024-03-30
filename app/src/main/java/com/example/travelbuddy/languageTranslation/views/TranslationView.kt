@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.languageTranslation.TranslationViewModel
+import com.example.travelbuddy.languageTranslation.components.LanguageSelectionDropdown
 
 @Composable
 fun TranslationScreen() {
@@ -145,72 +146,72 @@ fun updateLanguagesHistory(selectedLanguage: String, languageHistory: List<Strin
     updatedList.addAll(languageHistory.filterNot { it == selectedLanguage })
     return updatedList.take(3)
 }
-@Composable
-
-fun LanguageSelectionDropdown(
-    label: String,
-    selectedLanguage: String,
-    languages: List<String>,
-    showDropdown: Boolean,
-    onLanguageSelected: (String) -> Unit,
-    onDropdownChange: (Boolean) -> Unit,
-    languageHistory: List<String>
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-    ) {
-        Text(text = "$label: ")
-
-        Box(modifier = Modifier.weight(2f)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable { onDropdownChange(true) }
-                    .padding(end = 8.dp)
-            ){
-                Text(
-                    text = selectedLanguage,
-                    modifier = Modifier.padding(end = 4.dp)
-                )
-                Icon(
-                    imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = "Dropdown Arrow"
-                )
-            }
-            DropdownMenu(
-                expanded = showDropdown,
-                onDismissRequest = { onDropdownChange(false) }
-            ) {
-                //Displaying the language history first followed by border
-                languageHistory.forEach { language ->
-                    DropdownMenuItem(
-                        text = { Text(language) },
-                        onClick = {
-                            onLanguageSelected(language)
-                            onDropdownChange(false)
-                        }
-                    )
-                }
-
-                if (languageHistory.isNotEmpty()) {
-                    HorizontalDivider()
-                }
-
-                // Displaying the rest of the languages
-                (languages - languageHistory).forEach { language ->
-                    DropdownMenuItem(
-                        text = { Text(language) },
-                        onClick = {
-                            onLanguageSelected(language)
-                            onDropdownChange(false)
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
+//@Composable
+//
+//fun LanguageSelectionDropdown(
+//    label: String,
+//    selectedLanguage: String,
+//    languages: List<String>,
+//    showDropdown: Boolean,
+//    onLanguageSelected: (String) -> Unit,
+//    onDropdownChange: (Boolean) -> Unit,
+//    languageHistory: List<String>
+//) {
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+//    ) {
+//        Text(text = "$label: ")
+//
+//        Box(modifier = Modifier.weight(2f)) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier
+//                    .clickable { onDropdownChange(true) }
+//                    .padding(end = 8.dp)
+//            ){
+//                Text(
+//                    text = selectedLanguage,
+//                    modifier = Modifier.padding(end = 4.dp)
+//                )
+//                Icon(
+//                    imageVector = Icons.Filled.ArrowDropDown,
+//                    contentDescription = "Dropdown Arrow"
+//                )
+//            }
+//            DropdownMenu(
+//                expanded = showDropdown,
+//                onDismissRequest = { onDropdownChange(false) }
+//            ) {
+//                //Displaying the language history first followed by border
+//                languageHistory.forEach { language ->
+//                    DropdownMenuItem(
+//                        text = { Text(language) },
+//                        onClick = {
+//                            onLanguageSelected(language)
+//                            onDropdownChange(false)
+//                        }
+//                    )
+//                }
+//
+//                if (languageHistory.isNotEmpty()) {
+//                    HorizontalDivider()
+//                }
+//
+//                // Displaying the rest of the languages
+//                (languages - languageHistory).forEach { language ->
+//                    DropdownMenuItem(
+//                        text = { Text(language) },
+//                        onClick = {
+//                            onLanguageSelected(language)
+//                            onDropdownChange(false)
+//                        }
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable
