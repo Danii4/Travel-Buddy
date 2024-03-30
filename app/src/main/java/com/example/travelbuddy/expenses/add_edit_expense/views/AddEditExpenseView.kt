@@ -236,7 +236,9 @@ fun AddEditExpenseView(
 
                 Button(
                     onClick = {
+                        val id = viewModel.getExpenseId() ?: ""
                         val newExpense = ExpenseModel.Expense(
+                            id = id,
                             name = state.name,
                             type = state.type,
                             amount = BigDecimal(state.amount),

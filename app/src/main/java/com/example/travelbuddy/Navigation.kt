@@ -51,11 +51,15 @@ fun Navigation(
             NavigationDrawerWrapper (navController = navController, children = { UnitConversionScreen() }, itemIndex = Screen.UnitConversion.drawerItem)
         }
         composable(
-            route = Screen.AddEditExpense.route + "?expenseId={expenseId}",
+            route = Screen.AddEditExpense.route + "?expenseId={expenseId}&tripId={tripId}",
             arguments = listOf(navArgument("expenseId") {
                 type = NavType.StringType
                 nullable = true
-            })
+            },
+                navArgument("tripId") {
+                    type = NavType.StringType
+                    nullable = true
+                })
         ){
                 AddEditExpenseView()
         }

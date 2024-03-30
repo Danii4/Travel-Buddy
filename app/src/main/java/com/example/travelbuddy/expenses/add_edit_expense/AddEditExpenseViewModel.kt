@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.travelbuddy.NavWrapper
 import com.example.travelbuddy.Screen
 import com.example.travelbuddy.data.ExpenseRepository
@@ -16,10 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
-import java.time.Instant
 import java.util.Date
 import javax.inject.Inject
 
@@ -36,8 +32,9 @@ class AddEditExpenseViewModel @Inject constructor(
     val state: StateFlow<AddEditExpenseModel.AddEditExpenseViewState>
         get() = _state
     private val expenseId: String? = savedStateHandle["expenseId"]
+//    private val tripId: String? = savedStateHandle["tripId"]
 //    private val expenseId = "1mU6O6SswXWCEu6aT8ci"
-
+    private val tripId = "OREAgUxxBdNtecnL22tS"
     private val name: MutableStateFlow<String> = MutableStateFlow(_state.value.name)
     private val amount: MutableStateFlow<String> = MutableStateFlow(_state.value.amount)
 
@@ -49,6 +46,10 @@ class AddEditExpenseViewModel @Inject constructor(
 
     fun setExpenseName(newName: String) {
         name.value = newName
+    }
+
+    fun getExpenseId() : String? {
+        return expenseId
     }
 
     // Cited from: https://github.com/Kotlin/kotlinx.coroutines/issues/3598
@@ -116,7 +117,7 @@ class AddEditExpenseViewModel @Inject constructor(
     fun submitExpense(expense: ExpenseModel.Expense) {
         viewModelScope.launch {
             // Add type checking for expense
-            when (expenseRepository.addExpense(expense)) {
+            when (expenseRepository.addUpdateExpense(expense, tripId)) {
                 is ResponseModel.Response.Success -> {}
                 is ResponseModel.Response.Failure -> {}
             }
