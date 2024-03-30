@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
+import com.example.travelbuddy.trips.add_trips.views.DestinationView
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,8 +50,6 @@ fun TripCard(
     navController: NavController,
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
-//        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
-//        val addTripViewModel = hiltViewModel<AddTripsViewModel>()
 
         val sheetState = rememberModalBottomSheetState(
             skipPartiallyExpanded = true
@@ -78,7 +77,7 @@ fun TripCard(
                 AssistChip(
                     onClick = {
                         destSheetOpen = true
-                        destSheetTripId = ""
+                        destSheetTripId = "6DNpnjh2xcZjgCVKfxxk"
                     },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -95,9 +94,7 @@ fun TripCard(
                 )
                 Spacer(modifier = Modifier.width(100.dp))
                 AssistChip(
-                    onClick = {
-//                        expenseViewModel.navigateToAddEditExpense()
-                              },
+                    onClick = {},
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
@@ -121,7 +118,7 @@ fun TripCard(
                     destSheetTripId = null
                 },
                 content = {
-                    DestinationView()
+                    DestinationView(destSheetTripId)
                 }
             )
         }

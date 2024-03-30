@@ -6,4 +6,5 @@ interface TripRepository {
     suspend fun addTrip(tripName: String, destIdList: List<String>) : ResponseModel.ResponseWithData<String>
     suspend fun addTripIdToUser(Id: String)
     suspend fun getExpenseIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>>
+    suspend fun getDestinationIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>>
 }

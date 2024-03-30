@@ -1,4 +1,4 @@
-package com.example.travelbuddy.trips.views
+package com.example.travelbuddy.trips.add_trips.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,18 +10,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.travelbuddy.trips.TripsViewModel
-import com.example.travelbuddy.trips.add_trips.views.AddEditDestinationView
+import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 
 
 @Composable
 fun NavigationRow() {
-    val viewModel = hiltViewModel<TripsViewModel>()
-    val scope = rememberCoroutineScope()
+    val viewModel = hiltViewModel<AddTripsViewModel>()
 
     Row(
         modifier = Modifier
@@ -52,7 +49,7 @@ fun NavigationRow() {
 }
 
 @Composable
-fun DestinationView() {
+fun DestinationView(destSheetTripId: String?) {
     Scaffold(
         topBar = {
             NavigationRow()
