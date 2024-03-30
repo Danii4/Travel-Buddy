@@ -71,4 +71,13 @@ class TripRepositoryImpl @Inject constructor(
             ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting destination ids")
         }
     }
+
+    override suspend fun updateDestinationIds(tripId: String, destIdList: List<String>): ResponseModel.Response {
+        return try {
+            db.collection("trips").document(tripId).update("destinationList", destIdList)
+            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination")
+        }
+    }
 }
