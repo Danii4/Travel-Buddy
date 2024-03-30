@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
+import com.example.travelbuddy.trips.add_trips.views.DestinationView
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
