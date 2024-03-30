@@ -1,11 +1,13 @@
 package com.example.travelbuddy.trips.views
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,15 +19,19 @@ import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,27 +42,39 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
+import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
-import com.example.travelbuddy.expenses.ExpensesViewModel
+import com.example.travelbuddy.trips.add_trips.views.DestinationView
 
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripCard(
-    trip: String,
-    navController: NavController
+    trip: TripModel.Trip,
+    navController: NavController,
 ) {
-    return Card(modifier = Modifier
-        .padding(4.dp),) {
-        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
-        val addTripViewModel = hiltViewModel<AddTripsViewModel>()
+    return Card(modifier = Modifier.padding(4.dp)) {
+//        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
+//        val addTripViewModel = hiltViewModel<AddTripsViewModel>()
 
+        val sheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = true
+        )
+        var destSheetOpen by rememberSaveable {
+            mutableStateOf(false)
+        }
+        var destSheetTripId: String? by rememberSaveable {
+            mutableStateOf(null)
+        }
 
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
             Text(
-                text = trip,
+                text = trip.name,
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -66,8 +84,9 @@ fun TripCard(
             ) {
                 AssistChip(
                     onClick = {
-//                        addTripViewModel.navigateToCreateTripAdd(navController)
-                              },
+                        destSheetOpen = true
+                        destSheetTripId = "6DNpnjh2xcZjgCVKfxxk"
+                    },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
@@ -84,7 +103,7 @@ fun TripCard(
                 Spacer(modifier = Modifier.width(100.dp))
                 AssistChip(
                     onClick = {
-                        expenseViewModel.navigateToAddEditExpense()
+//                        expenseViewModel.navigateToAddEditExpense()
                               },
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -101,29 +120,39 @@ fun TripCard(
                 )
             }
         }
+        if (destSheetOpen){
+            ModalBottomSheet(
+                sheetState = sheetState,
+                onDismissRequest = {
+                    destSheetOpen = false
+                    destSheetTripId = null
+                },
+                content = {
+                    DestinationView(destSheetTripId)
+                }
+            )
+        }
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TripsView(
     navController: NavController
 ) {
 
-    val trip1 = "Grad Trip"
-    val trip2 = "Month in Europe"
+    val viewModel = hiltViewModel<TripsViewModel>()
+    val state by viewModel.state.collectAsState()
 
-    val tripList = remember {
-        mutableStateListOf(trip1, trip2)
-    }
-
-    Scaffold { paddingValues ->
+    Scaffold {
         LazyColumn(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(bottom = 25.dp),
             userScrollEnabled = true
         ) {
-            items(tripList) { trip: String ->
+            items(state.tripsList) { trip: TripModel.Trip ->
                 TripCard(trip = trip, navController)
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(7.dp))
             }
         }
         var isSheetOpen by rememberSaveable {
@@ -143,7 +172,8 @@ fun TripsView(
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp, vertical = 10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xff5cb85c)
+                    containerColor = Color(92,184,92),
+                    contentColor = MaterialTheme.colorScheme.onTertiary
                 )
             ) {
                 Text(text = "New Trip")

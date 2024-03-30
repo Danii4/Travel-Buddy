@@ -29,7 +29,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,11 +39,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.ExpenseModel
-import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
-import java.time.LocalDate
+import com.example.travelbuddy.util.Money
+import java.math.BigDecimal
+import java.time.Instant
+import java.util.Date
 
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -71,8 +71,8 @@ fun AddEditExpenseView(
     ) { paddingValues ->
         var expenseName by remember { mutableStateOf("") }
         var expenseType by remember { mutableStateOf(ExpenseModel.ExpenseType.MISCELLANEOUS) }
-        var expenseAmount by remember { mutableStateOf(0.0f) }
-        var expenseDate by remember { mutableStateOf(LocalDate.now()) }
+        var expenseAmount by remember { mutableStateOf(Money(amount = BigDecimal(0.00), currencyCode = "USD", displayAmount = null)) }
+        var expenseDate by remember { mutableStateOf(Date.from(Instant.now())) }
         var expanded by remember { mutableStateOf(false) }
 
         Column(
@@ -141,8 +141,8 @@ fun AddEditExpenseView(
             // Text field for entering expense amount
             TextField(
                 label = { Text(text = "Amount ($)") },
-                value = expenseAmount.toString(),
-                onValueChange = { expenseAmount = it.toFloatOrNull() ?: 0.0f },
+                value = expenseAmount.amount.toString(),
+                onValueChange = { expenseAmount.amount = it.toBigDecimal()},
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -238,7 +238,7 @@ fun AddEditExpenseView(
                         val newExpense = ExpenseModel.Expense(
                             name = expenseName,
                             type = expenseType,
-                            amount = expenseAmount,
+                            money = expenseAmount,
                             date = expenseDate
                         )
                         viewModel.submitExpense(newExpense)

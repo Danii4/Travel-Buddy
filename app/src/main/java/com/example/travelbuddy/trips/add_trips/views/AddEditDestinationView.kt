@@ -58,6 +58,8 @@ import com.example.travelbuddy.itinerary.model.ItineraryModel
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 @Composable
 fun GenerateDestinationView(
@@ -307,9 +309,11 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                 if (destBarText.isNotBlank()) {
                                     val newDestination = DestinationModel.Destination(
                                         name = destBarText,
-                                        startDate = selectedRange.value.lower,
-                                        endDate = selectedRange.value.upper,
-//                                        itinerary = ItineraryModel(0,)
+                                        startDate = Date.from(selectedRange.value.lower.atStartOfDay(
+                                            ZoneId.systemDefault()).toInstant()),
+                                        endDate = Date.from(selectedRange.value.upper.atStartOfDay(
+                                            ZoneId.systemDefault()).toInstant()),
+                                        //                                        itinerary = ItineraryModel(0,)
                                     )
                                     viewModel.addDestination(newDestination)
                                     destBarText = ""

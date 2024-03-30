@@ -26,7 +26,38 @@ fun TranslationScreen() {
     var translatedText by remember { mutableStateOf("") }
     var inputLanguageSelected by remember { mutableStateOf("English") }
     var outputLanguageSelected by remember { mutableStateOf("French") }
-    val languages = listOf("English", "French", "Spanish", "German") // Example language options
+    val languages = listOf(
+        "Arabic",
+        "Bengali",
+        "Chinese",
+        "English",
+        "French",
+        "German",
+        "Hindi",
+        "Indonesian",
+        "Italian",
+        "Japanese",
+        "Korean",
+        "Malay",
+        "Marathi",
+        "Persian",
+        "Polish",
+        "Portuguese",
+        "Russian",
+        "Spanish",
+        "Swahili",
+        "Tamil",
+        "Telugu",
+        "Thai",
+        "Turkish",
+        "Urdu",
+        "Vietnamese",
+        "Dutch",
+        "Greek",
+        "Hungarian",
+        "Romanian",
+        "Swedish"
+    )
     var showInputDropdown by remember { mutableStateOf(false) }
     var showOutputDropdown by remember { mutableStateOf(false) }
 

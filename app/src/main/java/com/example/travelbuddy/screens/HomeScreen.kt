@@ -45,6 +45,25 @@ fun HomeScreen() {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
+                 Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Frequently Asked Questions",
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium
+            )
+                 //FAQ section
+                  Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Do I have to be connected to the internet to view my data?",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+                     Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Limited content will be visible without full internet access on the app. Please connect to the internet",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
