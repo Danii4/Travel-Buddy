@@ -152,7 +152,7 @@ fun TripsView(
         ) {
             items(state.tripsList) { trip: TripModel.Trip ->
                 TripCard(trip = trip, navController)
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(7.dp))
             }
         }
         var isSheetOpen by rememberSaveable {
@@ -172,7 +172,8 @@ fun TripsView(
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp, vertical = 10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0x005CB85C)
+                    containerColor = Color(92,184,92),
+                    contentColor = MaterialTheme.colorScheme.onTertiary
                 )
             ) {
                 Text(text = "New Trip")
