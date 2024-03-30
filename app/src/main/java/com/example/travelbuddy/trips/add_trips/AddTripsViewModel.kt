@@ -1,12 +1,13 @@
 package com.example.travelbuddy.trips.add_trips
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelbuddy.NavWrapper
 import com.example.travelbuddy.Screen
-import com.example.travelbuddy.data.DestinationRepositoryImpl
-import com.example.travelbuddy.data.TripRepositoryImpl
 import com.example.travelbuddy.data.model.DestinationModel
+import com.example.travelbuddy.repository.DestinationRepository
+import com.example.travelbuddy.repository.TripRepository
 import com.example.travelbuddy.trips.add_trips.model.AddTripsPageModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTripsViewModel @Inject constructor(
-    private val destinationRepositoryImpl: DestinationRepositoryImpl,
-    private val tripRepositoryImpl: TripRepositoryImpl,
+    private val destinationRepository: DestinationRepository,
+    private val tripRepository: TripRepository,
     private val navWrapper: NavWrapper
 ) : ViewModel() {
     private val _state = MutableStateFlow(AddTripsPageModel.AddTripViewState())
@@ -27,6 +28,7 @@ class AddTripsViewModel @Inject constructor(
 
     private val destinationList: MutableStateFlow<List<DestinationModel.Destination>> = MutableStateFlow(listOf())
     private val tripName: MutableStateFlow<String> = MutableStateFlow(_state.value.tripName)
+    private val tripId = "VLmb9HsekUi5zOjp4WsU"
 
     init {
         viewModelScope.launch {
@@ -43,6 +45,21 @@ class AddTripsViewModel @Inject constructor(
         }
     }
 
+    fun getData(){
+        viewModelScope.launch {
+            destinationRepository.getDestinations(tripId).collect{destination ->
+                destination.data?.let {
+                    destinationList.value = it
+                }?: run {
+                    Log.d("Error", "Error getting destination data")
+                }
+            }
+        }
+    }
+
+    init {
+        getData()
+    }
 
     fun addDestination(destination: DestinationModel.Destination) {
         destinationList.value += destination
@@ -60,14 +77,14 @@ class AddTripsViewModel @Inject constructor(
         viewModelScope.launch {
             val destIdList = mutableListOf<String>()
             destinationList.value.forEach { destination ->
-                val resp = destinationRepositoryImpl.addDestination(destination)
+                val resp = destinationRepository.addDestination(destination)
                 destIdList.add(resp?.data.toString())
             }
-            val tripId = tripRepositoryImpl.addTrip(
+            val tripId = tripRepository.addTrip(
                 tripName= tripName.value,
                 destIdList = destIdList,
             )
-            tripRepositoryImpl.addTripIdToUser(tripId.data.toString())
+            tripRepository.addTripIdToUser(tripId.data.toString())
         }
     }
 
