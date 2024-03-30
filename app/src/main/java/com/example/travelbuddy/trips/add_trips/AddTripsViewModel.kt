@@ -28,16 +28,18 @@ class AddTripsViewModel @Inject constructor(
 
     private val destinationList: MutableStateFlow<List<DestinationModel.Destination>> = MutableStateFlow(listOf())
     private val tripName: MutableStateFlow<String> = MutableStateFlow(_state.value.tripName)
-    private val tripId = "VLmb9HsekUi5zOjp4WsU"
+    private val tripId: MutableStateFlow<String?> = MutableStateFlow(_state.value.tripId)
 
     init {
         viewModelScope.launch {
-            combine(destinationList, tripName) {
+            combine(destinationList, tripName, tripId) {
                     destinationList: List<DestinationModel.Destination>,
-                    tripName: String ->
+                    tripName: String,
+                    tripId: String? ->
                 AddTripsPageModel.AddTripViewState(
                     destinationList = destinationList,
                     tripName = tripName,
+                    tripId = tripId
                 )
             }.collect {
                 _state.value = it
@@ -47,7 +49,7 @@ class AddTripsViewModel @Inject constructor(
 
     fun getData(){
         viewModelScope.launch {
-            destinationRepository.getDestinations(tripId).collect{destination ->
+            destinationRepository.getDestinations(tripId.value).collect{destination ->
                 destination.data?.let {
                     destinationList.value = it
                 }?: run {
@@ -73,6 +75,11 @@ class AddTripsViewModel @Inject constructor(
         tripName.value = name
     }
 
+    fun setTripId(Id: String?){
+        tripId.value = Id.toString()
+        getData()
+    }
+
     fun submitDestination(){
         viewModelScope.launch {
             val destIdList = mutableListOf<String>()
@@ -91,9 +98,9 @@ class AddTripsViewModel @Inject constructor(
     fun updateDestination(){
         viewModelScope.launch {
             // Clear Existing Data
-            val destinationListOrig = tripRepository.getDestinationIds(tripId)
+            val destinationListOrig = tripRepository.getDestinationIds(tripId.value)
             destinationListOrig.data?.forEach { destinationId ->
-                destinationRepository.deleteDestination(destinationId, tripId)
+                destinationRepository.deleteDestination(destinationId, tripId.value)
             }
 
             // Update With New Data Values
@@ -102,7 +109,7 @@ class AddTripsViewModel @Inject constructor(
                 val response = destinationRepository.addDestination(destination)
                 destIdList.add(response?.data.toString())
             }
-            tripRepository.updateDestinationIds(tripId, destIdList)
+            tripRepository.updateDestinationIds(tripId.value, destIdList)
         }
     }
 

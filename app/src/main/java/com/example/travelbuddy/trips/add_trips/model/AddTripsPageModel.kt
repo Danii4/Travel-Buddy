@@ -6,5 +6,6 @@ class AddTripsPageModel {
     data class AddTripViewState(
         val destinationList: List<DestinationModel.Destination> = emptyList(),
         val tripName: String = "",
+        var tripId: String? = null
     )
 }
