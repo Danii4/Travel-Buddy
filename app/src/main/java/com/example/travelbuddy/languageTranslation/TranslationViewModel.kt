@@ -1,6 +1,5 @@
 package com.example.travelbuddy.languageTranslation
 
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.example.travelbuddy.languageTranslation.model.TranslationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,13 +11,11 @@ import javax.inject.Inject
 class TranslationViewModel @Inject constructor(
     private val translationModel: TranslationModel
 ) : ViewModel() {
-//    private val _inputText = MutableStateFlow("")
     private val _translatedText = MutableStateFlow("")
     val translatedText = _translatedText.asStateFlow()
 
-//    fun setInputText(text: TextFieldValue) {
-//        _inputText.value = text.toString()
-//    }
+    private val _languageHistory = MutableStateFlow<List<String>>(emptyList())
+    val languageHistory = _languageHistory.asStateFlow()
 
     fun translateText(inputText: String, sourceLanguage: String, targetLanguage: String) {
         translationModel.performTranslation(inputText, sourceLanguage, targetLanguage,
@@ -28,5 +25,11 @@ class TranslationViewModel @Inject constructor(
             onFailure = { error ->
                 _translatedText.value = error
             })
+    }
+    fun updateLanguagesHistory(selectedLanguage: String) {
+        val updatedList = _languageHistory.value.toMutableList()
+        updatedList.remove(selectedLanguage)
+        updatedList.add(0, selectedLanguage)
+        _languageHistory.value = updatedList.take(3)
     }
 }

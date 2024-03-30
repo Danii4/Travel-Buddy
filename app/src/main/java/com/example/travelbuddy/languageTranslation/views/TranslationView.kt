@@ -1,12 +1,8 @@
 package com.example.travelbuddy.languageTranslation.views
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +18,7 @@ fun TranslationScreen() {
     val translatedText by viewModel.translatedText.collectAsState()
     var inputLanguageSelected by remember { mutableStateOf("English") }
     var outputLanguageSelected by remember { mutableStateOf("French") }
-    var languageHistory by remember { mutableStateOf(listOf<String>()) }
+    val languageHistory by viewModel.languageHistory.collectAsState()
     val languages = listOf(
         "Arabic",
         "Bengali",
@@ -67,7 +63,7 @@ fun TranslationScreen() {
             showDropdown = showInputDropdown,
             onLanguageSelected = {  language ->
                 inputLanguageSelected = language
-                languageHistory = updateLanguagesHistory(language, languageHistory)
+                viewModel.updateLanguagesHistory(language)
                 showInputDropdown = false },
             onDropdownChange = { showInputDropdown = it },
             languageHistory = languageHistory
@@ -121,7 +117,7 @@ fun TranslationScreen() {
             showDropdown = showOutputDropdown,
             onLanguageSelected = {  language ->
                 outputLanguageSelected = language
-                languageHistory = updateLanguagesHistory(language, languageHistory)
+                viewModel.updateLanguagesHistory(language)
                 showOutputDropdown = false },
             onDropdownChange = { showOutputDropdown = it },
             languageHistory = languageHistory
@@ -138,81 +134,10 @@ fun TranslationScreen() {
                 .padding(bottom = 16.dp),
             label = { Text("Translated Text") }
         )
+
+
     }
 }
-
-fun updateLanguagesHistory(selectedLanguage: String, languageHistory: List<String>): List<String> {
-    val updatedList = mutableListOf(selectedLanguage)
-    updatedList.addAll(languageHistory.filterNot { it == selectedLanguage })
-    return updatedList.take(3)
-}
-//@Composable
-//
-//fun LanguageSelectionDropdown(
-//    label: String,
-//    selectedLanguage: String,
-//    languages: List<String>,
-//    showDropdown: Boolean,
-//    onLanguageSelected: (String) -> Unit,
-//    onDropdownChange: (Boolean) -> Unit,
-//    languageHistory: List<String>
-//) {
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-//    ) {
-//        Text(text = "$label: ")
-//
-//        Box(modifier = Modifier.weight(2f)) {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically,
-//                modifier = Modifier
-//                    .clickable { onDropdownChange(true) }
-//                    .padding(end = 8.dp)
-//            ){
-//                Text(
-//                    text = selectedLanguage,
-//                    modifier = Modifier.padding(end = 4.dp)
-//                )
-//                Icon(
-//                    imageVector = Icons.Filled.ArrowDropDown,
-//                    contentDescription = "Dropdown Arrow"
-//                )
-//            }
-//            DropdownMenu(
-//                expanded = showDropdown,
-//                onDismissRequest = { onDropdownChange(false) }
-//            ) {
-//                //Displaying the language history first followed by border
-//                languageHistory.forEach { language ->
-//                    DropdownMenuItem(
-//                        text = { Text(language) },
-//                        onClick = {
-//                            onLanguageSelected(language)
-//                            onDropdownChange(false)
-//                        }
-//                    )
-//                }
-//
-//                if (languageHistory.isNotEmpty()) {
-//                    HorizontalDivider()
-//                }
-//
-//                // Displaying the rest of the languages
-//                (languages - languageHistory).forEach { language ->
-//                    DropdownMenuItem(
-//                        text = { Text(language) },
-//                        onClick = {
-//                            onLanguageSelected(language)
-//                            onDropdownChange(false)
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 @Preview(showBackground = true)
 @Composable
 fun TranslationScreenPreview() {
