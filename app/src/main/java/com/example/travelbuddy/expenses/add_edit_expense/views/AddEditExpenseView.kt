@@ -1,7 +1,6 @@
 package com.example.travelbuddy.expenses.add_edit_expense.views
 
 import android.annotation.SuppressLint
-import android.widget.DatePicker
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +16,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -40,20 +38,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.ExpenseModel
-import com.example.travelbuddy.data.model.TripModel
-import com.example.travelbuddy.expenses.ExpensesViewModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
-import java.time.LocalDate
+import com.example.travelbuddy.util.Money
+import java.math.BigDecimal
+import java.time.Instant
+import java.util.Date
 
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
-    val viewModel = AddEditExpenseViewModel()
-//    val viewModel = hiltViewModel<AddEditExpenseViewModel>()
-//    val state by viewModel.state.collectAsState()
+fun AddEditExpenseView(
+) {
+    val viewModel = hiltViewModel<AddEditExpenseViewModel>()
+
+//    var state = viewModel.state.collectAsState(initial = null)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -70,8 +71,8 @@ fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
     ) { paddingValues ->
         var expenseName by remember { mutableStateOf("") }
         var expenseType by remember { mutableStateOf(ExpenseModel.ExpenseType.MISCELLANEOUS) }
-        var expenseAmount by remember { mutableStateOf(0.0f) }
-        var expenseDate by remember { mutableStateOf(LocalDate.now()) }
+        var expenseAmount by remember { mutableStateOf(Money(amount = BigDecimal(0.00), currencyCode = "USD", displayAmount = null)) }
+        var expenseDate by remember { mutableStateOf(Date.from(Instant.now())) }
         var expanded by remember { mutableStateOf(false) }
 
         Column(
@@ -140,8 +141,8 @@ fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
             // Text field for entering expense amount
             TextField(
                 label = { Text(text = "Amount ($)") },
-                value = expenseAmount.toString(),
-                onValueChange = { expenseAmount = it.toFloatOrNull() ?: 0.0f },
+                value = expenseAmount.amount.toString(),
+                onValueChange = { expenseAmount.amount = it.toBigDecimal()},
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -226,9 +227,8 @@ fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
             ) {
                 Button(
                     onClick = {
-                        viewModel.navigatetoExpenses(navController)
+                        viewModel.navigateToExpenses()
                     },
-//                    modifier = Modifier.
                 ) {
                     Text(text = "Cancel")
                 }
@@ -238,20 +238,16 @@ fun AddEditExpenseView( navController: NavController, trip: TripModel.Trip) {
                         val newExpense = ExpenseModel.Expense(
                             name = expenseName,
                             type = expenseType,
-                            amount = expenseAmount,
+                            money = expenseAmount,
                             date = expenseDate
                         )
-                        trip.addExpense(newExpense)
-                        viewModel.navigatetoExpenses(navController)
+                        viewModel.submitExpense(newExpense)
+                        viewModel.navigateToExpenses()
                     },
-//                    modifier = Modifier.
                 ) {
                     Text(text = "Save")
                 }
             }
-            // Button to save the expense
-
-
             Spacer(modifier = Modifier.height(20.dp))
             Divider(modifier = Modifier.fillMaxWidth())
         }

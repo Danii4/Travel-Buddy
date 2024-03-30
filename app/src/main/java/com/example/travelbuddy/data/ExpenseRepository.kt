@@ -1,4 +1,83 @@
 package com.example.travelbuddy.data
 
-class ExpenseRepository {
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.travelbuddy.data.model.ExpenseModel
+import com.example.travelbuddy.data.model.ResponseModel
+import com.example.travelbuddy.repository.AuthRepository
+import com.example.travelbuddy.repository.TripRepository
+import com.example.travelbuddy.util.Money
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.tasks.await
+import java.math.BigDecimal
+
+class ExpenseRepository(
+    private val tripRepository: TripRepository,
+    private val authRepository: AuthRepository
+) {
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+
+    suspend fun addExpense(expense: ExpenseModel.Expense): ResponseModel.Response {
+        return try {
+            val colRef = db.collection("expenses").add(
+                mapOf(
+                    "name" to expense.name,
+                    "type" to expense.type,
+                    "money" to expense.money,
+                    "date" to expense.date
+                )
+            ).await()
+            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            ResponseModel.Response.Failure(
+                error = e.message ?: "Error adding an expense. Please try again."
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getExpenses(tripId : String): Flow<ResponseModel.ResponseWithData<List<ExpenseModel.Expense>>> {
+        return flow {
+            emit(getExpenseData(tripId))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun getExpenseData(tripId: String): ResponseModel.ResponseWithData<List<ExpenseModel.Expense>> {
+        val expenseIds = tripRepository.getExpenseIds(tripId)
+        if (expenseIds.error != null) {
+            return ResponseModel.ResponseWithData.Failure(error = expenseIds.error)
+        }
+
+        val expenseData: MutableList<DocumentSnapshot> = mutableListOf()
+        expenseIds.data?.forEach {
+            try {
+                expenseData.add(db.collection("expenses").document(it).get().await())
+            } catch (e: Exception) {
+                return ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting expenses")
+            }
+        }
+
+        val expenseList = mutableListOf<ExpenseModel.Expense>()
+        for (expense in expenseData) {
+            val timestamp = expense.get("date") as Timestamp
+            val money = expense.get("money") as HashMap<*, *>
+            ExpenseModel.Expense(
+                id = expense.id,
+                name = expense.get("name") as String,
+                type = ExpenseModel.ExpenseType.valueOf(expense.get("type") as String),
+                money = Money(amount = BigDecimal(money["amount"] as String), currencyCode = money["currencyCode"] as String),
+                date = timestamp.toDate()
+            )
+                .let { expenseList.add(it) }
+        }
+        return ResponseModel.ResponseWithData.Success(expenseList)
+    }
 }
