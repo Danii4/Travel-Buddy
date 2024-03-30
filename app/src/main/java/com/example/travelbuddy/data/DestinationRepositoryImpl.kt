@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 
 
 class DestinationRepositoryImpl @Inject constructor(
@@ -32,6 +33,20 @@ class DestinationRepositoryImpl @Inject constructor(
             ResponseModel.ResponseWithData.Success(destID)
         } catch (e: Exception) {
             ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error adding destination")
+        }
+    }
+
+    override suspend fun deleteDestination(destinationId: String, tripId: String): ResponseModel.Response {
+        try {
+            db.collection("transactions").document(destinationId).delete()
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting destination")
+        }
+        return try {
+            db.collection("trips").document(tripId).update("destinationList", FieldValue.arrayRemove(destinationId))
+            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            ResponseModel.Response.Failure(e.message ?: "Unknown message while updating farm")
         }
     }
 

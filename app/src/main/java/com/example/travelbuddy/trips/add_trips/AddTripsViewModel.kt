@@ -77,14 +77,32 @@ class AddTripsViewModel @Inject constructor(
         viewModelScope.launch {
             val destIdList = mutableListOf<String>()
             destinationList.value.forEach { destination ->
-                val resp = destinationRepository.addDestination(destination)
-                destIdList.add(resp?.data.toString())
+                val response = destinationRepository.addDestination(destination)
+                destIdList.add(response?.data.toString())
             }
             val tripId = tripRepository.addTrip(
                 tripName= tripName.value,
                 destIdList = destIdList,
             )
             tripRepository.addTripIdToUser(tripId.data.toString())
+        }
+    }
+
+    fun updateDestination(){
+        viewModelScope.launch {
+            // Clear Existing Data
+            val destinationListOrig = tripRepository.getDestinationIds(tripId)
+            destinationListOrig.data?.forEach { destinationId ->
+                destinationRepository.deleteDestination(destinationId, tripId)
+            }
+
+            // Update With New Data Values
+            val destIdList = mutableListOf<String>()
+            destinationList.value.forEach { destination ->
+                val response = destinationRepository.addDestination(destination)
+                destIdList.add(response?.data.toString())
+            }
+            tripRepository.updateDestinationIds(tripId, destIdList)
         }
     }
 
