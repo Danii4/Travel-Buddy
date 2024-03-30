@@ -24,40 +24,52 @@ class ExpenseRepository(
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
-    suspend fun addUpdateExpense(expense: ExpenseModel.Expense, tripId: String?): ResponseModel.Response {
-        val expenseSnapshot = db.collection("expenses").document(expense.id).get().await()
+    suspend fun addUpdateExpense(
+        expense: ExpenseModel.Expense,
+        tripId: String?
+    ): ResponseModel.Response {
         if (tripId.isNullOrBlank()) {
             return ResponseModel.Response.Failure(error = "Error: Null or Empty tripId")
         }
-        return try {
-            if (expenseSnapshot.exists()) {
-                db.collection("expenses").document(expense.id).update(
-                    "name", expense.name,
-                    "type", expense.type,
-                    "amount", expense.amount.toString(),
-                    "date", expense.date,
-                    "currencyCode", expense.currencyCode
-                )
-            } else {
-                val expenseRef = db.collection("expenses").add(
-                    mapOf(
-                        "name" to expense.name,
-                        "type" to expense.type,
-                        "amount" to expense.amount,
-                        "date" to expense.date
+        if (expense.id.isNotBlank()) {
+            val expenseSnapshot = db.collection("expenses").document(expense.id).get().await()
+            return try {
+                if (expenseSnapshot.exists()) {
+                    db.collection("expenses").document(expense.id).update(
+                        "name", expense.name,
+                        "type", expense.type,
+                        "amount", expense.amount.toString(),
+                        "date", Timestamp(expense.date),
+                        "currencyCode", expense.currencyCode
                     )
-                ).await()
-                db.collection("trips").document(tripId).update(
-                    "expenses", FieldValue.arrayUnion(expenseRef.id)
-                )
-            }
-            ResponseModel.Response.Success
-        }
-        catch (e: Exception) {
+                }
+                ResponseModel.Response.Success
+            } catch (e: Exception) {
                 return ResponseModel.Response.Failure(
                     error = e.message ?: "Error adding an expense. Please try again."
                 )
             }
+        } else {
+            return try {
+                val expenseRef = db.collection("expenses").add(
+                    mapOf(
+                        "name" to expense.name,
+                        "type" to expense.type,
+                        "amount" to expense.amount.toString(),
+                        "date" to Timestamp(expense.date),
+                        "currencyCode" to expense.currencyCode
+                    )
+                ).await()
+                db.collection("trips").document(tripId).update(
+                    "expensesList", FieldValue.arrayUnion(expenseRef.id)
+                )
+                ResponseModel.Response.Success
+            } catch (e: Exception) {
+                return ResponseModel.Response.Failure(
+                    error = e.message ?: "Error adding an expense. Please try again."
+                )
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -123,7 +135,7 @@ class ExpenseRepository(
         }
     }
 
-    suspend fun getExpense(expenseId: String) : Flow<ResponseModel.ResponseWithData<ExpenseModel.Expense>> {
+    suspend fun getExpense(expenseId: String): Flow<ResponseModel.ResponseWithData<ExpenseModel.Expense>> {
         return flow {
             emit(getExpenseData(expenseId))
         }.flowOn(Dispatchers.IO)
