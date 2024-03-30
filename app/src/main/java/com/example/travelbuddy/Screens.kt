@@ -13,6 +13,8 @@ sealed class Screen(val route: String, var drawerItem: Int = 0) {
     object Trips: Screen("trip", 1)
     object TripAdd: Screen("trip-add", 1)
     object Expenses: Screen("expenses", 2)
+
+    object Itinerary: Screen(route = "itinerary")
     object AddEditExpense: Screen("add-edit-expense", 2)
 
     object LanguageTranslation: Screen("language-translation", 3)

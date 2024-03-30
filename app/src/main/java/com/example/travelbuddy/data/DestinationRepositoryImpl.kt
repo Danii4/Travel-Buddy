@@ -2,20 +2,20 @@ package com.example.travelbuddy.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.travelbuddy.data.model.DestinationModel
 import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.repository.DestinationRepository
 import com.example.travelbuddy.repository.TripRepository
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
-import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
+import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 class DestinationRepositoryImpl @Inject constructor(
     private val tripRepository: TripRepository
@@ -84,5 +84,14 @@ class DestinationRepositoryImpl @Inject constructor(
                 .let { destinationList.add(it) }
         }
         return ResponseModel.ResponseWithData.Success(destinationList)
+    }
+
+    override suspend fun updateItineraryIds(destinationId: String, itineraryIdList: List<String>): ResponseModel.Response {
+        return try {
+            db.collection("destinations").document(destinationId).update("itineraryIdList", itineraryIdList)
+            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination itinerary")
+        }
     }
 }

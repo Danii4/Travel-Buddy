@@ -6,6 +6,7 @@ class DestinationModel {
     data class Destination(
         val id: String = "",
         val name: String = "",
+        val itinerary: ItineraryModel.Itinerary? = null,
         val startDate: Date,
         val endDate: Date,
     )
