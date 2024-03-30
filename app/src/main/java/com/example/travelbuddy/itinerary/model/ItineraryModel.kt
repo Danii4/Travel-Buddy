@@ -1,7 +1,10 @@
 package com.example.travelbuddy.itinerary.model
-data class ItineraryModel(val id: Int, val items: List<ItineraryItem>) {
-}
 
-class ItineraryItem(val id: Int, val title: String, val date: String) {
+import com.example.travelbuddy.data.model.ItineraryModel
 
+class ItineraryModel {
+    data class ItineraryViewState(
+        val itineraryList: List<ItineraryModel.Itinerary> = emptyList(),
+        val isLoading: Boolean = false,
+    )
 }
