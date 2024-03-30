@@ -58,10 +58,10 @@ object AppModule {
     @Provides
     @Singleton
     fun providesDestinationRepositoryImpl(
-        authRepository: AuthRepository
+        tripRepository: TripRepository
     ): DestinationRepository {
         return DestinationRepositoryImpl(
-            authRepository = authRepository
+            tripRepository = tripRepository
         )
     }
 
