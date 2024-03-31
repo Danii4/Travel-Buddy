@@ -26,16 +26,22 @@ class AddTripsViewModel @Inject constructor(
     val state: StateFlow<AddTripsPageModel.AddTripViewState>
         get() = _state
 
-    private val destinationList: MutableStateFlow<List<DestinationModel.Destination>> = MutableStateFlow(listOf())
+    private val destinationList: MutableStateFlow<List<DestinationModel.Destination>> =
+        MutableStateFlow(listOf())
     private val tripName: MutableStateFlow<String> = MutableStateFlow(_state.value.tripName)
     private val tripId: MutableStateFlow<String?> = MutableStateFlow(_state.value.tripId)
+    private val changeDetected: MutableStateFlow<Boolean> =
+        MutableStateFlow(_state.value.changeDetected)
 
     init {
         viewModelScope.launch {
-            combine(destinationList, tripName, tripId) {
-                    destinationList: List<DestinationModel.Destination>,
-                    tripName: String,
-                    tripId: String? ->
+            combine(
+                destinationList,
+                tripName,
+                tripId
+            ) { destinationList: List<DestinationModel.Destination>,
+                tripName: String,
+                tripId: String? ->
                 AddTripsPageModel.AddTripViewState(
                     destinationList = destinationList,
                     tripName = tripName,
@@ -47,12 +53,12 @@ class AddTripsViewModel @Inject constructor(
         }
     }
 
-    fun getData(){
+    private fun getData() {
         viewModelScope.launch {
-            destinationRepository.getDestinations(tripId.value).collect{destination ->
+            destinationRepository.getDestinations(tripId.value).collect { destination ->
                 destination.data?.let {
                     destinationList.value = it
-                }?: run {
+                } ?: run {
                     Log.d("Error", "Error getting destination data")
                 }
             }
@@ -65,22 +71,24 @@ class AddTripsViewModel @Inject constructor(
 
     fun addDestination(destination: DestinationModel.Destination) {
         destinationList.value += destination
+        changeDetected.value = true
     }
 
-    fun deleteDestination(destination: DestinationModel.Destination){
+    fun deleteDestination(destination: DestinationModel.Destination) {
         destinationList.value -= destination
+        changeDetected.value = true
     }
 
-    fun setTripName(name: String){
+    fun setTripName(name: String) {
         tripName.value = name
     }
 
-    fun setTripId(Id: String?){
+    fun setTripId(Id: String?) {
         tripId.value = Id.toString()
         getData()
     }
 
-    fun submitDestination(){
+    fun submitDestination() {
         viewModelScope.launch {
             val destIdList = mutableListOf<String>()
             destinationList.value.forEach { destination ->
@@ -88,32 +96,40 @@ class AddTripsViewModel @Inject constructor(
                 destIdList.add(response?.data.toString())
             }
             val tripId = tripRepository.addTrip(
-                tripName= tripName.value,
+                tripName = tripName.value,
                 destIdList = destIdList,
             )
             tripRepository.addTripIdToUser(tripId.data.toString())
         }
     }
 
-    fun updateDestination(){
+    fun updateDestination() {
         viewModelScope.launch {
-            // Clear Existing Data
-            val destinationListOrig = tripRepository.getDestinationIds(tripId.value)
-            destinationListOrig.data?.forEach { destinationId ->
-                destinationRepository.deleteDestination(destinationId, tripId.value)
-            }
+            if (changeDetected.value) {
+                // Clear Existing Data
+                val destinationListOrig = tripRepository.getDestinationIds(tripId.value)
+                destinationListOrig.data?.forEach { destinationId ->
+                    destinationRepository.deleteDestination(destinationId, tripId.value)
+                }
 
-            // Update With New Data Values
-            val destIdList = mutableListOf<String>()
-            destinationList.value.forEach { destination ->
-                val response = destinationRepository.addDestination(destination)
-                destIdList.add(response?.data.toString())
+                // Update With New Data Values
+                val destIdList = mutableListOf<String>()
+                destinationList.value.forEach { destination ->
+                    val response = destinationRepository.addDestination(destination)
+                    destIdList.add(response?.data.toString())
+                }
+                tripRepository.updateDestinationIds(tripId.value, destIdList)
+                changeDetected.value = false
             }
-            tripRepository.updateDestinationIds(tripId.value, destIdList)
         }
     }
 
     fun navigateToTrips() {
         navWrapper.getNavController().navigate(Screen.Trips.route)
+    }
+
+    fun navigateToItinerary(destinationId: String) {
+        navWrapper.getNavController()
+            .navigate(Screen.Itinerary.route + "?destinationId=${destinationId}")
     }
 }

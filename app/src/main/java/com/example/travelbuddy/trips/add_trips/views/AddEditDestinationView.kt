@@ -64,8 +64,10 @@ import java.util.Date
 @Composable
 fun GenerateDestinationView(
     destination: DestinationModel.Destination,
-    onDeleteClicked: () -> Unit
+    viewMode: String,
+    onDeleteClicked: () -> Unit,
 ) {
+    val viewModel = hiltViewModel<AddTripsViewModel>()
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -112,16 +114,18 @@ fun GenerateDestinationView(
                     tint = Color.Red
                 )
             }
-            // Itinerary View
-            IconButton(
-                onClick = { },
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Itinerary View",
-                    tint = Color.Black
-                )
+            if (viewMode == "read") {
+                // Itinerary View
+                IconButton(
+                    onClick = { viewModel.navigateToItinerary(destination.id) },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = "Itinerary View",
+                        tint = Color.Black
+                    )
+                }
             }
         }
     }
@@ -131,7 +135,10 @@ fun GenerateDestinationView(
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
+fun AddEditDestinationView(
+    innerPadding: PaddingValues = PaddingValues(10.dp),
+    viewMode: String = ""
+) {
     val viewModel = hiltViewModel<AddTripsViewModel>()
     val state by viewModel.state.collectAsState()
 
@@ -147,7 +154,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         userScrollEnabled = true
     ) {
         items(state.destinationList) { destination ->
-            GenerateDestinationView(destination = destination) {
+            GenerateDestinationView(destination = destination, viewMode=viewMode) {
                 viewModel.deleteDestination(destination)
             }
         }
@@ -157,7 +164,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         mutableStateOf(false)
     }
 
-    Box (
+    Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
@@ -267,7 +274,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                 )
 
                 Button(
-                    onClick = {calendarState.show()},
+                    onClick = { calendarState.show() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(7.dp),
@@ -317,10 +324,16 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                                 if (destBarText.isNotBlank()) {
                                     val newDestination = DestinationModel.Destination(
                                         name = destBarText,
-                                        startDate = Date.from(selectedRange.value.lower.atStartOfDay(
-                                            ZoneId.systemDefault()).toInstant()),
-                                        endDate = Date.from(selectedRange.value.upper.atStartOfDay(
-                                            ZoneId.systemDefault()).toInstant()),
+                                        startDate = Date.from(
+                                            selectedRange.value.lower.atStartOfDay(
+                                                ZoneId.systemDefault()
+                                            ).toInstant()
+                                        ),
+                                        endDate = Date.from(
+                                            selectedRange.value.upper.atStartOfDay(
+                                                ZoneId.systemDefault()
+                                            ).toInstant()
+                                        ),
                                     )
                                     viewModel.addDestination(newDestination)
                                     destBarText = ""
