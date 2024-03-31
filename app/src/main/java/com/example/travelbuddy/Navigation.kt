@@ -1,11 +1,14 @@
 package com.example.travelbuddy
 
 import HomeScreen
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.travelbuddy.components.NavigationDrawerWrapper
 import com.example.travelbuddy.expenses.add_edit_expense.views.AddEditExpenseView
 import com.example.travelbuddy.expenses.views.ExpensesView
@@ -13,10 +16,12 @@ import com.example.travelbuddy.firebaseauth.screens.InitialAuthScreen
 import com.example.travelbuddy.firebaseauth.screens.LoginScreen
 import com.example.travelbuddy.firebaseauth.screens.ResetPasswordScreen
 import com.example.travelbuddy.firebaseauth.screens.SignupScreen
+import com.example.travelbuddy.itinerary.views.ItineraryView
 import com.example.travelbuddy.languageTranslation.TranslationScreen
 import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 
+@SuppressLint("NewApi")
 @Composable
 fun Navigation(
     loggedIn: Boolean,
@@ -51,6 +56,22 @@ fun Navigation(
         composable(Screen.AddEditExpense.route) {
             //NavigationDrawerWrapper (navController = navController, children = { AddEditExpenseView() }, itemIndex = Screen.AddEditExpense.drawerItem)
             AddEditExpenseView()
+        }
+
+        composable(
+            route = Screen.Itinerary.route + "?destinationId={destinationId}&tripId={tripId}",
+            arguments = listOf(
+                navArgument("destinationId") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("tripId") {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) {
+            ItineraryView()
         }
     }
 }
