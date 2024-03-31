@@ -4,7 +4,6 @@ class ResponseModel {
     sealed class Response(val error : String? = null) {
         object Success : Response()
         class Failure(error : String): Response(error = error)
-        class Loading : Response()
     }
     sealed class ResponseWithData<T>(
         val data : T? = null,

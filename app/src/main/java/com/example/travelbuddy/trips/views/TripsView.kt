@@ -58,9 +58,9 @@ import com.example.travelbuddy.trips.add_trips.views.DestinationView
 fun TripCard(
     trip: TripModel.Trip,
     navController: NavController,
+    onExpenseClick: () -> Unit
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
-//        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
         val addTripsViewModel = hiltViewModel<AddTripsViewModel>()
 
         val sheetState = rememberModalBottomSheetState(
@@ -103,9 +103,7 @@ fun TripCard(
                 )
                 Spacer(modifier = Modifier.width(100.dp))
                 AssistChip(
-                    onClick = {
-//                        expenseViewModel.navigateToAddEditExpense()
-                              },
+                    onClick = onExpenseClick,
                     colors = AssistChipDefaults.assistChipColors(
                         leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
@@ -167,7 +165,9 @@ fun TripsView(
         ) {
             viewModel.getData()
             items(state.tripsList) { trip: TripModel.Trip ->
-                TripCard(trip = trip, navController)
+                TripCard(trip = trip, navController) {
+                    viewModel.navigateToExpense(trip.id)
+                }
                 Spacer(modifier = Modifier.height(7.dp))
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.travelbuddy.util.Money
+import java.math.BigDecimal
 import java.util.Date
 
 class ExpenseModel {
@@ -42,8 +43,9 @@ class ExpenseModel {
         val id: String = "",
         val name: String = "",
         val type: ExpenseType,
-        val money: Money,
-        val date: Date
+        val amount: BigDecimal,
+        val date: Date,
+        val currencyCode: String
     )
 
 }
