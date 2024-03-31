@@ -70,6 +70,30 @@ fun HomeScreen() {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
+                      Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Is it possible to contact someone directly about pricing and questions related to using the app?",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+                     Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Yes, for travel agent support or questions relating to a specific itinerary please feel free to contact us at inquiries@travelbuddy.com",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+                      Text(
+                modifier = Modifier.padding(20.dp),
+                text = "How often does the pricing of various flights and hotels change?",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+                     Text(
+                modifier = Modifier.padding(20.dp),
+                text = "In our system we use real time data connected directly to industry suppliers to receive real time pricing.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
