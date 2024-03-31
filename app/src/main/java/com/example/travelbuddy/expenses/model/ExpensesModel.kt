@@ -1,24 +1,14 @@
 package com.example.travelbuddy.expenses.model
 
 import com.example.travelbuddy.data.model.ExpenseModel
-import java.util.UUID
+import com.example.travelbuddy.data.model.TripModel
+import java.math.BigDecimal
 
 class ExpensesModel {
-//    enum class FilterName(val uiName : String, val dbFieldName : String) {
-//        Type("Type", "type"),
-//        Trip("Trip", "tripId"),
-//    }
-
     data class ExpensesViewState(
         val expensesList: List<ExpenseModel.Expense> = emptyList(),
-        val isLoading: Boolean = false,
+        val budgets: Map<ExpenseModel.ExpenseType, BigDecimal> = emptyMap(),
+        val trip: TripModel.Trip = TripModel.Trip(),
+        val defaultCurrency: String = ""
     )
-
-//    data class Filter(
-//        val id: UUID = UUID.randomUUID(),
-//        val name: FilterName,
-//        val itemsList: List<String>,
-//        val selectedItem: String?
-//    )
-
 }

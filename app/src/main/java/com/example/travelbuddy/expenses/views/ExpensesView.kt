@@ -13,20 +13,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -36,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -45,12 +50,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.R
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
 import com.example.travelbuddy.expenses.model.ExpensesModel
@@ -70,9 +80,6 @@ fun ExpenseList(
             .padding(4.dp)
             .height(70.dp)
             .animateContentSize(),
-//            .clickable {
-//                onTransactionNavigate(transaction.transactionId)
-//            },
         shape = RoundedCornerShape(15),
         onClick = { viewModel.navigateToAddEditExpense(expense.id) }
     ) {
@@ -88,7 +95,7 @@ fun ExpenseList(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-            ){
+            ) {
 
                 Spacer(modifier = Modifier.width(11.dp))
                 Image(
@@ -130,7 +137,6 @@ fun ExpenseList(
 
     }
 }
-
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,100 +147,90 @@ fun ExpensesView(
     val viewModel = hiltViewModel<ExpensesViewModel>()
     val state by viewModel.state.collectAsState()
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.navigateToAddEditExpense("") },
-                shape = CircleShape
-            ) {
-                Icon(Icons.Filled.Add, "Floating action button.")
-            }
-        }
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
+    Scaffold { paddingValues ->
+        Column(
+            modifier = modifier.padding(paddingValues)
         ) {
-            item {
-//                Text(
-//                    text = trip.name,
-//                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
-//
-//                )
-                Spacer(modifier = Modifier.height(10.dp))
-                Column(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-                            shape = RoundedCornerShape(16.dp),
+            Text(
+                text = state.trip.name,
+                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .border(
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(8.dp)
+            ) {
+                items(state.budgets.toList()) { (expenseType, amount) ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = expenseType.displayValue,
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 16.sp,
+                            modifier = Modifier.weight(1f)
                         )
-                        .background(
-                            MaterialTheme.colorScheme.surfaceVariant
+                        Text(
+                            text = "\$${
+                                "%.2f".format(
+                                    viewModel.getTotalExpenses(expenseType)
+                                )
+                            } / \$${"%.2f".format(amount.toString().toDouble())}",
+                            overflow = TextOverflow.Ellipsis,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(start = 16.dp)
                         )
-                        .clickable { onClick() }
-                        .padding(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
-                ) {
-//                    trip.budgets.forEach { budget ->
-//                        val expenseType = budget.key
-//                        val budgetAmount = budget.value
-//                        val budgetTotalExpense = trip.totalExpenses[expenseType] ?: 0.0
-//                        val budgetProgress: Float =
-//                            (budgetTotalExpense.toFloat() / budgetAmount).coerceIn(0f, 1f)
-////                        val budgetColor: Color = when {
-////                            budgetProgress >= 0.75 -> Color.Red
-////                            budgetProgress >= 0.50 -> Color.Yellow
-////                            else -> Color.Green
-////                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-//                            Text(
-//                                text = expenseType.toString(),
-//                                overflow = TextOverflow.Ellipsis,
-//                                fontSize = 14.sp,
-//                                textAlign = TextAlign.Left
-//                            )
-//                            Spacer(Modifier.weight(0.9f))
-//                            Text(
-//                                text = "\$${
-//                                    "%.2f".format(
-//                                        budgetTotalExpense
-//                                    )
-//                                } / \$${"%.2f".format(budgetAmount)}",
-//                                overflow = TextOverflow.Ellipsis,
-//                                fontSize = 14.sp,
-//                                textAlign = TextAlign.Right
-//                            )
-                        }
-                        var progress by remember { mutableFloatStateOf(0f) }
-                        val progressAnimDuration = 1500
-                        val progressAnimation by animateFloatAsState(
-                            targetValue = progress,
-                            animationSpec = tween(
-                                durationMillis = progressAnimDuration,
-                                easing = FastOutSlowInEasing
-                            ),
-                            label = ""
-                        )
-                        LinearProgressIndicator(
-                            progress = progressAnimation,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(10.dp)
-                                .padding(end = 16.dp),
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-//                        LaunchedEffect(budgetProgress) {
-//                            progress = budgetProgress
-//                        }
                     }
+                    LinearProgressIndicator(
+                        progress = 0.5f, // Dummy progress for demonstration
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.secondary
+                    )
                 }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .border(
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(8.dp)
+            ) {
+                viewModel.getData()
                 items(state.expensesList) { expense ->
                     ExpenseList(expense = expense, viewModel = viewModel, state = state)
                 }
             }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Button(
+                    onClick = {
+                        viewModel.navigateToAddEditExpense()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(92, 184, 92),
+                        contentColor = MaterialTheme.colorScheme.onTertiary
+                    )
+                ) {
+                    Text(text = "+")
+                }
 
+            }
         }
     }
+}

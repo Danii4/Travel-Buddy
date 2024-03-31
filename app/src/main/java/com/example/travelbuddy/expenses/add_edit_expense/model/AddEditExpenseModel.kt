@@ -16,6 +16,6 @@ class AddEditExpenseModel {
         val amount : String = "",
         val date : Date = Date.from(Instant.now()),
         val type : ExpenseModel.ExpenseType = ExpenseModel.ExpenseType.FLIGHT,
-        val currencyCode : String = ""
+        val currencyCode : String = "CAD"
     )
 }

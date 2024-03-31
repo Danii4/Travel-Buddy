@@ -59,21 +59,29 @@ class TripRepositoryImpl @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getTrips(): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>> {
+    override suspend fun getTrips(tripId: String): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>> {
         return flow {
-            emit(getTripData())
+            emit(getTripsData(tripId))
         }.flowOn(Dispatchers.IO)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun getTripData(): ResponseModel.ResponseWithData<List<TripModel.Trip>> {
-        val tripIds = getTripsIds()
-        if (tripIds.error != null) {
-            return ResponseModel.ResponseWithData.Failure(error = tripIds.error)
+    private suspend fun getTripsData(tripId: String = ""): ResponseModel.ResponseWithData<List<TripModel.Trip>> {
+        var tripIds : MutableList<String>? = mutableListOf()
+        if (tripId.isBlank()) {
+            val tripIdsResponse = getTripsIds()
+            if (tripIdsResponse.error != null) {
+                return ResponseModel.ResponseWithData.Failure(error = tripIdsResponse.error)
+            }
+            else {
+                tripIds = tripIdsResponse.data
+            }
         }
-
+        else {
+            tripIds?.add(tripId)
+        }
         val tripData: MutableList<DocumentSnapshot> = mutableListOf()
-        tripIds.data?.forEach {
+        tripIds?.forEach {
             try {
                 tripData.add(db.collection("trips").document(it).get().await())
             } catch (e: Exception) {
@@ -83,15 +91,14 @@ class TripRepositoryImpl @Inject constructor(
 
         val tripList = mutableListOf<TripModel.Trip>()
         for (trip in tripData) {
+            var budgetsData = trip.get("budgets") as Map<String, String>
+            val budgets = budgetsData.map { ExpenseModel.ExpenseType.from(it.key) to BigDecimal(it.value) }.toMap().toMutableMap()
             TripModel.Trip(
                 id = trip.id,
                 name = trip.get("name") as String,
-//                budgets = MutableMap<ExpenseModel.ExpenseType, Double>,
-//                expensesList = trip.get("expensesList") as List<String>,
-                expensesList = null,
-//                destinationList= trip.get("destinationList") as List<String>,
-                destinationList = null
-//                totalExpenses = MutableMap<ExpenseModel.ExpenseType, Double>
+                budgets = budgets,
+                expensesList = trip.get("expensesList") as List<String>,
+                destinationList = trip.get("destinationList") as List<String>,
             )
                 .let { tripList.add(it) }
         }

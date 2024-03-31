@@ -10,23 +10,23 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.travelbuddy.util.Money
+import androidx.compose.ui.text.toUpperCase
 import java.math.BigDecimal
 import java.util.Date
 
 class ExpenseModel {
-    enum class ExpenseType(val stringValue: String, val colour: Color?, val icon: ImageVector) {
-        FLIGHT("Flight", Color(0xFFE5F0C8), Icons.Default.Flight),
-        FOOD("Food", Color(0xFFFBEECC), Icons.Default.Restaurant),
-        ACCOMMODATION("Accommodation", Color(0xFFFFE6DB), Icons.Default.Hotel),
-        TRANSPORTATION("Transportation", Color(0xFFFFE6DB), Icons.Default.DirectionsCar),
-        ENTERTAINMENT("Entertainment", Color(0xFFFFE6DB), Icons.Default.Attractions),
-        SHOPPING("Shopping", Color(0xFFFFE6DB), Icons.Default.ShoppingBag),
-        MISCELLANEOUS("Miscellaneous", Color(0xFFFFE6DB), Icons.Default.Pending);
+    enum class ExpenseType(val stringValue: String, val displayValue: String, val colour: Color?, val icon: ImageVector) {
+        FLIGHT("FLIGHT","Flight", Color(0xFFE5F0C8), Icons.Default.Flight),
+        FOOD("FOOD","Food", Color(0xFFFBEECC), Icons.Default.Restaurant),
+        ACCOMMODATION("ACCOMMODATION","Accommodation", Color(0xFFFFE6DB), Icons.Default.Hotel),
+        TRANSPORTATION("TRANSPORTATION","Transportation", Color(0xFFFFE6DB), Icons.Default.DirectionsCar),
+        ENTERTAINMENT("ENTERTAINMENT","Entertainment", Color(0xFFFFE6DB), Icons.Default.Attractions),
+        SHOPPING("SHOPPING", "Shopping", Color(0xFFFFE6DB), Icons.Default.ShoppingBag),
+        MISCELLANEOUS("MISCELLANEOUS","Miscellaneous", Color(0xFFFFE6DB), Icons.Default.Pending);
 
         companion object{
-            fun from(type : String) : ExpenseType {
-                return when (type) {
+            fun from(stringValue : String) : ExpenseType {
+                return when (stringValue) {
                     FLIGHT.stringValue -> FLIGHT
                     FOOD.stringValue -> FOOD
                     ACCOMMODATION.stringValue -> ACCOMMODATION

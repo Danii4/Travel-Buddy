@@ -12,6 +12,7 @@ interface TripRepository {
     suspend fun getExpenseIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>>
     suspend fun getDestinationIds(tripId: String?): ResponseModel.ResponseWithData<MutableList<String>>
     suspend fun updateDestinationIds(tripId: String?, destIdList: List<String>): ResponseModel.Response
-    suspend fun getTrips(): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>>
+    suspend fun getTrips(tripId: String = ""): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>>
     suspend fun getTripsIds(): ResponseModel.ResponseWithData<MutableList<String>>
+
 }
