@@ -52,6 +52,7 @@ fun AddTripNameView() {
                 modifier = Modifier.fillMaxWidth(),
                 value = state.tripName,
                 onValueChange = { viewModel.setTripName(it) },
+                singleLine = true
             )
         }
     }
