@@ -5,11 +5,13 @@ import com.example.travelbuddy.data.AuthRepositoryImpl
 import com.example.travelbuddy.data.CurrencyExchangeRepositoryImpl
 import com.example.travelbuddy.data.DestinationRepositoryImpl
 import com.example.travelbuddy.data.ExpenseRepository
+import com.example.travelbuddy.data.ItineraryRepositoryImpl
 import com.example.travelbuddy.data.TripRepositoryImpl
 import com.example.travelbuddy.languageTranslation.model.TranslationModel
 import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.CurrencyExchangeRepository
 import com.example.travelbuddy.repository.DestinationRepository
+import com.example.travelbuddy.repository.ItineraryRepository
 import com.example.travelbuddy.repository.TripRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
@@ -73,6 +75,16 @@ object AppModule {
     ): TripRepository {
         return TripRepositoryImpl(
             authRepository = authRepository
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun providesItineraryRepositoryImpl(
+        destinationRepository: DestinationRepository
+    ): ItineraryRepository {
+        return ItineraryRepositoryImpl(
+            destinationRepository=destinationRepository
         )
     }
 

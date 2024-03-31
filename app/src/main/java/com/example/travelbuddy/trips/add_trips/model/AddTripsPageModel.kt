@@ -10,6 +10,7 @@ class AddTripsPageModel {
         val tripName: String = "",
         val budgets : List<Pair<ExpenseModel.ExpenseType, BigDecimal>> = emptyList(),
         val selectedExpenseTypes : Set<ExpenseModel.ExpenseType> = emptySet(),
-        var tripId: String? = null
+        var tripId: String? = null,
+        val changeDetected: Boolean = false,
     )
 }

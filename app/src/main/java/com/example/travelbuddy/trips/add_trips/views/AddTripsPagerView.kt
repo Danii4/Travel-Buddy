@@ -44,7 +44,6 @@ fun AddTripsPagerView(navController: NavController) {
     )
     val addDestPage = TripAddPageModel(
         page = { innerPadding ->
-            // AddDestinationsView
             AddEditDestinationView(innerPadding)
         }
     )

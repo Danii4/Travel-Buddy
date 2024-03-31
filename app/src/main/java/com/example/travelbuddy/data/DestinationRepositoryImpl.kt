@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+@Suppress("UNCHECKED_CAST")
 class DestinationRepositoryImpl @Inject constructor(
     private val tripRepository: TripRepository
     ) : DestinationRepository {
@@ -26,6 +27,7 @@ class DestinationRepositoryImpl @Inject constructor(
             "name" to destination.name,
             "startDate" to destination.startDate,
             "endDate" to destination.endDate,
+            "itineraryIdList" to destination.itineraryIdList
         )
         return try {
             val destID = db.collection("destinations").add(destinationLoad).await().id
@@ -35,17 +37,12 @@ class DestinationRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.Response {
-        try {
-            db.collection("transactions").document(destinationId).delete()
-        } catch (e: Exception) {
-            return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting destination")
-        }
+    override suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.ResponseWithData<String>? {
         return try {
-            tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayRemove(destinationId)) }
-            ResponseModel.Response.Success
+            db.collection("destinations").document(destinationId).delete()
+            ResponseModel.ResponseWithData.Success(destinationId)
         } catch (e: Exception) {
-            ResponseModel.Response.Failure(e.message ?: "Unknown message while updating farm")
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error deleting Destination")
         }
     }
 
@@ -79,19 +76,27 @@ class DestinationRepositoryImpl @Inject constructor(
                 id = destination.id,
                 name = destination.get("name") as String,
                 startDate = startDate.toDate(),
-                endDate = endDate.toDate()
+                endDate = endDate.toDate(),
+                itineraryIdList = destination.get("itineraryIdList") as List<String>,
             )
                 .let { destinationList.add(it) }
         }
         return ResponseModel.ResponseWithData.Success(destinationList)
     }
 
-    override suspend fun updateItineraryIds(destinationId: String, itineraryIdList: List<String>): ResponseModel.Response {
+    override suspend fun getItineraryIds(destinationId: String?): ResponseModel.ResponseWithData<MutableList<String>> {
+        val destRef = destinationId.let { db.collection("destinations").document(it.toString()) }
         return try {
-            db.collection("destinations").document(destinationId).update("itineraryIdList", itineraryIdList)
-            ResponseModel.Response.Success
+            val documentSnapshot  = destRef.get().await()
+            if (documentSnapshot?.exists() == true) {
+                val destData = documentSnapshot.data?.get("itineraryIdList") as MutableList<String>
+                ResponseModel.ResponseWithData.Success(destData)
+            }
+            else {
+                ResponseModel.ResponseWithData.Failure(error = "Destination does not exist")
+            }
         } catch (e: Exception) {
-            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination itinerary")
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting itinerary ids")
         }
     }
 }

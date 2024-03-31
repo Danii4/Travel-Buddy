@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import java.util.Date
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -31,6 +33,8 @@ class AddTripsViewModel @Inject constructor(
     private val destinationList: MutableStateFlow<List<DestinationModel.Destination>> = MutableStateFlow(listOf())
     private val tripName: MutableStateFlow<String> = MutableStateFlow(_state.value.tripName)
     private val tripId: MutableStateFlow<String?> = MutableStateFlow(_state.value.tripId)
+    private val changeDetected: MutableStateFlow<Boolean> =
+        MutableStateFlow(_state.value.changeDetected)
     private val budgets: MutableStateFlow<List<Pair<ExpenseModel.ExpenseType, BigDecimal>>> =
         MutableStateFlow(
             listOf()
@@ -55,12 +59,12 @@ class AddTripsViewModel @Inject constructor(
         }
     }
 
-    fun getData(){
+    private fun getData() {
         viewModelScope.launch {
-            destinationRepository.getDestinations(tripId.value).collect{destination ->
+            destinationRepository.getDestinations(tripId.value).collect { destination ->
                 destination.data?.let {
                     destinationList.value = it
-                }?: run {
+                } ?: run {
                     Log.d("Error", "Error getting destination data")
                 }
             }
@@ -71,19 +75,48 @@ class AddTripsViewModel @Inject constructor(
         getData()
     }
 
-    fun addDestination(destination: DestinationModel.Destination) {
+    fun addDestination(name: String, startDate: Date, endDate: Date, readMode: Boolean) {
+        val destination = DestinationModel.Destination(
+            name = name,
+            startDate = startDate,
+            endDate = endDate,
+        )
         destinationList.value += destination
+        if (readMode){
+            viewModelScope.launch {
+                val destRef = destinationRepository.addDestination(destination)
+                val destinationId = destRef?.data.toString()
+                tripRepository.addDestinationId(
+                    tripId = tripId.value,
+                    destinationId = destinationId
+                )
+                getData()
+            }
+        }
     }
 
-    fun deleteDestination(destination: DestinationModel.Destination){
+    fun deleteDestination(destination: DestinationModel.Destination, readMode: Boolean) {
         destinationList.value -= destination
+        if (readMode){
+            viewModelScope.launch {
+                val destRef = destinationRepository.deleteDestination(
+                    destinationId = destination.id,
+                    tripId = tripId.value
+                )
+                val destinationId = destRef?.data.toString()
+                tripRepository.deleteDestinationId(
+                    tripId = tripId.value,
+                    destinationId = destinationId
+                )
+            }
+        }
     }
 
-    fun setTripName(name: String){
+    fun setTripName(name: String) {
         tripName.value = name
     }
 
-    fun setTripId(Id: String?){
+    fun setTripId(Id: String?) {
         tripId.value = Id.toString()
         getData()
     }
@@ -159,25 +192,12 @@ class AddTripsViewModel @Inject constructor(
         }
     }
 
-    fun updateDestination(){
-        viewModelScope.launch {
-            // Clear Existing Data
-            val destinationListOrig = tripRepository.getDestinationIds(tripId.value)
-            destinationListOrig.data?.forEach { destinationId ->
-                destinationRepository.deleteDestination(destinationId, tripId.value)
-            }
-
-            // Update With New Data Values
-            val destIdList = mutableListOf<String>()
-            destinationList.value.forEach { destination ->
-                val response = destinationRepository.addDestination(destination)
-                destIdList.add(response?.data.toString())
-            }
-            tripRepository.updateDestinationIds(tripId.value, destIdList)
-        }
-    }
-
     fun navigateToTrips() {
         navWrapper.getNavController().navigate(Screen.Trips.route)
+    }
+
+    fun navigateToItinerary(destinationId: String) {
+        navWrapper.getNavController()
+            .navigate(Screen.Itinerary.route + "?destinationId=${destinationId}")
     }
 }

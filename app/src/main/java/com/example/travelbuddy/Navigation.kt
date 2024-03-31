@@ -1,6 +1,7 @@
 package com.example.travelbuddy
 
 import HomeScreen
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -17,10 +18,12 @@ import com.example.travelbuddy.firebaseauth.screens.InitialAuthScreen
 import com.example.travelbuddy.firebaseauth.screens.LoginScreen
 import com.example.travelbuddy.firebaseauth.screens.ResetPasswordScreen
 import com.example.travelbuddy.firebaseauth.screens.SignupScreen
+import com.example.travelbuddy.itinerary.views.ItineraryView
 import com.example.travelbuddy.languageTranslation.views.TranslationScreen
 import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 
+@SuppressLint("NewApi")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(
@@ -86,6 +89,18 @@ fun Navigation(
                 })
         ) {
             AddEditExpenseView()
+        }
+
+        composable(
+            route = Screen.Itinerary.route + "?destinationId={destinationId}",
+            arguments = listOf(
+                navArgument("destinationId") {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) {
+            ItineraryView()
         }
     }
 }

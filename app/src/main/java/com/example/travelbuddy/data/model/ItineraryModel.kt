@@ -1,11 +1,11 @@
 package com.example.travelbuddy.data.model
 
-import com.google.firebase.Timestamp
+import java.util.Date
 
 class ItineraryModel {
     data class Itinerary(
-        val id: Int,
-        val title: String,
-        val time: Timestamp
+        val id: String = "",
+        val name: String,
+        val time: Date
     )
 }

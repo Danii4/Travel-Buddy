@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Place
@@ -63,8 +64,10 @@ import java.util.Date
 @Composable
 fun GenerateDestinationView(
     destination: DestinationModel.Destination,
-    onDeleteClicked: () -> Unit
+    readMode: Boolean,
+    onDeleteClicked: () -> Unit,
 ) {
+    val viewModel = hiltViewModel<AddTripsViewModel>()
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -111,6 +114,19 @@ fun GenerateDestinationView(
                     tint = Color.Red
                 )
             }
+            if (readMode) {
+                // Itinerary View
+                IconButton(
+                    onClick = { viewModel.navigateToItinerary(destination.id) },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = "Itinerary View",
+                        tint = Color.Black
+                    )
+                }
+            }
         }
     }
 }
@@ -119,7 +135,10 @@ fun GenerateDestinationView(
 @SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
+fun AddEditDestinationView(
+    innerPadding: PaddingValues = PaddingValues(10.dp),
+    readMode: Boolean = false
+) {
     val viewModel = hiltViewModel<AddTripsViewModel>()
     val state by viewModel.state.collectAsState()
 
@@ -135,8 +154,8 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         userScrollEnabled = true
     ) {
         items(state.destinationList) { destination ->
-            GenerateDestinationView(destination = destination) {
-                viewModel.deleteDestination(destination)
+            GenerateDestinationView(destination = destination, readMode = readMode) {
+                viewModel.deleteDestination(destination, readMode=readMode)
             }
         }
     }
@@ -145,7 +164,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
         mutableStateOf(false)
     }
 
-    Box (
+    Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
@@ -255,7 +274,7 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                 )
 
                 Button(
-                    onClick = {calendarState.show()},
+                    onClick = { calendarState.show() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(7.dp),
@@ -303,14 +322,20 @@ fun AddEditDestinationView(innerPadding: PaddingValues = PaddingValues(10.dp)) {
                             onClick = {
                                 destBarActive = false
                                 if (destBarText.isNotBlank()) {
-                                    val newDestination = DestinationModel.Destination(
+                                    viewModel.addDestination(
                                         name = destBarText,
-                                        startDate = Date.from(selectedRange.value.lower.atStartOfDay(
-                                            ZoneId.systemDefault()).toInstant()),
-                                        endDate = Date.from(selectedRange.value.upper.atStartOfDay(
-                                            ZoneId.systemDefault()).toInstant()),
+                                        startDate = Date.from(
+                                            selectedRange.value.lower.atStartOfDay(
+                                                ZoneId.systemDefault()
+                                            ).toInstant()
+                                        ),
+                                        endDate = Date.from(
+                                            selectedRange.value.upper.atStartOfDay(
+                                                ZoneId.systemDefault()
+                                            ).toInstant()
+                                        ),
+                                        readMode = readMode
                                     )
-                                    viewModel.addDestination(newDestination)
                                     destBarText = ""
                                 }
                             },

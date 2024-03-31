@@ -127,6 +127,8 @@ dependencies {
     // Calendar Components
     implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.3.0")
     implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
+    implementation("com.maxkeppeler.sheets-compose-dialogs:date-time:1.3.0")
+
     // Expenses
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("io.coil-kt:coil-svg:2.0.0")
@@ -135,4 +137,5 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     // Translation
     implementation("com.google.mlkit:translate:17.0.2")
+    implementation("io.github.pushpalroy:jetlime:2.1.1")
 }
