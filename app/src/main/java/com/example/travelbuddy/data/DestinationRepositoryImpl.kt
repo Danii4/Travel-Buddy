@@ -37,17 +37,12 @@ class DestinationRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.Response {
-        try {
-            db.collection("transactions").document(destinationId).delete()
-        } catch (e: Exception) {
-            return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting destination")
-        }
+    override suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.ResponseWithData<String>? {
         return try {
-            tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayRemove(destinationId)) }
-            ResponseModel.Response.Success
+            db.collection("transactions").document(destinationId).delete()
+            ResponseModel.ResponseWithData.Success(destinationId)
         } catch (e: Exception) {
-            ResponseModel.Response.Failure(e.message ?: "Unknown message while updating farm")
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error deleting Destination")
         }
     }
 
