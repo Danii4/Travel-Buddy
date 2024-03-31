@@ -58,7 +58,6 @@ import com.example.travelbuddy.trips.add_trips.views.DestinationView
 fun TripCard(
     trip: TripModel.Trip,
     navController: NavController,
-//    onDeleteClicked: () -> Unit
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
 //        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
@@ -75,12 +74,10 @@ fun TripCard(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Row(){
-                Text(
-                    text = trip.name,
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
+            Text(
+                text = trip.name,
+                style = MaterialTheme.typography.titleLarge
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
@@ -147,7 +144,7 @@ fun TripsView(
 
     val viewModel = hiltViewModel<TripsViewModel>()
     val state by viewModel.state.collectAsState()
-    var isLoading by remember { mutableStateOf(false) } // Loading state
+    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         isLoading = true
@@ -186,7 +183,6 @@ fun TripsView(
                 onClick = {
                     isSheetOpen = true
                     showPager = true
-//                    viewModel.getData()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
