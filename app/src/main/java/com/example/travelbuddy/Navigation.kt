@@ -59,13 +59,9 @@ fun Navigation(
         }
 
         composable(
-            route = Screen.Itinerary.route + "?destinationId={destinationId}&tripId={tripId}",
+            route = Screen.Itinerary.route + "?destinationId={destinationId}",
             arguments = listOf(
                 navArgument("destinationId") {
-                    type = NavType.StringType
-                    nullable = true
-                },
-                navArgument("tripId") {
                     type = NavType.StringType
                     nullable = true
                 }
