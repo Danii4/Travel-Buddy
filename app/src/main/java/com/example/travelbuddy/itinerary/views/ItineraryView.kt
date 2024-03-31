@@ -1,6 +1,7 @@
 package com.example.travelbuddy.itinerary.views
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,18 +11,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,7 +37,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.travelbuddy.data.model.ItineraryModel
 import com.example.travelbuddy.itinerary.ItineraryViewModel
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
@@ -47,6 +46,40 @@ import com.pushpal.jetlime.JetLimeColumn
 import com.pushpal.jetlime.JetLimeEvent
 import com.pushpal.jetlime.JetLimeEventDefaults
 import java.time.LocalDateTime
+
+
+@Composable
+fun NavigationRow() {
+    val viewModel = hiltViewModel<ItineraryViewModel>()
+
+    Row(
+        modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 15.dp, vertical = 10.dp)
+                .clickable {
+                    viewModel.navigateBack()
+                }
+        ) {
+            Text("Cancel")
+        }
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 15.dp, vertical = 10.dp)
+                .clickable {
+                    viewModel.submitItinerary("create")
+                    viewModel.navigateBack()
+                }
+        ) {
+            Text("Done")
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,15 +97,16 @@ fun ItineraryView() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Destination's Itinerary",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                },
-            )
+//            TopAppBar(
+//                title = {
+//                    Text(
+//                        text = "Destination's Itinerary",
+//                        style = MaterialTheme.typography.headlineSmall,
+//                        modifier = Modifier.padding(start = 16.dp)
+//                    )
+//                },
+//            )
+            NavigationRow()
         },
         bottomBar = {
             Box(
@@ -151,7 +185,9 @@ fun ItineraryView() {
                     value = state.name,
                     onValueChange = {viewModel.setItineraryName(it)},
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     shape = RoundedCornerShape(15.dp),
                 )
 
