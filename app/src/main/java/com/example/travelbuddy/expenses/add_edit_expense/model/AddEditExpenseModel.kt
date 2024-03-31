@@ -2,6 +2,7 @@ package com.example.travelbuddy.expenses.add_edit_expense.model
 
 import android.annotation.SuppressLint
 import com.example.travelbuddy.data.model.ExpenseModel
+import com.github.nkuppan.country.domain.model.Currency
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -16,6 +17,6 @@ class AddEditExpenseModel {
         val amount : String = "",
         val date : Date = Date.from(Instant.now()),
         val type : ExpenseModel.ExpenseType = ExpenseModel.ExpenseType.FLIGHT,
-        val currencyCode : String = "CAD"
+        val currency : Currency = Currency(code = "CAD", symbol = "$")
     )
 }

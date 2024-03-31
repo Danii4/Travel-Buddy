@@ -11,6 +11,7 @@ import com.example.travelbuddy.data.ExpenseRepository
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.expenses.add_edit_expense.model.AddEditExpenseModel
+import com.github.nkuppan.country.domain.model.Currency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +40,7 @@ class AddEditExpenseViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val date: MutableStateFlow<Date> = MutableStateFlow(_state.value.date)
-    private val currencyCode: MutableStateFlow<String> = MutableStateFlow(_state.value.currencyCode)
+    private val currency: MutableStateFlow<Currency> = MutableStateFlow(_state.value.currency)
     private val type: MutableStateFlow<ExpenseModel.ExpenseType> =
         MutableStateFlow(_state.value.type)
 
@@ -74,17 +75,17 @@ class AddEditExpenseViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            combine(name, amount, date, type, currencyCode) { name: String,
+            combine(name, amount, date, type, currency) { name: String,
                                                               amount: String,
                                                               date: Date,
                                                               type: ExpenseModel.ExpenseType,
-                                                              currencyCode: String ->
+                                                              currency: Currency ->
                 AddEditExpenseModel.AddEditExpenseViewState(
                     name = name,
                     amount = amount,
                     date = date,
                     type = type,
-                    currencyCode = currencyCode
+                    currency = currency
                 )
             }.collect {
                 _state.value = it
@@ -106,7 +107,7 @@ class AddEditExpenseViewModel @Inject constructor(
                         amount.value = it.amount.toString()
                         date.value = it.date
                         type.value = it.type
-                        currencyCode.value = it.currencyCode
+                        currency.value = Currency(code = it.currencyCode)
                     }
                 }
             }
@@ -134,5 +135,14 @@ class AddEditExpenseViewModel @Inject constructor(
 
     fun setExpenseAmount(newAmount: String) {
         amount.value = newAmount
+    }
+
+    fun setExpenseCurrency(newCurrency: Currency) {
+        currency.value = newCurrency
+
+    }
+
+    fun deleteExpense() {
+        TODO("Not yet implemented")
     }
 }
