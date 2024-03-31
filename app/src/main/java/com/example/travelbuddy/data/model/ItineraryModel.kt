@@ -4,8 +4,8 @@ import java.util.Date
 
 class ItineraryModel {
     data class Itinerary(
-        val id: Int,
-        val title: String,
+        val id: String = "",
+        val name: String,
         val time: Date
     )
 }
