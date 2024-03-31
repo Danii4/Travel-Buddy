@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Place
@@ -109,6 +110,17 @@ fun GenerateDestinationView(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",
                     tint = Color.Red
+                )
+            }
+            // Itinerary View
+            IconButton(
+                onClick = { },
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = "Itinerary View",
+                    tint = Color.Black
                 )
             }
         }
