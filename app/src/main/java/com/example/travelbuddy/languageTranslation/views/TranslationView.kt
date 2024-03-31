@@ -150,7 +150,7 @@ fun TranslationScreen() {
                         .padding(vertical = 4.dp)
                 ) {
                     Text(
-                        text = "${viewModel.mapToCode(recentInput.inputLanguage)} to ${viewModel.mapToCode(recentInput.outputLanguage)}",
+                        text = "${viewModel.mapToCode(recentInput.inputLanguage).uppercase()} to ${viewModel.mapToCode(recentInput.outputLanguage).uppercase()}",
                     )
                     OutlinedButton(
                         onClick = {
