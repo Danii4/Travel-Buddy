@@ -112,7 +112,7 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
                 }
                 Spacer(modifier = Modifier.width(40.dp))
                 Text(
-                    text = "\$${"%.2f".format(expense.money.amount)}",
+                    text = "\$${"%.2f".format(expense.amount)}",
                     textAlign = TextAlign.Left,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary)

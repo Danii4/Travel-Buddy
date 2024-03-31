@@ -20,8 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.model.TripAddPageModel
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +48,12 @@ fun AddTripsPagerView(navController: NavController) {
             AddEditDestinationView(innerPadding)
         }
     )
-    val tripsAddScreenList = listOf(titlePage, addDestPage)
+    val addBudgetsPage = TripAddPageModel(
+        page = {
+            AddBudgetsView()
+        }
+    )
+    val tripsAddScreenList = listOf(titlePage, addDestPage, addBudgetsPage)
     GenerateTripAddViews(tripsAddScreenList, navController)
 }
 
@@ -179,7 +181,7 @@ fun ModifiedRow(
                 modifier = Modifier
                     .padding(horizontal = 15.dp, vertical = 10.dp)
                     .clickable {
-                        viewModel.submitDestination()
+                        viewModel.submitTrip()
                         viewModel.navigateToTrips()
                     }
             ) {

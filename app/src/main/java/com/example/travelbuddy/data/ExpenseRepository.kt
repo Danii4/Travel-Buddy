@@ -30,7 +30,7 @@ class ExpenseRepository(
                 mapOf(
                     "name" to expense.name,
                     "type" to expense.type,
-                    "money" to expense.money,
+                    "amount" to expense.amount,
                     "date" to expense.date
                 )
             ).await()
@@ -68,13 +68,14 @@ class ExpenseRepository(
         val expenseList = mutableListOf<ExpenseModel.Expense>()
         for (expense in expenseData) {
             val timestamp = expense.get("date") as Timestamp
-            val money = expense.get("money") as HashMap<*, *>
+            val amount = expense.get("amount") as String
             ExpenseModel.Expense(
                 id = expense.id,
                 name = expense.get("name") as String,
                 type = ExpenseModel.ExpenseType.valueOf(expense.get("type") as String),
-                money = Money(amount = BigDecimal(money["amount"] as String), currencyCode = money["currencyCode"] as String),
-                date = timestamp.toDate()
+                amount = BigDecimal(amount),
+                date = timestamp.toDate(),
+                currencyCode = expense.get("currencyCode") as String
             )
                 .let { expenseList.add(it) }
         }

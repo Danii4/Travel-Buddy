@@ -71,8 +71,9 @@ fun AddEditExpenseView(
     ) { paddingValues ->
         var expenseName by remember { mutableStateOf("") }
         var expenseType by remember { mutableStateOf(ExpenseModel.ExpenseType.MISCELLANEOUS) }
-        var expenseAmount by remember { mutableStateOf(Money(amount = BigDecimal(0.00), currencyCode = "USD", displayAmount = null)) }
+        var expenseAmount by remember { mutableStateOf(BigDecimal(0.00)) }
         var expenseDate by remember { mutableStateOf(Date.from(Instant.now())) }
+        var currencyCode by remember { mutableStateOf("CAD") }
         var expanded by remember { mutableStateOf(false) }
 
         Column(
@@ -141,8 +142,8 @@ fun AddEditExpenseView(
             // Text field for entering expense amount
             TextField(
                 label = { Text(text = "Amount ($)") },
-                value = expenseAmount.amount.toString(),
-                onValueChange = { expenseAmount.amount = it.toBigDecimal()},
+                value = expenseAmount.toString(),
+                onValueChange = { expenseAmount = it.toBigDecimal()},
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.textFieldColors(
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -238,8 +239,9 @@ fun AddEditExpenseView(
                         val newExpense = ExpenseModel.Expense(
                             name = expenseName,
                             type = expenseType,
-                            money = expenseAmount,
-                            date = expenseDate
+                            amount = expenseAmount,
+                            date = expenseDate,
+                            currencyCode = currencyCode
                         )
                         viewModel.submitExpense(newExpense)
                         viewModel.navigateToExpenses()

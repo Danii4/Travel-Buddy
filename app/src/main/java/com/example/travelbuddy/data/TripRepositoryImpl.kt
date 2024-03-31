@@ -1,5 +1,6 @@
 package com.example.travelbuddy.data
 
+import com.example.travelbuddy.data.model.ExpenseModel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.travelbuddy.data.model.ResponseModel
@@ -15,22 +16,29 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class TripRepositoryImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : TripRepository{
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    override suspend fun addTrip(tripName: String, destIdList: List<String>) : ResponseModel.ResponseWithData<String> {
+    override suspend fun addTrip(
+        tripName: String,
+        destIdList: List<String>,
+        budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>>,
+        defaultCurrency: String
+    ): ResponseModel.ResponseWithData<String> {
         return try {
+            val budgetMap = budgets.associate { it.first.name to it.second.toString() }
             // add trip to Trip table
             val tripID = db.collection("trips").add(
                 mapOf(
                     "name" to tripName,
-                    "budgets" to null,
-                    "totalExpenses" to null,
-                    "expensesList" to null,
-                    "destinationList" to destIdList
+                    "budgets" to budgetMap,
+                    "expensesList" to listOf<String>(),
+                    "destinationList" to destIdList,
+                    "defaultCurrency" to defaultCurrency
                 )
             ).await().id
 
