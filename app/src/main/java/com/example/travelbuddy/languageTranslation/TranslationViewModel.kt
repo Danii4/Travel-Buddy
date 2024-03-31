@@ -31,7 +31,7 @@ class TranslationViewModel @Inject constructor(
     fun setInputText(inputText: String) {
         _inputText.value = inputText
     }
-    
+
     fun translateText(inputText: String, sourceLanguage: String, targetLanguage: String) {
         addRecentInput(inputText, sourceLanguage, targetLanguage)
         translationModel.performTranslation(inputText, sourceLanguage, targetLanguage,
