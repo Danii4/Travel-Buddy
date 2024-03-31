@@ -1,6 +1,8 @@
 package com.example.travelbuddy.expenses.views
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -51,10 +53,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
+import com.example.travelbuddy.expenses.model.ExpensesModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ExpenseList(expense: ExpenseModel.Expense) {
+fun ExpenseList(
+    expense: ExpenseModel.Expense,
+    viewModel: ExpensesViewModel,
+    state: ExpensesModel.ExpensesViewState
+) {
     var expanded by remember { mutableStateOf(false) }
     ElevatedCard(
         modifier = Modifier
@@ -66,7 +74,7 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
 //                onTransactionNavigate(transaction.transactionId)
 //            },
         shape = RoundedCornerShape(15),
-        onClick = { expanded = !expanded }
+        onClick = { viewModel.navigateToAddEditExpense(expense.id) }
     ) {
         Row(
             modifier = Modifier
@@ -112,22 +120,12 @@ fun ExpenseList(expense: ExpenseModel.Expense) {
                 }
                 Spacer(modifier = Modifier.width(40.dp))
                 Text(
-                    text = "\$${"%.2f".format(expense.money.amount)}",
+                    text = "\$${"%.2f".format(expense.amount)}",
                     textAlign = TextAlign.Left,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(color = MaterialTheme.colorScheme.primary)
                 )
             }
-//            IconButton(onClick = {
-//                onTransactionNavigate(transaction.transactionId)
-//            }) {
-//                Icon(
-//                    imageVector = Icons.Outlined.ChevronRight,
-//                    tint = Color.Black,
-//                    contentDescription = "More "
-//                )
-//
-//            }
         }
 
     }
@@ -146,7 +144,7 @@ fun ExpensesView(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { viewModel.navigateToAddEditExpense() },
+                onClick = { viewModel.navigateToAddEditExpense("") },
                 shape = CircleShape
             ) {
                 Icon(Icons.Filled.Add, "Floating action button.")
@@ -234,7 +232,7 @@ fun ExpensesView(
                     }
                 }
                 items(state.expensesList) { expense ->
-                    ExpenseList(expense = expense)
+                    ExpenseList(expense = expense, viewModel = viewModel, state = state)
                 }
             }
 
