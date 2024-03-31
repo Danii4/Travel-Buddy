@@ -9,11 +9,11 @@ import com.example.travelbuddy.amadeus_client.AmadeusClient
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SpeechRecognitionModule {
+object AmadeusClientModule {
 
     @Singleton
     @Provides
-    fun provideSpeechRecognizer(): AmadeusClient {
+    fun provideAmadeusClient(): AmadeusClient {
         return AmadeusClient()
     }
 
