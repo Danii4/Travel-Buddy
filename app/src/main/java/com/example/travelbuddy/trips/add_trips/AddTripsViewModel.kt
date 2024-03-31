@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,8 +71,13 @@ class AddTripsViewModel @Inject constructor(
         getData()
     }
 
-    fun addDestination(destination: DestinationModel.Destination) {
-        destinationList.value += destination
+    fun addDestination(name: String, startDate: Date, endDate: Date) {
+        val newDestination = DestinationModel.Destination(
+            name = name,
+            startDate = startDate,
+            endDate = endDate,
+        )
+        destinationList.value += newDestination
         changeDetected.value = true
     }
 

@@ -322,20 +322,11 @@ fun AddEditDestinationView(
                             onClick = {
                                 destBarActive = false
                                 if (destBarText.isNotBlank()) {
-                                    val newDestination = DestinationModel.Destination(
+                                    viewModel.addDestination(
                                         name = destBarText,
-                                        startDate = Date.from(
-                                            selectedRange.value.lower.atStartOfDay(
-                                                ZoneId.systemDefault()
-                                            ).toInstant()
-                                        ),
-                                        endDate = Date.from(
-                                            selectedRange.value.upper.atStartOfDay(
-                                                ZoneId.systemDefault()
-                                            ).toInstant()
-                                        ),
+                                        startDate = Date.from( selectedRange.value.lower.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                                        endDate = Date.from( selectedRange.value.upper.atStartOfDay( ZoneId.systemDefault()).toInstant())
                                     )
-                                    viewModel.addDestination(newDestination)
                                     destBarText = ""
                                 }
                             },
