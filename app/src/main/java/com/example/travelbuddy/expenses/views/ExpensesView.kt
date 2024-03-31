@@ -50,6 +50,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
@@ -70,9 +71,6 @@ fun ExpenseList(
             .padding(4.dp)
             .height(70.dp)
             .animateContentSize(),
-//            .clickable {
-//                onTransactionNavigate(transaction.transactionId)
-//            },
         shape = RoundedCornerShape(15),
         onClick = { viewModel.navigateToAddEditExpense(expense.id) }
     ) {
@@ -141,26 +139,17 @@ fun ExpensesView(
     val viewModel = hiltViewModel<ExpensesViewModel>()
     val state by viewModel.state.collectAsState()
 
-    Scaffold(
-        floatingActionButton = {
-//            FloatingActionButton(
-//                onClick = { viewModel.navigateToAddEditExpense("") },
-//                shape = CircleShape
-//            ) {
-//                Icon(Icons.Filled.Add, "Floating action button.")
-//            }
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
         ) {
             item {
-//                Text(
-//                    text = trip.name,
-//                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
-//
-//                )
+                Text(
+                    text = state.trip.name,
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
+
+                )
                 Spacer(modifier = Modifier.height(10.dp))
                 Column(
                     modifier = Modifier
