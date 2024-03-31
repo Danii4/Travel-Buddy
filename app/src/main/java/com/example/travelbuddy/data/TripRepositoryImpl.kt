@@ -98,7 +98,7 @@ class TripRepositoryImpl @Inject constructor(
                 name = trip.get("name") as String,
                 budgets = budgets,
                 expensesList = trip.get("expensesList") as List<String>,
-                destinationList= trip.get("destinationList") as List<String>,
+                destinationList = trip.get("destinationList") as List<String>,
             )
                 .let { tripList.add(it) }
         }

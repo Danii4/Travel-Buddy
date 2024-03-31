@@ -287,7 +287,7 @@ fun ExpensesView(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = expenseType.stringValue,
+                            text = expenseType.displayValue,
                             overflow = TextOverflow.Ellipsis,
                             fontSize = 16.sp,
                             modifier = Modifier.weight(1f)
@@ -295,7 +295,7 @@ fun ExpensesView(
                         Text(
                             text = "\$${
                                 "%.2f".format(
-                                    amount.toString().toDouble()
+                                    viewModel.getTotalExpenses(expenseType)
                                 )
                             } / \$${"%.2f".format(amount.toString().toDouble())}",
                             overflow = TextOverflow.Ellipsis,
