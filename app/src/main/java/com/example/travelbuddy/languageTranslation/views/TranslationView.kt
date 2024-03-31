@@ -138,9 +138,9 @@ fun TranslationScreen() {
         )
 
         Column {
-            Text("Recent Inputs")
+            Text("Recent Inputs: ")
             recentInputs.forEach { recentInput ->
-                TextButton(onClick = {
+                OutlinedButton(onClick = {
                     inputText = TextFieldValue(recentInput)
                     viewModel.setInputText(recentInput)
                 }) {

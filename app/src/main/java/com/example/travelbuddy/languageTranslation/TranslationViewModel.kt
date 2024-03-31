@@ -45,7 +45,7 @@ class TranslationViewModel @Inject constructor(
     }
 
     fun addRecentInput(inputText: String) {
-        if (_recentInputs.value.firstOrNull() != inputText) {
+        if (inputText != "" && _recentInputs.value.firstOrNull() != inputText) {
             val updatedInputs = _recentInputs.value.toMutableList()
             updatedInputs.add(0, inputText)
             _recentInputs.value = updatedInputs.take(3)
