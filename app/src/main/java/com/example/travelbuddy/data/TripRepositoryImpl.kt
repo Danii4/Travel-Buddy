@@ -161,7 +161,7 @@ class TripRepositoryImpl @Inject constructor(
             tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayUnion(destinationId)) }
             ResponseModel.Response.Success
         } catch (e: Exception) {
-            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination")
+            ResponseModel.Response.Failure(error = e.message ?: "Error adding destination")
         }
     }
     override suspend fun deleteDestinationId(tripId: String?, destinationId: String): ResponseModel.Response {
@@ -169,7 +169,7 @@ class TripRepositoryImpl @Inject constructor(
             tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayRemove(destinationId)) }
             ResponseModel.Response.Success
         } catch (e: Exception) {
-            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination")
+            ResponseModel.Response.Failure(error = e.message ?: "Error deleting destination")
         }
     }
 }

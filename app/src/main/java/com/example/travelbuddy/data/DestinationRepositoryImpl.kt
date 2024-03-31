@@ -39,7 +39,7 @@ class DestinationRepositoryImpl @Inject constructor(
 
     override suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.ResponseWithData<String>? {
         return try {
-            db.collection("transactions").document(destinationId).delete()
+            db.collection("destinations").document(destinationId).delete()
             ResponseModel.ResponseWithData.Success(destinationId)
         } catch (e: Exception) {
             ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error deleting Destination")
