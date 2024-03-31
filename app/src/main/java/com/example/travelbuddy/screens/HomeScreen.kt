@@ -45,6 +45,12 @@ fun HomeScreen() {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
+                Text(
+                modifier = Modifier.padding(20.dp),
+                text = "By using our app, you agree to all the terms and conditions listed.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
                  Text(
                 modifier = Modifier.padding(20.dp),
                 text = "Frequently Asked Questions",
