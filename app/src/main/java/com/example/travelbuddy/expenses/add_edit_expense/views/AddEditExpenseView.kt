@@ -52,17 +52,12 @@ fun AddEditExpenseView(
 ) {
     val viewModel = hiltViewModel<AddEditExpenseViewModel>()
     val state by viewModel.state.collectAsState()
-    
-//    LaunchedEffect(Unit) {
-//        viewModel.getData()
-//    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        // text = if (state.selectedMarket == null) "Add Market" else "Edit - ${state.selectedMarket!!.name}",
                         text = "Add Expense",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -71,11 +66,6 @@ fun AddEditExpenseView(
             )
         }
     ) { paddingValues ->
-//        var expenseName by remember { mutableStateOf(state.value.name) }
-//        var expenseType by remember { mutableStateOf(state.value.type) }
-//        var expenseAmount by remember { mutableStateOf(state.value.amount) }
-//        var expenseDate by remember { mutableStateOf(state.value.date) }
-//        var currencyCode by remember { mutableStateOf(state.value.currencyCode) }
         var expanded by remember { mutableStateOf(false) }
 
         Column(

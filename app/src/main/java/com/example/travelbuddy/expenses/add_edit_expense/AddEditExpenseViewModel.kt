@@ -32,9 +32,8 @@ class AddEditExpenseViewModel @Inject constructor(
     val state: StateFlow<AddEditExpenseModel.AddEditExpenseViewState>
         get() = _state
     private val expenseId: String? = savedStateHandle["expenseId"]
-//    private val tripId: String? = savedStateHandle["tripId"]
-//    private val expenseId = "1mU6O6SswXWCEu6aT8ci"
-    private val tripId = "OREAgUxxBdNtecnL22tS"
+    private val tripId: String? = savedStateHandle["tripId"]
+
     private val name: MutableStateFlow<String> = MutableStateFlow(_state.value.name)
     private val amount: MutableStateFlow<String> = MutableStateFlow(_state.value.amount)
 
