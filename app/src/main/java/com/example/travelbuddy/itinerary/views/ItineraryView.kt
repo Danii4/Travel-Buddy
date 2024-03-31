@@ -46,17 +46,22 @@ import com.pushpal.jetlime.ItemsList
 import com.pushpal.jetlime.JetLimeColumn
 import com.pushpal.jetlime.JetLimeEvent
 import com.pushpal.jetlime.JetLimeEventDefaults
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "NewApi")
 fun ItineraryView() {
+    val viewModel = hiltViewModel<ItineraryViewModel>()
+    val state by viewModel.state.collectAsState()
+
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable {
         mutableStateOf(false)
     }
+    var selectedDateTime by remember { mutableStateOf(LocalDateTime.now()) }
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -90,22 +95,6 @@ fun ItineraryView() {
             }
         },
         content = { innerPadding ->
-            val viewModel = hiltViewModel<ItineraryViewModel>()
-            val state by viewModel.state.collectAsState()
-            val item1 = ItineraryModel.Itinerary(
-                title = "item1",
-                time = LocalDate.now(),
-            )
-            val item2 = ItineraryModel.Itinerary(
-                title = "item2",
-                time = LocalDate.now(),
-            )
-            val item3 = ItineraryModel.Itinerary(
-                title = "item3",
-                time = LocalDate.now(),
-            )
-            val itemList = mutableListOf(item1, item2, item3)
-            state.itineraryList = itemList
             Surface(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
                 JetLimeColumn(
                     modifier = Modifier.padding(16.dp),
@@ -126,7 +115,7 @@ fun ItineraryView() {
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = item.title,
+                                    text = item.name,
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
                                     )
@@ -152,7 +141,6 @@ fun ItineraryView() {
                 isSheetOpen = false
             }
         ) {
-            val itineraryName: String = ""
 
             Column(
                 modifier = Modifier
@@ -160,8 +148,8 @@ fun ItineraryView() {
             ) {
 
                 TextField(
-                    value = itineraryName,
-                    onValueChange = {},
+                    value = state.name,
+                    onValueChange = {viewModel.setItineraryName(it)},
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth().padding(10.dp),
                     shape = RoundedCornerShape(15.dp),
@@ -169,19 +157,14 @@ fun ItineraryView() {
 
                 // Date Time Component
                 // From: https://github.com/maxkeppeler/sheets-compose-dialogs/blob/main/app/src/main/java/com/mk/sheets/compose/samples/DateTimeSample1.kt
-
-                val selectedDateTime = remember {
-                    mutableStateOf<LocalDateTime?>(LocalDateTime.now().plusDays(1))
-                }
-
                 val datetimeState = rememberUseCaseState(visible = false)
                 DateTimeDialog(
                     state = datetimeState,
                     selection = DateTimeSelection.DateTime(
-                        selectedDate = selectedDateTime.value!!.toLocalDate(),
-                        selectedTime = selectedDateTime.value!!.toLocalTime(),
+                        selectedDate = selectedDateTime.toLocalDate(),
+                        selectedTime = selectedDateTime.toLocalTime(),
                     ) { newDateTime ->
-                        selectedDateTime.value = newDateTime
+                        selectedDateTime = newDateTime
                     },
                 )
                 Button(
@@ -232,17 +215,10 @@ fun ItineraryView() {
                 ) {
                     Button(
                         onClick = {
-                            if ( itineraryName != "") {
-//                                val newDestination = DestinationModel.Destination(
-//                                    name = destBarText,
-//                                    startDate = Date.from(selectedRange.value.lower.atStartOfDay(
-//                                        ZoneId.systemDefault()).toInstant()),
-//                                    endDate = Date.from(selectedRange.value.upper.atStartOfDay(
-//                                        ZoneId.systemDefault()).toInstant()),
-//                                )
-//                                viewModel.addDestination(newDestination)
-//                                destBarText = ""
-                            }
+                            viewModel.addItinerary(
+                                name = state.name,
+                                time = selectedDateTime
+                            )
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
