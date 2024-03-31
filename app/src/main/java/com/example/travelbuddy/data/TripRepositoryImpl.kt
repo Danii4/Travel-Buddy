@@ -43,13 +43,14 @@ class TripRepositoryImpl @Inject constructor(
             ).await().id
 
             ResponseModel.ResponseWithData.Success(tripID)
-        }
-        catch (e: Exception) {
-            return ResponseModel.ResponseWithData.Failure(error=e.message?:"Error adding a trip. Please try again.")
+        } catch (e: Exception) {
+            return ResponseModel.ResponseWithData.Failure(
+                error = e.message ?: "Error adding a trip. Please try again."
+            )
         }
     }
 
-    override suspend fun addTripIdToUser(Id: String){
+    override suspend fun addTripIdToUser(Id: String) {
         authRepository.getUserId().let {
             db.collection("users").document(it!!).update(
                 "tripsIdList", FieldValue.arrayUnion(Id)
