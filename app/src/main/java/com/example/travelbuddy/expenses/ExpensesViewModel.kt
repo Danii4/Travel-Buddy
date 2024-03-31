@@ -38,8 +38,8 @@ class ExpensesViewModel @Inject constructor(
     private val expensesList: MutableStateFlow<List<ExpenseModel.Expense>> =
         MutableStateFlow(listOf())
 
-    private val budgets: MutableStateFlow<Map<ExpenseModel.ExpenseType, BigDecimal>> =
-        MutableStateFlow(emptyMap())
+    private val budgets: MutableStateFlow<MutableMap<ExpenseModel.ExpenseType, BigDecimal>> =
+        MutableStateFlow(mutableMapOf())
 
     private val trip: MutableStateFlow<TripModel.Trip> = MutableStateFlow(_state.value.trip)
 
@@ -80,18 +80,12 @@ class ExpensesViewModel @Inject constructor(
                 }
                 tripResponse.data?.let {
                     trip.value = it[0]
+                    budgets.value = it[0].budgets!!
                 }?: run {
                     Log.d("Firebase Error", "Error initializing ExpensesViewModel while getting trip from Trip Repository")
                 }
             }
-//            expenseRepository.getExpenses(tripId!!).collect { expenses -> expenses.data?.let {
-//                expensesList.value = it
-//            } ?: run {
-//                Log.d("Error", "Error getting expense data")
-//            }
-//            }
         }
-
     }
 
     init {

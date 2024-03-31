@@ -61,7 +61,7 @@ class TripRepositoryImpl @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getTrips(tripId: String): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>> {
         return flow {
-            emit(getTripsData())
+            emit(getTripsData(tripId))
         }.flowOn(Dispatchers.IO)
     }
 
