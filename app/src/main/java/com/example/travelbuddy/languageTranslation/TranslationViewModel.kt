@@ -31,6 +31,7 @@ class TranslationViewModel @Inject constructor(
     fun setInputText(inputText: String) {
         _inputText.value = inputText
     }
+    
     fun translateText(inputText: String, sourceLanguage: String, targetLanguage: String) {
         addRecentInput(inputText, sourceLanguage, targetLanguage)
         translationModel.performTranslation(inputText, sourceLanguage, targetLanguage,
@@ -40,6 +41,10 @@ class TranslationViewModel @Inject constructor(
             onFailure = { error ->
                 _translatedText.value = error
             })
+    }
+
+    fun mapToCode(inputText: String): String {
+        return translationModel.mapLanguageToCode(inputText)
     }
     fun updateLanguagesHistory(selectedLanguage: String) {
         val updatedList = _languageHistory.value.toMutableList()

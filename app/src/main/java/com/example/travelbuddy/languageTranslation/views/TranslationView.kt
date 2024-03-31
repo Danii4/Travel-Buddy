@@ -3,8 +3,10 @@ package com.example.travelbuddy.languageTranslation.views
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -141,17 +143,31 @@ fun TranslationScreen() {
         Column {
             Text("Recent Inputs: ")
             recentInputs.forEach { recentInput ->
-                OutlinedButton(
-                    onClick = {
-                        inputText = TextFieldValue(recentInput.inputText)
-                        inputLanguageSelected = recentInput.inputLanguage
-                        outputLanguageSelected = recentInput.outputLanguage
-                        viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
-
-                    },
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 ) {
-                    Text(recentInput.inputText)
+                    Text(
+                        text = "${viewModel.mapToCode(recentInput.inputLanguage)} to ${viewModel.mapToCode(recentInput.outputLanguage)}",
+                    )
+                    OutlinedButton(
+                        onClick = {
+                            inputText = TextFieldValue(recentInput.inputText)
+                            inputLanguageSelected = recentInput.inputLanguage
+                            outputLanguageSelected = recentInput.outputLanguage
+                            viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
+                        },
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                    ) {
+                        Text(
+                            text = recentInput.inputText,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }

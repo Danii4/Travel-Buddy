@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-
 fun LanguageSelectionDropdown(
     label: String,
     selectedLanguage: String,
