@@ -1,6 +1,8 @@
 package com.example.travelbuddy
 
 import HomeScreen
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -19,6 +21,7 @@ import com.example.travelbuddy.languageTranslation.TranslationScreen
 import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(
     loggedIn: Boolean,
@@ -36,19 +39,40 @@ fun Navigation(
 
         // Other Screens
         composable(Screen.Home.route) {
-            NavigationDrawerWrapper(navController = navController, children = { HomeScreen() }, itemIndex = Screen.Home.drawerItem)
+            NavigationDrawerWrapper(
+                navController = navController,
+                children = { HomeScreen() },
+                itemIndex = Screen.Home.drawerItem
+            )
         }
-        composable(Screen.Expenses.route) {
-            NavigationDrawerWrapper(navController = navController, children = {  ExpensesView()}, itemIndex = Screen.Expenses.drawerItem)
+        composable(route = Screen.Expenses.route + "?tripId={tripId}",
+            arguments = listOf(navArgument("tripId") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) {
+            ExpensesView()
         }
         composable(Screen.LanguageTranslation.route) {
-            NavigationDrawerWrapper(navController = navController, children = { TranslationScreen() }, itemIndex = Screen.LanguageTranslation.drawerItem)
+            NavigationDrawerWrapper(
+                navController = navController,
+                children = { TranslationScreen() },
+                itemIndex = Screen.LanguageTranslation.drawerItem
+            )
         }
         composable(Screen.Trips.route) {
-            NavigationDrawerWrapper (navController = navController, children = { TripsView(navController = navController) }, itemIndex = Screen.Trips.drawerItem)
+            NavigationDrawerWrapper(
+                navController = navController,
+                children = { TripsView(navController = navController) },
+                itemIndex = Screen.Trips.drawerItem
+            )
         }
         composable(Screen.UnitConversion.route) {
-            NavigationDrawerWrapper (navController = navController, children = { UnitConversionScreen() }, itemIndex = Screen.UnitConversion.drawerItem)
+            NavigationDrawerWrapper(
+                navController = navController,
+                children = { UnitConversionScreen() },
+                itemIndex = Screen.UnitConversion.drawerItem
+            )
         }
         composable(
             route = Screen.AddEditExpense.route + "?expenseId={expenseId}&tripId={tripId}",
@@ -60,8 +84,8 @@ fun Navigation(
                     type = NavType.StringType
                     nullable = true
                 })
-        ){
-                AddEditExpenseView()
+        ) {
+            AddEditExpenseView()
         }
     }
 }

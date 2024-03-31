@@ -30,9 +30,6 @@ class TripsViewModel @Inject constructor(
     private val _state = MutableStateFlow(TripsModel.TripsViewState())
     val state: StateFlow<TripsModel.TripsViewState>
         get() = _state
-    //    private val tripId : String? = savedStateHandle["tripId"]
-//    private val tripId = "OREAgUxxBdNtecnL22tS"
-
 
     private val tripsList: MutableStateFlow<List<TripModel.Trip>> =
         MutableStateFlow(listOf())
@@ -78,5 +75,9 @@ class TripsViewModel @Inject constructor(
 
     fun navigateToTrips() {
         navWrapper.getNavController().navigate(Screen.Trips.route)
+    }
+
+    fun navigateToExpense(tripId: String) {
+        navWrapper.getNavController().navigate(Screen.Expenses.route + "?tripId=${tripId}")
     }
 }

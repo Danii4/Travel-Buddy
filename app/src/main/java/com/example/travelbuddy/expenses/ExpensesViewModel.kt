@@ -29,15 +29,11 @@ class ExpensesViewModel @Inject constructor(
     private val _state = MutableStateFlow(ExpensesModel.ExpensesViewState())
     val state: StateFlow<ExpensesModel.ExpensesViewState>
         get() = _state
-//    private val tripId : String? = savedStateHandle["tripId"]
-    private val tripId = "OREAgUxxBdNtecnL22tS"
+    private val tripId : String? = savedStateHandle["tripId"]
 
     private val expensesList: MutableStateFlow<List<ExpenseModel.Expense>> =
         MutableStateFlow(listOf())
     private val isLoading : MutableStateFlow<Boolean>  = MutableStateFlow(false )
-//    private val isLoading: MutableStateFlow<Boolean> = MutableStateFlow(_state.value.isLoading)
-//    private val isDefaultCurrency: MutableStateFlow<Boolean> =
-//        MutableStateFlow(_state.value.isDefaultCurrency)
 
     init {
         viewModelScope.launch {
@@ -60,7 +56,7 @@ class ExpensesViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun getData() {
         viewModelScope.launch {
-            expenseRepository.getExpenses(tripId).collect { expenses -> expenses.data?.let {
+            expenseRepository.getExpenses(tripId!!).collect { expenses -> expenses.data?.let {
                 expensesList.value = it
             } ?: run {
                 Log.d("Error", "Error getting expense data")
