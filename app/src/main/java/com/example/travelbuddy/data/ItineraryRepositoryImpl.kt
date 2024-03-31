@@ -38,7 +38,7 @@ class ItineraryRepositoryImpl @Inject constructor(
 
     override suspend fun updateDestItineraryIds(destId: String?, itineraryId: String) : ResponseModel.Response{
         return try {
-            db.collection("destinations").document(destId!!).update("itineraryList", FieldValue.arrayUnion(itineraryId))
+            db.collection("destinations").document(destId!!).update("itineraryIdList", FieldValue.arrayUnion(itineraryId))
             ResponseModel.Response.Success
         } catch (e: Exception){
             ResponseModel.Response.Failure("Error updating Destination Itinerary Ids")

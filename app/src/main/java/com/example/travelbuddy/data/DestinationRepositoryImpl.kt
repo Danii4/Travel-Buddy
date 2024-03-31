@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+@Suppress("UNCHECKED_CAST")
 class DestinationRepositoryImpl @Inject constructor(
     private val tripRepository: TripRepository
     ) : DestinationRepository {
@@ -26,7 +27,7 @@ class DestinationRepositoryImpl @Inject constructor(
             "name" to destination.name,
             "startDate" to destination.startDate,
             "endDate" to destination.endDate,
-            "itineraryList" to destination.itineraryList
+            "itineraryIdList" to destination.itineraryIdList
         )
         return try {
             val destID = db.collection("destinations").add(destinationLoad).await().id
@@ -80,7 +81,8 @@ class DestinationRepositoryImpl @Inject constructor(
                 id = destination.id,
                 name = destination.get("name") as String,
                 startDate = startDate.toDate(),
-                endDate = endDate.toDate()
+                endDate = endDate.toDate(),
+                itineraryIdList = destination.get("itineraryIdList") as List<String>,
             )
                 .let { destinationList.add(it) }
         }
@@ -92,7 +94,7 @@ class DestinationRepositoryImpl @Inject constructor(
         return try {
             val documentSnapshot  = destRef.get().await()
             if (documentSnapshot?.exists() == true) {
-                val destData = documentSnapshot.data?.get("itineraryList") as MutableList<String>
+                val destData = documentSnapshot.data?.get("itineraryIdList") as MutableList<String>
                 ResponseModel.ResponseWithData.Success(destData)
             }
             else {
