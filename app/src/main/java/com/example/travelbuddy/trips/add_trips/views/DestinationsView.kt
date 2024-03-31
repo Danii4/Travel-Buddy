@@ -60,7 +60,7 @@ fun DestinationView() {
             NavigationRow()
         },
         content = { innerPadding ->
-            AddEditDestinationView(innerPadding, viewMode = "read")
+            AddEditDestinationView(innerPadding, readMode = true)
         }
     )
 }

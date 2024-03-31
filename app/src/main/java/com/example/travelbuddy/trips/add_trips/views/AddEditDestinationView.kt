@@ -64,7 +64,7 @@ import java.util.Date
 @Composable
 fun GenerateDestinationView(
     destination: DestinationModel.Destination,
-    viewMode: String,
+    readMode: Boolean,
     onDeleteClicked: () -> Unit,
 ) {
     val viewModel = hiltViewModel<AddTripsViewModel>()
@@ -114,7 +114,7 @@ fun GenerateDestinationView(
                     tint = Color.Red
                 )
             }
-            if (viewMode == "read") {
+            if (readMode) {
                 // Itinerary View
                 IconButton(
                     onClick = { viewModel.navigateToItinerary(destination.id) },
@@ -137,7 +137,7 @@ fun GenerateDestinationView(
 @Composable
 fun AddEditDestinationView(
     innerPadding: PaddingValues = PaddingValues(10.dp),
-    viewMode: String = ""
+    readMode: Boolean = false
 ) {
     val viewModel = hiltViewModel<AddTripsViewModel>()
     val state by viewModel.state.collectAsState()
@@ -154,7 +154,7 @@ fun AddEditDestinationView(
         userScrollEnabled = true
     ) {
         items(state.destinationList) { destination ->
-            GenerateDestinationView(destination = destination, viewMode=viewMode) {
+            GenerateDestinationView(destination = destination, readMode = readMode) {
                 viewModel.deleteDestination(destination)
             }
         }
@@ -324,8 +324,16 @@ fun AddEditDestinationView(
                                 if (destBarText.isNotBlank()) {
                                     viewModel.addDestination(
                                         name = destBarText,
-                                        startDate = Date.from( selectedRange.value.lower.atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                                        endDate = Date.from( selectedRange.value.upper.atStartOfDay( ZoneId.systemDefault()).toInstant())
+                                        startDate = Date.from(
+                                            selectedRange.value.lower.atStartOfDay(
+                                                ZoneId.systemDefault()
+                                            ).toInstant()
+                                        ),
+                                        endDate = Date.from(
+                                            selectedRange.value.upper.atStartOfDay(
+                                                ZoneId.systemDefault()
+                                            ).toInstant()
+                                        )
                                     )
                                     destBarText = ""
                                 }
