@@ -155,7 +155,7 @@ fun AddEditDestinationView(
     ) {
         items(state.destinationList) { destination ->
             GenerateDestinationView(destination = destination, readMode = readMode) {
-                viewModel.deleteDestination(destination)
+                viewModel.deleteDestination(destination, readMode=readMode)
             }
         }
     }
@@ -333,7 +333,8 @@ fun AddEditDestinationView(
                                             selectedRange.value.upper.atStartOfDay(
                                                 ZoneId.systemDefault()
                                             ).toInstant()
-                                        )
+                                        ),
+                                        readMode = readMode
                                     )
                                     destBarText = ""
                                 }
