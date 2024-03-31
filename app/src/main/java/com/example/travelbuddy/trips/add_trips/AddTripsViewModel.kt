@@ -71,19 +71,41 @@ class AddTripsViewModel @Inject constructor(
         getData()
     }
 
-    fun addDestination(name: String, startDate: Date, endDate: Date) {
-        val newDestination = DestinationModel.Destination(
+    fun addDestination(name: String, startDate: Date, endDate: Date, readMode: Boolean) {
+        val destination = DestinationModel.Destination(
             name = name,
             startDate = startDate,
             endDate = endDate,
         )
-        destinationList.value += newDestination
-        changeDetected.value = true
+        destinationList.value += destination
+        if (readMode){
+            viewModelScope.launch {
+                val destRef = destinationRepository.addDestination(destination)
+                val destinationId = destRef?.data.toString()
+                tripRepository.addDestinationId(
+                    tripId = tripId.value,
+                    destinationId = destinationId
+                )
+                getData()
+            }
+        }
     }
 
-    fun deleteDestination(destination: DestinationModel.Destination) {
+    fun deleteDestination(destination: DestinationModel.Destination, readMode: Boolean) {
         destinationList.value -= destination
-        changeDetected.value = true
+        if (readMode){
+            viewModelScope.launch {
+                val destRef = destinationRepository.deleteDestination(
+                    destinationId = destination.id,
+                    tripId = tripId.value
+                )
+                val destinationId = destRef?.data.toString()
+                tripRepository.deleteDestinationId(
+                    tripId = tripId.value,
+                    destinationId = destinationId
+                )
+            }
+        }
     }
 
     fun setTripName(name: String) {
@@ -107,27 +129,6 @@ class AddTripsViewModel @Inject constructor(
                 destIdList = destIdList,
             )
             tripRepository.addTripIdToUser(tripId.data.toString())
-        }
-    }
-
-    fun updateDestination() {
-        viewModelScope.launch {
-            if (changeDetected.value) {
-                // Clear Existing Data
-                val destinationListOrig = tripRepository.getDestinationIds(tripId.value)
-                destinationListOrig.data?.forEach { destinationId ->
-                    destinationRepository.deleteDestination(destinationId, tripId.value)
-                }
-
-                // Update With New Data Values
-                val destIdList = mutableListOf<String>()
-                destinationList.value.forEach { destination ->
-                    val response = destinationRepository.addDestination(destination)
-                    destIdList.add(response?.data.toString())
-                }
-                tripRepository.updateDestinationIds(tripId.value, destIdList)
-                changeDetected.value = false
-            }
         }
     }
 
