@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DestinationRepository {
     suspend fun addDestination(destination: DestinationModel.Destination) : ResponseModel.ResponseWithData<String>?
-    suspend fun updateItineraryIds(destinationId: String, itineraryIdList: List<String>): ResponseModel.Response
     suspend fun deleteDestination(destinationId: String, tripId: String?): ResponseModel.Response
     suspend fun getDestinations(tripId: String?): Flow<ResponseModel.ResponseWithData<List<DestinationModel.Destination>>>
+    suspend fun getItineraryIds(destinationId: String?): ResponseModel.ResponseWithData<MutableList<String>>
 }

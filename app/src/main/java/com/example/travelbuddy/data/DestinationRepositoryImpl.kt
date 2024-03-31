@@ -26,6 +26,7 @@ class DestinationRepositoryImpl @Inject constructor(
             "name" to destination.name,
             "startDate" to destination.startDate,
             "endDate" to destination.endDate,
+            "itineraryList" to destination.itineraryList
         )
         return try {
             val destID = db.collection("destinations").add(destinationLoad).await().id
@@ -86,12 +87,19 @@ class DestinationRepositoryImpl @Inject constructor(
         return ResponseModel.ResponseWithData.Success(destinationList)
     }
 
-    override suspend fun updateItineraryIds(destinationId: String, itineraryIdList: List<String>): ResponseModel.Response {
+    override suspend fun getItineraryIds(destinationId: String?): ResponseModel.ResponseWithData<MutableList<String>> {
+        val destRef = destinationId.let { db.collection("destinations").document(it.toString()) }
         return try {
-            db.collection("destinations").document(destinationId).update("itineraryIdList", itineraryIdList)
-            ResponseModel.Response.Success
+            val documentSnapshot  = destRef.get().await()
+            if (documentSnapshot?.exists() == true) {
+                val destData = documentSnapshot.data?.get("itineraryList") as MutableList<String>
+                ResponseModel.ResponseWithData.Success(destData)
+            }
+            else {
+                ResponseModel.ResponseWithData.Failure(error = "Destination does not exist")
+            }
         } catch (e: Exception) {
-            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination itinerary")
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting itinerary ids")
         }
     }
 }
