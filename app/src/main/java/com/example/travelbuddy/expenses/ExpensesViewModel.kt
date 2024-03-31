@@ -69,7 +69,7 @@ class ExpensesViewModel @Inject constructor(
         getData()
     }
 
-fun navigateToAddEditExpense(expenseId: String) {
+fun navigateToAddEditExpense(expenseId: String = "") {
     navWrapper.getNavController().navigate(Screen.AddEditExpense.route + "?expenseId=${expenseId}&tripId=${tripId}")
 }
 }

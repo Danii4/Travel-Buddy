@@ -218,7 +218,7 @@ fun AddEditExpenseView(
             ) {
                 Button(
                     onClick = {
-                        viewModel.navigateToExpenses()
+                        viewModel.navigateBack()
                     },
                 ) {
                     Text(text = "Cancel")
@@ -236,7 +236,6 @@ fun AddEditExpenseView(
                             currencyCode = state.currencyCode
                         )
                         viewModel.submitExpense(newExpense)
-                        viewModel.navigateToExpenses()
                     },
                 ) {
                     Text(text = "Save")

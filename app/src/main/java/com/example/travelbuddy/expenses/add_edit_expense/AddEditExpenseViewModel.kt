@@ -120,12 +120,12 @@ class AddEditExpenseViewModel @Inject constructor(
                 is ResponseModel.Response.Success -> {}
                 is ResponseModel.Response.Failure -> {}
             }
-            navigateToExpenses()
+            navigateBack()
         }
     }
 
-    fun navigateToExpenses() {
-        navWrapper.getNavController().navigate(Screen.Expenses.route)
+    fun navigateBack() {
+        navWrapper.getNavController().navigateUp()
     }
 
     fun setExpenseType(newType: ExpenseModel.ExpenseType) {
