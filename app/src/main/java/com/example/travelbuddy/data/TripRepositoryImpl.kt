@@ -123,19 +123,6 @@ class TripRepositoryImpl @Inject constructor(
         }
     }
 
-//    override suspend fun getTrip(tripId: String): Flow<ResponseModel.ResponseWithData<TripModel.Trip>> {
-//        return flow {
-//            emit(getTripData(tripId))
-//        }.flowOn(Dispatchers.IO)
-//    }
-//
-//    override fun getTripData(tripId: String): ResponseModel.ResponseWithData<TripModel.Trip> {
-//        return try {
-//            db.collection("trips").document(tripId).get().await()
-//        }
-//    }
-
-
     override suspend fun getExpenseIds(tripId: String): ResponseModel.ResponseWithData<MutableList<String>> {
         val tripRef = db.collection("trips").document(tripId)
         return try {
