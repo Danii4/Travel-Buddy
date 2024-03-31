@@ -7,6 +7,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
+data class RecentInput(
+    val inputText: String,
+    val inputLanguage: String,
+    val outputLanguage: String
+)
 @HiltViewModel
 class TranslationViewModel @Inject constructor(
     private val translationModel: TranslationModel
@@ -20,15 +25,14 @@ class TranslationViewModel @Inject constructor(
     private val _languageHistory = MutableStateFlow<List<String>>(emptyList())
     val languageHistory = _languageHistory.asStateFlow()
 
-    private val _recentInputs = MutableStateFlow<List<String>>(emptyList())
+    private val _recentInputs = MutableStateFlow<List<RecentInput>>(emptyList())
     val recentInputs = _recentInputs.asStateFlow()
 
     fun setInputText(inputText: String) {
         _inputText.value = inputText
-        addRecentInput(inputText)
     }
     fun translateText(inputText: String, sourceLanguage: String, targetLanguage: String) {
-        addRecentInput(inputText)
+        addRecentInput(inputText, sourceLanguage, targetLanguage)
         translationModel.performTranslation(inputText, sourceLanguage, targetLanguage,
             onSuccess = { translatedText ->
                 _translatedText.value = translatedText
@@ -44,11 +48,15 @@ class TranslationViewModel @Inject constructor(
         _languageHistory.value = updatedList.take(3)
     }
 
-    fun addRecentInput(inputText: String) {
-        if (inputText != "" && _recentInputs.value.firstOrNull() != inputText) {
-            val updatedInputs = _recentInputs.value.toMutableList()
-            updatedInputs.add(0, inputText)
-            _recentInputs.value = updatedInputs.take(3)
+    fun addRecentInput(inputText: String, inputLanguage: String, outputLanguage: String) {
+        if (inputText != "") {
+            val newEntry = RecentInput(inputText, inputLanguage, outputLanguage)
+            val updatedInputs = listOf(newEntry) + _recentInputs.value.filterNot {
+                it.inputText == inputText && it.inputLanguage == inputLanguage && it.outputLanguage == outputLanguage
+            }.take(3)
+            _recentInputs.value = updatedInputs
+
         }
+
     }
 }

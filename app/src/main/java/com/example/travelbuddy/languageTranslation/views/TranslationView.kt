@@ -137,14 +137,21 @@ fun TranslationScreen() {
             label = { Text("Translated Text") }
         )
 
+        // Clickable recent inputs shown in a column
         Column {
             Text("Recent Inputs: ")
             recentInputs.forEach { recentInput ->
-                OutlinedButton(onClick = {
-                    inputText = TextFieldValue(recentInput)
-                    viewModel.setInputText(recentInput)
-                }) {
-                    Text(recentInput)
+                OutlinedButton(
+                    onClick = {
+                        inputText = TextFieldValue(recentInput.inputText)
+                        inputLanguageSelected = recentInput.inputLanguage
+                        outputLanguageSelected = recentInput.outputLanguage
+                        viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
+
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                ) {
+                    Text(recentInput.inputText)
                 }
             }
         }
