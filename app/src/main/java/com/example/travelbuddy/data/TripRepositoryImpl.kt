@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+@Suppress("UNCHECKED_CAST")
 class TripRepositoryImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : TripRepository{
@@ -139,9 +140,17 @@ class TripRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateDestinationIds(tripId: String?, destIdList: List<String>): ResponseModel.Response {
+    override suspend fun addDestinationId(tripId: String?, destinationId: String): ResponseModel.Response {
         return try {
-            tripId?.let { db.collection("trips").document(it).update("destinationList", destIdList) }
+            tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayUnion(destinationId)) }
+            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            ResponseModel.Response.Failure(error = e.message ?: "Error updating destination")
+        }
+    }
+    override suspend fun deleteDestinationId(tripId: String?, destinationId: String): ResponseModel.Response {
+        return try {
+            tripId?.let { db.collection("trips").document(it).update("destinationList", FieldValue.arrayRemove(destinationId)) }
             ResponseModel.Response.Success
         } catch (e: Exception) {
             ResponseModel.Response.Failure(error = e.message ?: "Error updating destination")
