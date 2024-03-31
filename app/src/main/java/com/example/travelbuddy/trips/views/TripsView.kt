@@ -3,6 +3,7 @@ package com.example.travelbuddy.trips.views
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +58,7 @@ import com.example.travelbuddy.trips.add_trips.views.DestinationView
 fun TripCard(
     trip: TripModel.Trip,
     navController: NavController,
+//    onDeleteClicked: () -> Unit
 ) {
     return Card(modifier = Modifier.padding(4.dp)) {
 //        val expenseViewModel = hiltViewModel<ExpensesViewModel>()
@@ -71,10 +75,12 @@ fun TripCard(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Text(
-                text = trip.name,
-                style = MaterialTheme.typography.titleLarge
-            )
+            Row(){
+                Text(
+                    text = trip.name,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
@@ -141,12 +147,28 @@ fun TripsView(
 
     val viewModel = hiltViewModel<TripsViewModel>()
     val state by viewModel.state.collectAsState()
+    var isLoading by remember { mutableStateOf(false) } // Loading state
 
+    LaunchedEffect(Unit) {
+        isLoading = true
+        viewModel.getData()
+        isLoading = false
+    }
+    if (isLoading) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
     Scaffold {
         LazyColumn(
             modifier = Modifier.padding(bottom = 25.dp),
             userScrollEnabled = true
         ) {
+            viewModel.getData()
             items(state.tripsList) { trip: TripModel.Trip ->
                 TripCard(trip = trip, navController)
                 Spacer(modifier = Modifier.height(7.dp))
@@ -164,6 +186,7 @@ fun TripsView(
                 onClick = {
                     isSheetOpen = true
                     showPager = true
+//                    viewModel.getData()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -179,5 +202,6 @@ fun TripsView(
         if (showPager) {
             AddTripsPagerView(navController)
         }
+    }
     }
 }

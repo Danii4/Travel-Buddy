@@ -5,20 +5,18 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.travelbuddy.NavWrapper
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
+import com.example.travelbuddy.NavWrapper
 import com.example.travelbuddy.Screen
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import com.example.travelbuddy.data.ExpenseRepository
 import com.example.travelbuddy.data.model.TripModel
 import com.example.travelbuddy.repository.TripRepository
 import com.example.travelbuddy.trips.model.TripsModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
@@ -63,7 +61,7 @@ class TripsViewModel @Inject constructor(
             tripRepository.getTrips().collect { trips ->
                 trips.data?.let {
                     tripsList.value = it
-                    Log.d("trips list", tripsList.toString())
+                    Log.d("trips list", tripsList.value.toString())
                 } ?: run {
                     Log.d("Error", "Error getting trips data")
                 }
