@@ -47,7 +47,12 @@ fun AddTripsPagerView(navController: NavController) {
             AddEditDestinationView(innerPadding)
         }
     )
-    val tripsAddScreenList = listOf(titlePage, addDestPage)
+    val addBudgetsPage = TripAddPageModel(
+        page = {
+            AddBudgetsView()
+        }
+    )
+    val tripsAddScreenList = listOf(titlePage, addDestPage, addBudgetsPage)
     GenerateTripAddViews(tripsAddScreenList, navController)
 }
 
@@ -175,7 +180,7 @@ fun ModifiedRow(
                 modifier = Modifier
                     .padding(horizontal = 15.dp, vertical = 10.dp)
                     .clickable {
-                        viewModel.submitDestination()
+                        viewModel.submitTrip()
                         viewModel.navigateToTrips()
                     }
             ) {

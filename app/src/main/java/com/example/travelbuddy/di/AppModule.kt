@@ -7,6 +7,7 @@ import com.example.travelbuddy.data.DestinationRepositoryImpl
 import com.example.travelbuddy.data.ExpenseRepository
 import com.example.travelbuddy.data.ItineraryRepositoryImpl
 import com.example.travelbuddy.data.TripRepositoryImpl
+import com.example.travelbuddy.languageTranslation.model.TranslationModel
 import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.CurrencyExchangeRepository
 import com.example.travelbuddy.repository.DestinationRepository
@@ -86,4 +87,12 @@ object AppModule {
             destinationRepository=destinationRepository
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideTranslationModel(): TranslationModel {
+        return TranslationModel()
+    }
+
+
 }

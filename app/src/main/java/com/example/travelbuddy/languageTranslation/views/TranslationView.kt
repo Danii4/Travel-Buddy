@@ -1,31 +1,26 @@
-package com.example.travelbuddy.languageTranslation
+package com.example.travelbuddy.languageTranslation.views
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-
-/*
-* Notes for Prototype:
-* Swap is not fully functional
-* Currently only supports text input. Voice will be added later
-* Dropdown will be enhanced for more clarity
-* History feature currently not supported
-* RTL languages currently not supported
-* */
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.languageTranslation.TranslationViewModel
+import com.example.travelbuddy.languageTranslation.components.LanguageSelectionDropdown
 
 @Composable
 fun TranslationScreen() {
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
-    var translatedText by remember { mutableStateOf("") }
+    val viewModel = hiltViewModel<TranslationViewModel>()
+    val translatedText by viewModel.translatedText.collectAsState()
     var inputLanguageSelected by remember { mutableStateOf("English") }
     var outputLanguageSelected by remember { mutableStateOf("French") }
+    val languageHistory by viewModel.languageHistory.collectAsState()
+    val recentInputs by viewModel.recentInputs.collectAsState()
+
     val languages = listOf(
         "Arabic",
         "Bengali",
@@ -68,8 +63,12 @@ fun TranslationScreen() {
             selectedLanguage = inputLanguageSelected,
             languages = languages,
             showDropdown = showInputDropdown,
-            onLanguageSelected = { inputLanguageSelected = it },
+            onLanguageSelected = {  language ->
+                inputLanguageSelected = language
+                viewModel.updateLanguagesHistory(language)
+                showInputDropdown = false },
             onDropdownChange = { showInputDropdown = it },
+            languageHistory = languageHistory
         )
 
         // Box for displaying input text
@@ -91,18 +90,7 @@ fun TranslationScreen() {
             // Translate button
             Button(
                 onClick = {
-                    Translator.performTranslation(
-                        inputText = inputText.text,
-                        sourceLanguage = inputLanguageSelected,
-                        targetLanguage = outputLanguageSelected,
-                        onSuccess = { translation ->
-                            translatedText = translation
-                        },
-                        onFailure = { error ->
-                            translatedText = "Error: $error"
-
-                        }
-                    )
+                    viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
                 },
                 modifier = Modifier.weight(1f)
             ) {
@@ -116,7 +104,6 @@ fun TranslationScreen() {
                     inputLanguageSelected = outputLanguageSelected
                     outputLanguageSelected = tempLanguage
                     inputText = TextFieldValue(translatedText)
-                    translatedText = ""
                 },
                 modifier = Modifier.weight(1f)
             ) {
@@ -130,8 +117,12 @@ fun TranslationScreen() {
             selectedLanguage = outputLanguageSelected,
             languages = languages,
             showDropdown = showOutputDropdown,
-            onLanguageSelected = { outputLanguageSelected = it },
-            onDropdownChange = { showOutputDropdown = it }
+            onLanguageSelected = {  language ->
+                outputLanguageSelected = language
+                viewModel.updateLanguagesHistory(language)
+                showOutputDropdown = false },
+            onDropdownChange = { showOutputDropdown = it },
+            languageHistory = languageHistory
         )
 
         // Box for displaying translated text
@@ -145,48 +136,29 @@ fun TranslationScreen() {
                 .padding(bottom = 16.dp),
             label = { Text("Translated Text") }
         )
-    }
-}
 
-@Composable
-fun LanguageSelectionDropdown(
-    label: String,
-    selectedLanguage: String,
-    languages: List<String>,
-    showDropdown: Boolean,
-    onLanguageSelected: (String) -> Unit,
-    onDropdownChange: (Boolean) -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-    ) {
-        Text(text = "$label: ")
+        // Clickable recent inputs shown in a column
+        Column {
+            Text("Recent Inputs: ")
+            recentInputs.forEach { recentInput ->
+                OutlinedButton(
+                    onClick = {
+                        inputText = TextFieldValue(recentInput.inputText)
+                        inputLanguageSelected = recentInput.inputLanguage
+                        outputLanguageSelected = recentInput.outputLanguage
+                        viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
 
-        Box(modifier = Modifier.weight(2f)) {
-            Text(
-                text = selectedLanguage,
-                modifier = Modifier
-                    .clickable { onDropdownChange(true) }
-            )
-            DropdownMenu(
-                expanded = showDropdown,
-                onDismissRequest = { onDropdownChange(false) }
-            ) {
-                languages.forEach { language ->
-                    DropdownMenuItem(
-                        text = { Text(language) },
-                        onClick = {
-                            onLanguageSelected(language)
-                            onDropdownChange(false)
-                        }
-                    )
+                    },
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                ) {
+                    Text(recentInput.inputText)
                 }
             }
         }
+
+
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun TranslationScreenPreview() {

@@ -1,5 +1,6 @@
 package com.example.travelbuddy.data
 
+import com.example.travelbuddy.data.model.ExpenseModel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.travelbuddy.data.model.ResponseModel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @Suppress("UNCHECKED_CAST")
@@ -22,27 +24,34 @@ class TripRepositoryImpl @Inject constructor(
     private val authRepository: AuthRepository
 ) : TripRepository{
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    override suspend fun addTrip(tripName: String, destIdList: List<String>) : ResponseModel.ResponseWithData<String> {
+    override suspend fun addTrip(
+        tripName: String,
+        destIdList: List<String>,
+        budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>>,
+        defaultCurrency: String
+    ): ResponseModel.ResponseWithData<String> {
         return try {
+            val budgetMap = budgets.associate { it.first.name to it.second.toString() }
             // add trip to Trip table
             val tripID = db.collection("trips").add(
                 mapOf(
                     "name" to tripName,
-                    "budgets" to null,
-                    "totalExpenses" to null,
-                    "expensesList" to null,
-                    "destinationList" to destIdList
+                    "budgets" to budgetMap,
+                    "expensesList" to listOf<String>(),
+                    "destinationList" to destIdList,
+                    "defaultCurrency" to defaultCurrency
                 )
             ).await().id
 
             ResponseModel.ResponseWithData.Success(tripID)
-        }
-        catch (e: Exception) {
-            return ResponseModel.ResponseWithData.Failure(error=e.message?:"Error adding a trip. Please try again.")
+        } catch (e: Exception) {
+            return ResponseModel.ResponseWithData.Failure(
+                error = e.message ?: "Error adding a trip. Please try again."
+            )
         }
     }
 
-    override suspend fun addTripIdToUser(Id: String){
+    override suspend fun addTripIdToUser(Id: String) {
         authRepository.getUserId().let {
             db.collection("users").document(it!!).update(
                 "tripsIdList", FieldValue.arrayUnion(Id)
@@ -51,21 +60,29 @@ class TripRepositoryImpl @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getTrips(): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>> {
+    override suspend fun getTrips(tripId: String): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>> {
         return flow {
-            emit(getTripData())
+            emit(getTripsData(tripId))
         }.flowOn(Dispatchers.IO)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun getTripData(): ResponseModel.ResponseWithData<List<TripModel.Trip>> {
-        val tripIds = getTripsIds()
-        if (tripIds.error != null) {
-            return ResponseModel.ResponseWithData.Failure(error = tripIds.error)
+    private suspend fun getTripsData(tripId: String = ""): ResponseModel.ResponseWithData<List<TripModel.Trip>> {
+        var tripIds : MutableList<String>? = mutableListOf()
+        if (tripId.isBlank()) {
+            val tripIdsResponse = getTripsIds()
+            if (tripIdsResponse.error != null) {
+                return ResponseModel.ResponseWithData.Failure(error = tripIdsResponse.error)
+            }
+            else {
+                tripIds = tripIdsResponse.data
+            }
         }
-
+        else {
+            tripIds?.add(tripId)
+        }
         val tripData: MutableList<DocumentSnapshot> = mutableListOf()
-        tripIds.data?.forEach {
+        tripIds?.forEach {
             try {
                 tripData.add(db.collection("trips").document(it).get().await())
             } catch (e: Exception) {
@@ -75,15 +92,14 @@ class TripRepositoryImpl @Inject constructor(
 
         val tripList = mutableListOf<TripModel.Trip>()
         for (trip in tripData) {
+            var budgetsData = trip.get("budgets") as Map<String, String>
+            val budgets = budgetsData.map { ExpenseModel.ExpenseType.from(it.key) to BigDecimal(it.value) }.toMap().toMutableMap()
             TripModel.Trip(
                 id = trip.id,
                 name = trip.get("name") as String,
-//                budgets = MutableMap<ExpenseModel.ExpenseType, Double>,
-//                expensesList = trip.get("expensesList") as List<String>,
-                expensesList = null,
-//                destinationList= trip.get("destinationList") as List<String>,
-                destinationList = null
-//                totalExpenses = MutableMap<ExpenseModel.ExpenseType, Double>
+                budgets = budgets,
+                expensesList = trip.get("expensesList") as List<String>,
+                destinationList = trip.get("destinationList") as List<String>,
             )
                 .let { tripList.add(it) }
         }
