@@ -138,4 +138,7 @@ dependencies {
     // Translation
     implementation("com.google.mlkit:translate:17.0.2")
     implementation("io.github.pushpalroy:jetlime:2.1.1")
+
+    implementation ("com.amadeus:amadeus-android:1.3.1")
+
 }
