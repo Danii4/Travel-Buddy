@@ -4,7 +4,8 @@ import com.example.travelbuddy.data.model.ItineraryModel
 
 class ItineraryPageModel {
     data class ItineraryViewState(
-        val itineraryList: List<ItineraryModel.Itinerary> = emptyList(),
-        val isLoading: Boolean = false,
+        var itineraryList: List<ItineraryModel.Itinerary> = emptyList(),
+        var name: String = "",
+        var destinationId: String? = null
     )
 }
