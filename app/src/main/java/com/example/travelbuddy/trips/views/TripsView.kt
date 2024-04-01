@@ -115,7 +115,6 @@ fun TripCard(
         ) {
             Spacer(modifier = Modifier.width(30.dp))
             AssistChip(
-//                modifier = Modifier.background(Color.White),
                 onClick = {
                     destSheetOpen = true
                     addTripsViewModel.setTripId(trip.id)
@@ -136,7 +135,6 @@ fun TripCard(
             )
             Spacer(modifier = Modifier.width(75.dp))
             AssistChip(
-//                modifier = Modifier.background(Color.White),
                 onClick = onExpenseClick,
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = Color.White,
@@ -205,7 +203,6 @@ fun TripsView(
                         viewModel.deleteTrip(trip.id)
                         viewModel.navigateToTrips()
                     })
-//                Spacer(modifier = Modifier.height(3.dp))
             }
         }
         var isSheetOpen by rememberSaveable {
