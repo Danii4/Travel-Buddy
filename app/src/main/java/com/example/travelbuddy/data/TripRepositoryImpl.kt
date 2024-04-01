@@ -2,6 +2,7 @@ package com.example.travelbuddy.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.travelbuddy.data.model.Currency
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
 import com.example.travelbuddy.data.model.TripModel
@@ -28,7 +29,7 @@ class TripRepositoryImpl @Inject constructor(
         tripName: String,
         destIdList: List<String>,
         budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>>,
-        defaultCurrency: String
+        defaultCurrency: Currency
     ): ResponseModel.ResponseWithData<String> {
         return try {
             val budgetMap = budgets.associate { it.first.name to it.second.toString() }
@@ -39,7 +40,7 @@ class TripRepositoryImpl @Inject constructor(
                     "budgets" to budgetMap,
                     "expensesList" to listOf<String>(),
                     "destinationList" to destIdList,
-                    "defaultCurrency" to defaultCurrency
+                    "defaultCurrency" to defaultCurrency.toMap()
                 )
             ).await().id
 
@@ -109,14 +110,16 @@ class TripRepositoryImpl @Inject constructor(
 
         val tripList = mutableListOf<TripModel.Trip>()
         for (trip in tripData) {
-            var budgetsData = trip.get("budgets") as Map<String, String>
+            val budgetsData = trip.get("budgets") as Map<String, String>
             val budgets = budgetsData.map { ExpenseModel.ExpenseType.from(it.key) to BigDecimal(it.value) }.toMap().toMutableMap()
+            val defaultCurrencyMap = trip.get("defaultCurrency") as Map<String, String>
             TripModel.Trip(
                 id = trip.id,
                 name = trip.get("name") as String,
                 budgets = budgets,
                 expensesList = trip.get("expensesList") as List<String>,
                 destinationList = trip.get("destinationList") as List<String>,
+                defaultCurrency = Currency(code = defaultCurrencyMap["code"], name = defaultCurrencyMap["name"], symbol = defaultCurrencyMap["symbol"])
             )
                 .let { tripList.add(it) }
         }
@@ -160,7 +163,7 @@ class TripRepositoryImpl @Inject constructor(
     override suspend fun getDestinationIds(tripId: String?): ResponseModel.ResponseWithData<MutableList<String>> {
         val tripRef = tripId.let { db.collection("trips").document(it.toString()) }
         return try {
-            val documentSnapshot  = tripRef?.get()?.await()
+            val documentSnapshot  = tripRef.get().await()
             if (documentSnapshot?.exists() == true) {
                 val tripData = documentSnapshot.data?.get("destinationList") as MutableList<String>
                 ResponseModel.ResponseWithData.Success(tripData)

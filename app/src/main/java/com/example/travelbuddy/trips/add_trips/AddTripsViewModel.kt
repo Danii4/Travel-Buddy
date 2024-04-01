@@ -190,7 +190,7 @@ class AddTripsViewModel @Inject constructor(
                 tripName = tripName.value,
                 destIdList = destIdList,
                 budgets = budgets.value,
-                defaultCurrency = defaultCurrency.value.code!!
+                defaultCurrency = com.example.travelbuddy.data.model.Currency(code = defaultCurrency.value.code, name = defaultCurrency.value.name, symbol = defaultCurrency.value.symbol)
             )
             tripRepository.addTripIdToUser(tripId.data.toString())
         }
