@@ -56,7 +56,9 @@ class AmadeusClient() {
         val generatedItineraryList = mutableListOf<ItineraryModel.Itinerary>()
         val pointsOfInterest = client!!.referenceData.locations.pointsOfInterest.get(
             latitude = latitude!!,
-            longitude = longitude!!
+            longitude = longitude!!,
+            radius = 10,
+            categories = listOf("SIGHTS")
         )
         when (pointsOfInterest) {
             is ApiResult.Success -> {
