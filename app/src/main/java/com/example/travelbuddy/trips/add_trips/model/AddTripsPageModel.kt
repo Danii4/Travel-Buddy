@@ -11,7 +11,7 @@ class AddTripsPageModel {
         val tripName: String = "",
         val budgets : List<Pair<ExpenseModel.ExpenseType, BigDecimal>> = emptyList(),
         val selectedExpenseTypes : Set<ExpenseModel.ExpenseType> = emptySet(),
-        val defaultCurrency : Currency = Currency(code="CAD", symbol = "$"),
+        val defaultCurrency : Currency = Currency(code="CAD", name="Canadian Dollar", symbol = "$"),
         var tripId: String? = null,
         val changeDetected: Boolean = false,
     )

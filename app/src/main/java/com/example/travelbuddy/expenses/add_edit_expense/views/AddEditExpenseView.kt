@@ -114,10 +114,9 @@ fun AddEditExpenseView(
                 expanded = true,
                 onExpandedChange = {
                     expanded = !expanded
-                },
-                modifier = Modifier.fillMaxWidth()) {
+                },) {
                 TextField(
-                    value = state.type.stringValue,
+                    value = state.type.displayValue,
                     onValueChange = {},
                     readOnly = true,
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -138,13 +137,6 @@ fun AddEditExpenseView(
                     }
                 }
             }
-
-            // Display the selected expense type
-            Text(
-                text = "Type: ${state.type.name}",
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
             Spacer(modifier = Modifier.height(20.dp))
 
             // Text field for entering expense amount
@@ -165,9 +157,10 @@ fun AddEditExpenseView(
             Spacer(modifier = Modifier.height(20.dp))
 
             Box(
-                modifier = Modifier.clickable {
-                    currencySelection = !currencySelection
-                }
+                modifier = Modifier
+                    .clickable {
+                        currencySelection = !currencySelection
+                    }
                     .align(AbsoluteAlignment.Right)
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -176,7 +169,7 @@ fun AddEditExpenseView(
                             .align(Alignment.CenterVertically)
                             .fillMaxWidth()
                     ) {
-                        Text(text = state.currency.code!!)
+                        Text(text = "${state.currency.code!!} ${state.currency.symbol}\n${state.currency.name}")
                     }
                 }
             }

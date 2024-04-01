@@ -46,18 +46,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
 import com.example.travelbuddy.expenses.model.ExpensesModel
+import com.example.travelbuddy.languageTranslation.CustomColors
 import java.math.BigDecimal
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -83,7 +86,11 @@ fun BudgetItem(
                 "%.2f".format(
                     viewModel.getTotalExpenses(expenseType)
                 )
-            } / ${state.trip.defaultCurrency.symbol}${"%.2f".format(amount.toString().toDouble())} ${state.trip.defaultCurrency.code}",
+            } / ${state.trip.defaultCurrency.symbol}${
+                "%.2f".format(
+                    amount.toString().toDouble()
+                )
+            } ${state.trip.defaultCurrency.code}",
             overflow = TextOverflow.Ellipsis,
             fontSize = 16.sp,
             modifier = Modifier.padding(start = 16.dp)
@@ -91,14 +98,23 @@ fun BudgetItem(
     }
     Spacer(modifier = Modifier.height(2.dp))
     val progress = viewModel.getProgress(expenseType, amount)
+//    CustomProgressBar(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(8.dp)
+//            .clip(RoundedCornerShape(16.dp)),
+//        backgroundColor = Color.Gray,
+//        foregroundColor = Color.Blue,
+//        progress = progress,
+//    )
     CustomProgressBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp)
-            .clip(RoundedCornerShape(16.dp)),
-        backgroundColor = Color.Gray,
-        foregroundColor = Color.Blue,
-        progress = progress,
+        Modifier
+            .clip(shape = RoundedCornerShape(16.dp))
+            .height(14.dp),
+        330.dp,
+        Color.White,
+        Brush.horizontalGradient(listOf(CustomColors.LightIndigo, CustomColors.Indigo)),
+        progress
     )
 //    LinearProgressIndicator(
 //        progress = progress, // Dummy progress for demonstration
@@ -112,17 +128,17 @@ fun BudgetItem(
 
 @Composable
 fun CustomProgressBar(
-    modifier: Modifier, backgroundColor: Color, foregroundColor: Color, progress: Float,
+    modifier: Modifier, width: Dp, backgroundColor: Color, foregroundColor: Brush, progress: Float,
 ) {
     Box(
         modifier = modifier
             .background(backgroundColor)
-            .width(300.dp)
+            .width(width)
     ) {
         Box(
             modifier = modifier
-                .background(color = foregroundColor)
-                .width((300 * progress).dp)
+                .background(brush = foregroundColor)
+                .width((width * progress))
         )
     }
 }
@@ -150,7 +166,8 @@ fun ExpenseList(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
                     .padding(15.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -231,12 +248,14 @@ fun ExpensesView(
                 actions = {
                     // Add a switch to toggle default currency for expenses
                     var toggleState by remember { mutableStateOf(false) }
-                    Row(verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(10.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(10.dp)
+                    ) {
                     }
                     Text(
                         text = state.trip.defaultCurrency.code!!,
-                        color = if (toggleState) Color.Green else Color.Gray,
+                        color = if (toggleState) CustomColors.LightGreen else CustomColors.DarkGreen,
                         fontWeight = FontWeight.Bold
                     )
                     Switch(
@@ -273,27 +292,37 @@ fun ExpensesView(
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }
-            if (state.expensesList.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .border(
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .padding(15.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
-                ) {
-                    items(state.expensesList) { expense ->
-                        ExpenseList(expense = expense, viewModel = viewModel)
+
+            Column(
+                modifier = Modifier
+                    .weight(1f, fill = true)
+                    .fillMaxWidth()
+            ) {
+                if (state.expensesList.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .border(
+                                border = BorderStroke(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.surfaceVariant
+                                ),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .padding(15.dp)
+                            .fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                    ) {
+                        items(state.expensesList) { expense ->
+                            ExpenseList(expense = expense, viewModel = viewModel)
+                        }
                     }
                 }
             }
+
             Box(
-                modifier = Modifier.fillMaxWidth()
-                    .height(20.dp),
+                modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.BottomCenter
             ) {
                 Button(
@@ -302,7 +331,6 @@ fun ExpensesView(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(20.dp)
                         .padding(horizontal = 10.dp, vertical = 10.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(92, 184, 92),
