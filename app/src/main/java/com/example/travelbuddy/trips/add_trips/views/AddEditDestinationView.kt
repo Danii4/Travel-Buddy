@@ -2,6 +2,7 @@ package com.example.travelbuddy.trips.add_trips.views
 
 import android.annotation.SuppressLint
 import android.util.Range
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,13 +26,13 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -47,16 +48,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.util.toRange
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.data.model.DestinationModel
+import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.calendar.models.CalendarStyle
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
@@ -68,12 +73,17 @@ fun GenerateDestinationView(
     onDeleteClicked: () -> Unit,
 ) {
     val viewModel = hiltViewModel<AddTripsViewModel>()
+    val formatter = SimpleDateFormat("MMM dd")
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
+            .border(
+                width = 2.dp,
+                color = CustomColors.Indigo,
+                shape = RoundedCornerShape(16.dp)
+            )
             .height(70.dp),
-        shape = RoundedCornerShape(15)
     ) {
         Row(
             modifier = Modifier
@@ -82,9 +92,10 @@ fun GenerateDestinationView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.Place,
+                imageVector = Icons.Outlined.Place,
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
+                tint = CustomColors.Indigo,
+                modifier = Modifier.size(30.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column(
@@ -93,15 +104,16 @@ fun GenerateDestinationView(
             ) {
                 Text(
                     text = destination.name,
-                    modifier = Modifier.padding(4.dp)
+                    fontWeight = FontWeight.Bold,
+                    color = CustomColors.Indigo,
+                    fontSize = 20.sp
                 )
                 Text(
-                    text = "Dates: ${destination.startDate} - ${destination.endDate}",
+                    text = "${formatter.format(destination.startDate)} - ${formatter.format(destination.endDate)}",
                     style = TextStyle(
-                        color = MaterialTheme.colorScheme.primary,
+                        color = CustomColors.Indigo,
+                        fontSize = 16.sp
                     ),
-                    modifier = Modifier.padding(4.dp),
-                    color = Color.Gray
                 )
             }
             IconButton(
@@ -111,7 +123,7 @@ fun GenerateDestinationView(
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete",
-                    tint = Color.Red
+                    tint = CustomColors.LightRed
                 )
             }
             if (readMode) {
@@ -148,7 +160,6 @@ fun AddEditDestinationView(
     var destBarActive by remember {
         mutableStateOf(false)
     }
-
     LazyColumn(
         modifier = Modifier.padding(innerPadding),
         userScrollEnabled = true
