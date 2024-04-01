@@ -72,8 +72,7 @@ fun NavigationRow() {
             modifier = Modifier
                 .padding(horizontal = 15.dp, vertical = 10.dp)
                 .clickable {
-                    viewModel.submitItinerary("create")
-                    viewModel.navigateBack()
+                    viewModel.submitItinerary()
                 }
         ) {
             Text("Done")
@@ -130,40 +129,55 @@ fun ItineraryView() {
         },
         content = { innerPadding ->
             Surface(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
-                JetLimeColumn(
-                    modifier = Modifier.padding(16.dp),
-                    itemsList = ItemsList(state.itineraryList)
-                ) { _, item, position ->
-                    JetLimeEvent(
-                        style = JetLimeEventDefaults.eventStyle(
-                            position = position
-                        ),
-                    ) {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(8.dp)
+                if (state.itineraryList.isNotEmpty()) {
+                    JetLimeColumn(
+                        modifier = Modifier.padding(16.dp),
+                        itemsList = ItemsList(state.itineraryList)
+                    ) { _, item, position ->
+                        JetLimeEvent(
+                            style = JetLimeEventDefaults.eventStyle(
+                                position = position
+                            ),
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth()
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(8.dp)
                             ) {
-                                Text(
-                                    text = item.name,
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
+                                Column(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = item.name,
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                        )
                                     )
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Time: ${item.time}",
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Normal,
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = "Time: ${item.time}",
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Normal,
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(
+                            onClick = { viewModel.generateItinerary(state.destinationId.toString()) },
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text("Generate Itinerary")
+                        }
+                    }
+
                 }
             }
         }
