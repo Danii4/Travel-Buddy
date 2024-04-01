@@ -143,5 +143,6 @@ dependencies {
     implementation("com.github.nkuppan.country:countrycompose:1.1.1")
 
     implementation ("com.amadeus:amadeus-android:1.3.1")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
 }
