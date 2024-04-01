@@ -1,19 +1,26 @@
 package com.example.travelbuddy.amadeus_client
 
 import android.content.Context
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.amadeus.android.Amadeus
 import com.amadeus.android.ApiResult
+import com.example.travelbuddy.data.model.ItineraryModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class AmadeusClient() {
     private var client: Amadeus? = null
     private lateinit var activityContext: Context
     val job = SupervisorJob()
     val scope = CoroutineScope(Dispatchers.Main + job)
+
     fun startClient() {
         client = Amadeus.Builder(activityContext)
             .setClientId("tbqK2WGYeVhktIJwwBQQ0MMyHTRDZ7pw")
@@ -28,7 +35,7 @@ class AmadeusClient() {
             when (val coordinates = client!!.referenceData.locations.get(keyword=dest, subType = listOf(
                 "CITY",
             )
-                )){
+            )){
                 is ApiResult.Success -> {
                     if (coordinates?.data.isNullOrEmpty()){
                         res = listOf("")
@@ -38,7 +45,6 @@ class AmadeusClient() {
                     }
                 }
                 is ApiResult.Error -> {
-                    // Handle your error
 
                 }
             }
@@ -46,18 +52,30 @@ class AmadeusClient() {
         return res
     }
 
-    fun getGeoPoint(){
-        scope.launch {
-            when (val pointsOfInterest = client!!.referenceData.locations.pointsOfInterest.get(latitude = 41.397158, longitude = 2.160873)){
-                is ApiResult.Success -> {
-                    Log.d("Result", "${pointsOfInterest.data}")
-                }
-                is ApiResult.Error -> {
-                    // Handle your error
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getGeoPoint(): Flow<MutableList<ItineraryModel.Itinerary>>{
+        val generatedItineraryList = mutableListOf<ItineraryModel.Itinerary>()
+
+        val pointsOfInterest = client!!.referenceData.locations.pointsOfInterest.get(latitude = 40.71427, longitude = -74.00597)
+
+        when (pointsOfInterest) {
+            is ApiResult.Success -> {
+                val results = pointsOfInterest.data
+                results.forEach { location ->
+                    val newItinerary = ItineraryModel.Itinerary(
+                        name = location.name.toString(),
+                        time = Date()
+                    )
+                    generatedItineraryList.add(newItinerary)
                 }
             }
+            is ApiResult.Error -> {}
         }
+        return flow {
+            emit(generatedItineraryList)
+        }.flowOn(Dispatchers.IO)
     }
+
     fun setActivityContext(context: Context) {
         activityContext = context
     }
