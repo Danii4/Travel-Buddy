@@ -30,21 +30,26 @@ class ItineraryViewModel @Inject constructor(
     private val amadeusClient: AmadeusClient,
     savedStateHandle: SavedStateHandle,
     private val navWrapper: NavWrapper
-) : ViewModel(){
+) : ViewModel() {
     private val _state = MutableStateFlow(ItineraryPageModel.ItineraryViewState())
     val state: StateFlow<ItineraryPageModel.ItineraryViewState>
         get() = _state
 
-    private val destinationId: MutableStateFlow<String?> = MutableStateFlow(savedStateHandle["destinationId"])
-    private val itineraryList: MutableStateFlow<List<ItineraryModel.Itinerary>> = MutableStateFlow(listOf())
+    private val destinationId: MutableStateFlow<String?> =
+        MutableStateFlow(savedStateHandle["destinationId"])
+    private val itineraryList: MutableStateFlow<List<ItineraryModel.Itinerary>> =
+        MutableStateFlow(listOf())
     private val itineraryName: MutableStateFlow<String> = MutableStateFlow(_state.value.name)
 
     init {
         viewModelScope.launch {
-            combine(itineraryList, itineraryName, destinationId) {
-                    itineraryList: List<ItineraryModel.Itinerary>,
-                    itineraryName: String,
-                    destinationId: String? ->
+            combine(
+                itineraryList,
+                itineraryName,
+                destinationId
+            ) { itineraryList: List<ItineraryModel.Itinerary>,
+                itineraryName: String,
+                destinationId: String? ->
                 ItineraryPageModel.ItineraryViewState(
                     itineraryList = itineraryList,
                     name = itineraryName,
@@ -56,12 +61,12 @@ class ItineraryViewModel @Inject constructor(
         }
     }
 
-    private fun getData(){
+    private fun getData() {
         viewModelScope.launch {
-            itineraryRepository.getItinerary(destinationId.value).collect{itinerary ->
+            itineraryRepository.getItinerary(destinationId.value).collect { itinerary ->
                 itinerary.data?.let {
                     itineraryList.value = it
-                }?: run {
+                } ?: run {
                     Log.d("Error", "Error getting itinerary data")
                 }
             }
@@ -81,28 +86,19 @@ class ItineraryViewModel @Inject constructor(
         itineraryList.value += itineraryItem
     }
 
-    fun deleteItinerary(itinerary: ItineraryModel.Itinerary){
+    fun deleteItinerary(itinerary: ItineraryModel.Itinerary) {
         itineraryList.value -= itinerary
     }
 
-    fun setItineraryName(name: String){
+    fun setItineraryName(name: String) {
         itineraryName.value = name
     }
 
-    fun navigateBack(){
+    fun navigateBack() {
         navWrapper.getNavController().navigateUp()
     }
 
-    fun generateItinerary(destinationId: String){
-        amadeusClient.startClient()
-        viewModelScope.launch {
-            val destName = destinationRepository.getDestinationName(destinationId).data.toString()
-
-            val coords = amadeusClient.getCoordinates(destName)
-        }
-    }
-
-    fun submitItinerary(){
+    fun submitItinerary() {
         viewModelScope.launch {
             val itineraryIdList = mutableListOf<String>()
             itineraryList.value.forEach { itinerary ->
@@ -120,10 +116,15 @@ class ItineraryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun generateDestPOI() {
+    fun generateItinerary(destinationId: String) {
         amadeusClient.startClient()
         viewModelScope.launch {
-            amadeusClient.getGeoPoint().collect { generatedItineraryList ->
+            val destName = destinationRepository.getDestinationName(destinationId).data.toString()
+            val coords = amadeusClient.getCoordinates(destName)
+            amadeusClient.getGeoPoint(
+                latitude = coords.data?.first,
+                longitude = coords.data?.second
+            ).collect { generatedItineraryList ->
                 generatedItineraryList.let {
                     itineraryList.value = it
                 }
