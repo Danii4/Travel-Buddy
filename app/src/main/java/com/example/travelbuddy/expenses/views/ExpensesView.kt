@@ -98,15 +98,6 @@ fun BudgetItem(
     }
     Spacer(modifier = Modifier.height(2.dp))
     val progress = viewModel.getProgress(expenseType, amount)
-//    CustomProgressBar(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(8.dp)
-//            .clip(RoundedCornerShape(16.dp)),
-//        backgroundColor = Color.Gray,
-//        foregroundColor = Color.Blue,
-//        progress = progress,
-//    )
     CustomProgressBar(
         Modifier
             .clip(shape = RoundedCornerShape(16.dp))
@@ -116,14 +107,6 @@ fun BudgetItem(
         Brush.horizontalGradient(listOf(CustomColors.LightIndigo, CustomColors.Indigo)),
         progress
     )
-//    LinearProgressIndicator(
-//        progress = progress, // Dummy progress for demonstration
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(8.dp)
-//            .clip(RoundedCornerShape(16.dp)),
-//        color = viewModel.getProgressColour(progress)
-//    )
 }
 
 @Composable
@@ -159,7 +142,6 @@ fun ExpenseList(
     ) {
         Row(
             modifier = Modifier
-//                .background(color = MaterialTheme.colorScheme.onBackground)
                 .fillMaxWidth()
                 .fillMaxHeight(),
             horizontalArrangement = Arrangement.Start,
@@ -172,8 +154,6 @@ fun ExpenseList(
                 horizontalArrangement = Arrangement.spacedBy(30.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-
-//                Spacer(modifier = Modifier.width(11.dp))
                 Image(
                     modifier = Modifier
                         .width(36.dp)
@@ -181,7 +161,6 @@ fun ExpenseList(
                     painter = rememberVectorPainter(expense.type.icon),
                     contentDescription = ""
                 )
-//                Spacer(modifier = Modifier.width(40.dp))
                 Column(
                     modifier = Modifier
                         .width(140.dp)
@@ -201,7 +180,6 @@ fun ExpenseList(
                     )
 
                 }
-//                Spacer(modifier = Modifier.width(40.dp))
                 Text(
                     text = "${expense.currency.symbol}${"%.2f".format(expense.amount)}\n${expense.currency.code}",
                     textAlign = TextAlign.Left,
