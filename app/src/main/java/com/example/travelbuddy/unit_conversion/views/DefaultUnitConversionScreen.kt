@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.travelbuddy.CustomColors
 import com.example.travelbuddy.R
 import com.example.travelbuddy.ui.theme.DarkBlue
 import com.example.travelbuddy.ui.theme.DarkGreen
@@ -34,42 +35,42 @@ fun DefaultUnitConversionScreen(onClick: (currency: ScreenType) -> Unit){
         ) {
             Text(
                 text = "Select Conversion Type:",
-                color = DarkGrey,
+                color = Color.Black,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(10.dp),
             )
             UnitTypeRow(
-                bgColor = DarkGreen,
+                bgColor = CustomColors.LightGreen,
                 fgColor = Color.White,
                 icon = ImageType.Drawable(R.drawable.money_24),
                 title = "Currency",
                 onClick = { onClick(ScreenType.CURRENCY) }
             )
             UnitTypeRow(
-                bgColor = DarkRed,
+                bgColor = CustomColors.Pink,
                 fgColor = Color.White,
                 icon = ImageType.Drawable(R.drawable.length_24),
                 title = "Lengths",
                 onClick = { onClick(ScreenType.LENGTHS) }
             )
             UnitTypeRow(
-                bgColor = DarkBlue,
+                bgColor = CustomColors.Blue,
                 fgColor = Color.White,
                 icon = ImageType.Drawable(R.drawable.temperature_24),
                 title = "Temperature",
                 onClick = { onClick(ScreenType.TEMPERATURE) }
             )
             UnitTypeRow(
-                bgColor = DarkPurple,
+                bgColor = CustomColors.Indigo,
                 fgColor = Color.White,
                 icon = ImageType.Drawable(R.drawable.weight_24),
                 title = "Weight",
                 onClick = { onClick(ScreenType.WEIGHT) }
             )
             UnitTypeRow(
-                bgColor = DarkOrange,
+                bgColor = CustomColors.DarkGreen,
                 fgColor = Color.White,
                 icon = ImageType.Drawable(R.drawable.volume_24),
                 title = "Volume",
