@@ -2,9 +2,9 @@ package com.example.travelbuddy.repository
 
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
-import java.math.BigDecimal
 import com.example.travelbuddy.data.model.TripModel
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
 
 interface TripRepository {
     suspend fun addTrip(tripName: String, destIdList: List<String>, budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>>, defaultCurrency: String) : ResponseModel.ResponseWithData<String>
@@ -16,5 +16,5 @@ interface TripRepository {
     suspend fun getTrips(tripId: String = ""): Flow<ResponseModel.ResponseWithData<List<TripModel.Trip>>>
     suspend fun getTripsIds(): ResponseModel.ResponseWithData<MutableList<String>>
     suspend fun getTripName(tripId: String): ResponseModel.ResponseWithData<String>
-
+    suspend fun deleteTrip(tripId: String): ResponseModel.Response
 }
