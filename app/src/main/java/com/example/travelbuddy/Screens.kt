@@ -13,11 +13,11 @@ sealed class Screen(val route: String, var drawerItem: Int = 0) {
     object FAQ: Screen("faq", 0)
     object Trips: Screen("trip", 1)
     object TripAdd: Screen("trip-add", 1)
-    object Expenses: Screen("expenses", 2)
+    object Expenses: Screen("expenses", 1)
 
-    object Itinerary: Screen(route = "itinerary")
+    object Itinerary: Screen(route = "itinerary", 1)
     object AddEditExpense: Screen("add-edit-expense", 2)
 
-    object LanguageTranslation: Screen("language-translation", 3)
-    object UnitConversion: Screen("unit-conversion", 4)
+    object LanguageTranslation: Screen("language-translation", 2)
+    object UnitConversion: Screen("unit-conversion", 3)
 }

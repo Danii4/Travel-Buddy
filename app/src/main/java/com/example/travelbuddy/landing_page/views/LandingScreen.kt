@@ -41,6 +41,7 @@ fun LandingScreen() {
     val viewModel = hiltViewModel<LandingScreenViewModel>()
     val state by viewModel.state.collectAsState()
 
+    val lastTripName: String = if (state.lastTripName != "null") state.lastTripName else ""
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +73,7 @@ fun LandingScreen() {
             Spacer(modifier = Modifier.weight(1f, fill = true))
             Row {
                 Text(
-                    text = state.lastTripName,
+                    text = lastTripName,
                     fontSize = 30.sp,
                     modifier = Modifier
                         .padding(15.dp)
