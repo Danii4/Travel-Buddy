@@ -135,8 +135,7 @@ fun ItineraryView() {
                             ),
                         ) {
                             Card(
-                                modifier = Modifier.fillMaxWidth().background(CustomColors.Indigo),
-                                shape = RoundedCornerShape(8.dp)
+                                modifier = Modifier.fillMaxWidth().background(CustomColors.Indigo, shape = RoundedCornerShape(8.dp)),
                             ) {
                                 Column(
                                     modifier = Modifier
