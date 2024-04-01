@@ -1,15 +1,16 @@
 package com.example.travelbuddy.data
 
-import com.example.travelbuddy.data.model.ExpenseModel
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
-import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.TripRepository
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -49,6 +50,30 @@ class TripRepositoryImpl @Inject constructor(
                 error = e.message ?: "Error adding a trip. Please try again."
             )
         }
+    }
+
+    override suspend fun deleteTrip(tripId: String): ResponseModel.Response {
+        Log.d("DELETE", tripId)
+        try {
+            authRepository.getUserId().let {
+                db.collection("users").document(it!!).update("tripsIdList", FieldValue.arrayRemove(tripId))
+            }
+//            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while updating user")
+        }
+        try {
+            db.collection("trips").document(tripId).delete()
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting trip")
+        }
+//        return try {
+//            tripId?.let { db.collection("destinations").document(it).update("tripsIdList", FieldValue.arrayRemove(tripId)) }
+//            ResponseModel.Response.Success
+//        } catch (e: Exception) {
+//            return ResponseModel.Response.Failure(e.message ?: "Unknown error while updating user")
+//        }
+        return ResponseModel.Response.Success
     }
 
     override suspend fun addTripIdToUser(Id: String) {
@@ -92,6 +117,7 @@ class TripRepositoryImpl @Inject constructor(
 
         val tripList = mutableListOf<TripModel.Trip>()
         for (trip in tripData) {
+            Log.d("TRIP", trip.id)
             var budgetsData = trip.get("budgets") as Map<String, String>
             val budgets = budgetsData.map { ExpenseModel.ExpenseType.from(it.key) to BigDecimal(it.value) }.toMap().toMutableMap()
             TripModel.Trip(
