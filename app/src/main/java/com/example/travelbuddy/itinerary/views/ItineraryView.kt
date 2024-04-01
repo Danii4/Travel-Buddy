@@ -1,6 +1,7 @@
 package com.example.travelbuddy.itinerary.views
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,8 +37,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.itinerary.ItineraryViewModel
+import com.example.travelbuddy.languageTranslation.CustomColors
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
 import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
@@ -45,6 +48,7 @@ import com.pushpal.jetlime.ItemsList
 import com.pushpal.jetlime.JetLimeColumn
 import com.pushpal.jetlime.JetLimeEvent
 import com.pushpal.jetlime.JetLimeEventDefaults
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 
@@ -72,8 +76,7 @@ fun NavigationRow() {
             modifier = Modifier
                 .padding(horizontal = 15.dp, vertical = 10.dp)
                 .clickable {
-                    viewModel.submitItinerary("create")
-                    viewModel.navigateBack()
+                    viewModel.submitItinerary()
                 }
         ) {
             Text("Done")
@@ -93,19 +96,10 @@ fun ItineraryView() {
         mutableStateOf(false)
     }
     var selectedDateTime by remember { mutableStateOf(LocalDateTime.now()) }
-
+    val formatter = SimpleDateFormat("EEE MMM dd HH:mm")
 
     Scaffold(
         topBar = {
-//            TopAppBar(
-//                title = {
-//                    Text(
-//                        text = "Destination's Itinerary",
-//                        style = MaterialTheme.typography.headlineSmall,
-//                        modifier = Modifier.padding(start = 16.dp)
-//                    )
-//                },
-//            )
             NavigationRow()
         },
         bottomBar = {
@@ -116,7 +110,6 @@ fun ItineraryView() {
                 Button(
                     onClick = {
                         isSheetOpen = true
-                        viewModel.generateItinerary(state.destinationId.toString())
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -131,40 +124,59 @@ fun ItineraryView() {
         },
         content = { innerPadding ->
             Surface(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
-                JetLimeColumn(
-                    modifier = Modifier.padding(16.dp),
-                    itemsList = ItemsList(state.itineraryList)
-                ) { _, item, position ->
-                    JetLimeEvent(
-                        style = JetLimeEventDefaults.eventStyle(
-                            position = position
-                        ),
-                    ) {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(8.dp)
+                if (state.itineraryList.isNotEmpty()) {
+                    JetLimeColumn(
+                        modifier = Modifier.padding(16.dp),
+                        itemsList = ItemsList(state.itineraryList)
+                    ) { _, item, position ->
+                        JetLimeEvent(
+                            style = JetLimeEventDefaults.eventStyle(
+                                position = position
+                            ),
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth()
+                            Card(
+                                modifier = Modifier.fillMaxWidth().background(CustomColors.Indigo, shape = RoundedCornerShape(8.dp)),
                             ) {
-                                Text(
-                                    text = item.name,
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
+                                Column(
+                                    modifier = Modifier
+                                        .background(CustomColors.Indigo)
+                                        .padding(16.dp)
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = item.name,
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp,
+                                            color = Color.White
+                                        )
                                     )
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "Time: ${item.time}",
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Normal,
+                                    Spacer(modifier = Modifier.height(8.dp).background(CustomColors.Indigo))
+                                    Text(
+                                        text = "${formatter.format(item.time)}",
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Normal,
+                                            fontSize = 14.sp,
+                                            color = Color.White
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Button(
+                            onClick = { viewModel.generateItinerary(state.destinationId.toString()) },
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Text("Generate Itinerary")
+                        }
+                    }
+
                 }
             }
         }

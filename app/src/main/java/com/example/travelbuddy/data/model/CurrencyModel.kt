@@ -22,10 +22,18 @@ data class CurrencyCountryResponse(
 }
 
 data class Currency(
-    val code: String,
-    val name: String,
-    val symbol: String
-)
+    val code: String? = "",
+    val name: String? = "",
+    val symbol: String? = ""
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "code" to code,
+            "name" to name,
+            "symbol" to symbol
+        )
+    }
+}
 
 fun getFlagUrlByCountryCode(currencyCode: String?, list: List<CurrencyCountryResponse>?): String? {
     if (currencyCode.isNullOrBlank() || list.isNullOrEmpty()) return null

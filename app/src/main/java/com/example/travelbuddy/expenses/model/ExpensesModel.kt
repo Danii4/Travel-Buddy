@@ -9,6 +9,6 @@ class ExpensesModel {
         val expensesList: List<ExpenseModel.Expense> = emptyList(),
         val budgets: Map<ExpenseModel.ExpenseType, BigDecimal> = emptyMap(),
         val trip: TripModel.Trip = TripModel.Trip(),
-        val defaultCurrency: String = ""
+        val isDefaultCurrency: Boolean = false
     )
 }

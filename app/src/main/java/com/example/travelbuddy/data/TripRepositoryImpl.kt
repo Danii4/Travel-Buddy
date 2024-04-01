@@ -1,15 +1,16 @@
 package com.example.travelbuddy.data
 
-import com.example.travelbuddy.data.model.ExpenseModel
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.travelbuddy.data.model.Currency
+import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
-import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.TripRepository
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +29,7 @@ class TripRepositoryImpl @Inject constructor(
         tripName: String,
         destIdList: List<String>,
         budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>>,
-        defaultCurrency: String
+        defaultCurrency: Currency
     ): ResponseModel.ResponseWithData<String> {
         return try {
             val budgetMap = budgets.associate { it.first.name to it.second.toString() }
@@ -39,7 +40,7 @@ class TripRepositoryImpl @Inject constructor(
                     "budgets" to budgetMap,
                     "expensesList" to listOf<String>(),
                     "destinationList" to destIdList,
-                    "defaultCurrency" to defaultCurrency
+                    "defaultCurrency" to defaultCurrency.toMap()
                 )
             ).await().id
 
@@ -49,6 +50,23 @@ class TripRepositoryImpl @Inject constructor(
                 error = e.message ?: "Error adding a trip. Please try again."
             )
         }
+    }
+
+    override suspend fun deleteTrip(tripId: String): ResponseModel.Response {
+        try {
+            authRepository.getUserId().let {
+                db.collection("users").document(it!!).update("tripsIdList", FieldValue.arrayRemove(tripId))
+            }
+//            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while updating user")
+        }
+        try {
+            db.collection("trips").document(tripId).delete()
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting trip")
+        }
+        return ResponseModel.Response.Success
     }
 
     override suspend fun addTripIdToUser(Id: String) {
@@ -92,14 +110,16 @@ class TripRepositoryImpl @Inject constructor(
 
         val tripList = mutableListOf<TripModel.Trip>()
         for (trip in tripData) {
-            var budgetsData = trip.get("budgets") as Map<String, String>
+            val budgetsData = trip.get("budgets") as Map<String, String>
             val budgets = budgetsData.map { ExpenseModel.ExpenseType.from(it.key) to BigDecimal(it.value) }.toMap().toMutableMap()
+            val defaultCurrencyMap = trip.get("defaultCurrency") as Map<String, String>
             TripModel.Trip(
                 id = trip.id,
                 name = trip.get("name") as String,
                 budgets = budgets,
                 expensesList = trip.get("expensesList") as List<String>,
                 destinationList = trip.get("destinationList") as List<String>,
+                defaultCurrency = Currency(code = defaultCurrencyMap["code"], name = defaultCurrencyMap["name"], symbol = defaultCurrencyMap["symbol"])
             )
                 .let { tripList.add(it) }
         }
@@ -143,7 +163,7 @@ class TripRepositoryImpl @Inject constructor(
     override suspend fun getDestinationIds(tripId: String?): ResponseModel.ResponseWithData<MutableList<String>> {
         val tripRef = tripId.let { db.collection("trips").document(it.toString()) }
         return try {
-            val documentSnapshot  = tripRef?.get()?.await()
+            val documentSnapshot  = tripRef.get().await()
             if (documentSnapshot?.exists() == true) {
                 val tripData = documentSnapshot.data?.get("destinationList") as MutableList<String>
                 ResponseModel.ResponseWithData.Success(tripData)
@@ -170,6 +190,20 @@ class TripRepositoryImpl @Inject constructor(
             ResponseModel.Response.Success
         } catch (e: Exception) {
             ResponseModel.Response.Failure(error = e.message ?: "Error deleting destination")
+        }
+    }
+
+    override suspend fun getTripName(tripId: String): ResponseModel.ResponseWithData<String> {
+        return try {
+            val destSnapshot = db.collection("trips").document(tripId).get().await()
+            if (destSnapshot.exists()) {
+                val destData = destSnapshot.data
+                ResponseModel.ResponseWithData.Success(destData?.get("name").toString())
+            } else {
+                ResponseModel.ResponseWithData.Failure(error="Error getting Destination")
+            }
+        } catch (e: Exception) {
+            ResponseModel.ResponseWithData.Failure(error="Error getting Destination")
         }
     }
 }

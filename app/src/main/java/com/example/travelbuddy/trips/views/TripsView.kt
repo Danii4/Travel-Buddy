@@ -3,6 +3,7 @@ package com.example.travelbuddy.trips.views
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Flight
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material3.AssistChip
@@ -26,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -42,10 +45,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView
@@ -58,9 +64,13 @@ import com.example.travelbuddy.trips.add_trips.views.DestinationView
 fun TripCard(
     trip: TripModel.Trip,
     navController: NavController,
-    onExpenseClick: () -> Unit
+    onExpenseClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
-    return Card(modifier = Modifier.padding(4.dp)) {
+    return Card(
+        modifier = Modifier
+            .padding(7.dp)
+    ) {
         val addTripsViewModel = hiltViewModel<AddTripsViewModel>()
 
         val sheetState = rememberModalBottomSheetState(
@@ -70,54 +80,76 @@ fun TripCard(
             mutableStateOf(false)
         }
 
-        Column(
+        Row(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
+                .background(color = CustomColors.Indigo)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = Modifier.width(15.dp))
             Text(
                 text = trip.name,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.White,
+                modifier = Modifier.weight(1f),
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
+            IconButton(
+                onClick = onDeleteClick
             ) {
-                AssistChip(
-                    onClick = {
-                        destSheetOpen = true
-                        addTripsViewModel.setTripId(trip.id)
-                    },
-                    colors = AssistChipDefaults.assistChipColors(
-                        leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Flight,
-                            contentDescription = null
-                        )
-                    },
-                    label = {
-                        Text(text = "Destinations")
-                    }
-                )
-                Spacer(modifier = Modifier.width(100.dp))
-                AssistChip(
-                    onClick = onExpenseClick,
-                    colors = AssistChipDefaults.assistChipColors(
-                        leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.AttachMoney,
-                            contentDescription = null
-                        )
-                    },
-                    label = {
-                        Text(text = "Budget")
-                    }
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Trip",
+                    tint = CustomColors.LightRed
                 )
             }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .background(color = CustomColors.Indigo),
+        ) {
+            Spacer(modifier = Modifier.width(30.dp))
+            AssistChip(
+                onClick = {
+                    destSheetOpen = true
+                    addTripsViewModel.setTripId(trip.id)
+                },
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = Color.White,
+                    leadingIconContentColor = CustomColors.Indigo,
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Flight,
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(text = "Destinations", color = CustomColors.Indigo)
+                }
+            )
+            Spacer(modifier = Modifier.width(75.dp))
+            AssistChip(
+                onClick = onExpenseClick,
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = Color.White,
+                    leadingIconContentColor = CustomColors.Indigo,
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.AttachMoney,
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(text = "Budget", color = CustomColors.Indigo)
+                }
+            )
         }
         if (destSheetOpen){
             ModalBottomSheet(
@@ -131,6 +163,7 @@ fun TripCard(
             )
         }
     }
+
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -165,10 +198,11 @@ fun TripsView(
         ) {
             viewModel.getData()
             items(state.tripsList) { trip: TripModel.Trip ->
-                TripCard(trip = trip, navController) {
-                    viewModel.navigateToExpense(trip.id)
-                }
-                Spacer(modifier = Modifier.height(7.dp))
+                TripCard(trip = trip, navController, { viewModel.navigateToExpense(trip.id) },
+                    {
+                        viewModel.deleteTrip(trip.id)
+                        viewModel.navigateToTrips()
+                    })
             }
         }
         var isSheetOpen by rememberSaveable {

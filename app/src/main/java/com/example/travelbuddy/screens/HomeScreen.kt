@@ -94,6 +94,18 @@ fun HomeScreen() {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
+                     Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Do you accept partnership or business for companies in the travel industry.",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+                     Text(
+                modifier = Modifier.padding(20.dp),
+                text = "Yes! If you would like to discuss partner opportunities please contact us at partners@travelbuddy.com",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }

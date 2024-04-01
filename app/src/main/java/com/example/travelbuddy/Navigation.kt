@@ -20,6 +20,7 @@ import com.example.travelbuddy.firebaseauth.screens.ResetPasswordScreen
 import com.example.travelbuddy.firebaseauth.screens.SignupScreen
 import com.example.travelbuddy.itinerary.views.ItineraryView
 import com.example.travelbuddy.languageTranslation.views.TranslationScreen
+import com.example.travelbuddy.landing_page.views.LandingScreen
 import com.example.travelbuddy.trips.views.TripsView
 import com.example.travelbuddy.unit_conversion.views.UnitConversionScreen
 
@@ -44,8 +45,15 @@ fun Navigation(
         composable(Screen.Home.route) {
             NavigationDrawerWrapper(
                 navController = navController,
-                children = { HomeScreen() },
+                children = { LandingScreen() },
                 itemIndex = Screen.Home.drawerItem
+            )
+        }
+        composable(Screen.FAQ.route) {
+            NavigationDrawerWrapper(
+                navController = navController,
+                children = { HomeScreen() },
+                itemIndex = Screen.FAQ.drawerItem
             )
         }
         composable(route = Screen.Expenses.route + "?tripId={tripId}",
