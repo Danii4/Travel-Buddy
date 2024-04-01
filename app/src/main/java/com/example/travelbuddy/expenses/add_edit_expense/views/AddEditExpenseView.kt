@@ -129,7 +129,7 @@ fun AddEditExpenseView(
                 ) {
                     ExpenseModel.ExpenseType.values().forEach { type ->
                         DropdownMenuItem(
-                            text = { Text(text = type.stringValue) },
+                            text = { Text(text = type.displayValue) },
                             onClick = {
                                 viewModel.setExpenseType(type)
                                 expanded = false
