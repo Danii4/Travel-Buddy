@@ -61,8 +61,8 @@ fun ResetPasswordScreen(
             scope.launch {
                 state.value?.success?.let {
                     val success = state.value?.success
-                    Toast.makeText(context, "$success", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Screen.Home.route);
+                    Toast.makeText(context, "Sent password reset email $success", Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.Login.route)
                 }
             }
         }
@@ -71,7 +71,7 @@ fun ResetPasswordScreen(
             scope.launch {
                 state.value?.error?.let {
                     val error = state.value?.error
-                    Toast.makeText(context, "$error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error sending password reset email: $error", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -100,7 +100,11 @@ fun ResetPasswordScreen(
                     icon = Icons.Outlined.Email,
                     onInputChange = { email = it}
                 )
-                PrimaryButton(text = "Send password reset email", textSize=17.sp, onClick = {})
+                Spacer(modifier = Modifier.height(25.dp))
+                PrimaryButton(
+                    text = "Send password reset email", textSize=17.sp,
+                    onClick = { viewModel.sendPasswordResetEmail(email) }
+                )
             }
         }
     }

@@ -134,10 +134,18 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                SecondaryButton(
-                    text = "Switch to Signup",
-                    onClick = { navController.navigate(Screen.Signup.route)},
-                )
+                Column(
+                ){
+                    SecondaryButton(
+                        text = "Switch to Signup",
+                        onClick = { navController.navigate(Screen.Signup.route)},
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    SecondaryButton(
+                        text = "Forgot Password",
+                        onClick = { navController.navigate(Screen.ResetPassword.route)},
+                    )
+                }
             }
         }
     }
