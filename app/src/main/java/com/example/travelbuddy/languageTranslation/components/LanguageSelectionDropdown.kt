@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.travelbuddy.languageTranslation.CustomColors
 
 @Composable
 fun LanguageSelectionDropdown(
@@ -31,14 +32,12 @@ fun LanguageSelectionDropdown(
     onDropdownChange: (Boolean) -> Unit,
     languageHistory: List<String>
 ) {
-    val Indigo = Color(0xFF36558F)
-    val LightIndigo = Color(0xFF6D86B3)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
     ) {
-        Text(text = "$label ", color = Indigo, fontWeight = FontWeight.Bold)
+        Text(text = "$label ", color = CustomColors.Indigo, fontWeight = FontWeight.Bold)
 
         Box(modifier = Modifier.weight(2f)) {
             Row(
@@ -46,7 +45,7 @@ fun LanguageSelectionDropdown(
                 modifier = Modifier
                     .clickable { onDropdownChange(true) }
                     .clip(RoundedCornerShape(8.dp))
-                    .background(color = LightIndigo)
+                    .background(color = CustomColors.LightIndigo)
             ){
                 Text(
                     text = selectedLanguage,

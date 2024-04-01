@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.languageTranslation.TranslationViewModel
 import com.example.travelbuddy.languageTranslation.components.LanguageSelectionDropdown
 
@@ -66,11 +67,7 @@ fun TranslationScreen() {
     var showInputDropdown by remember { mutableStateOf(false) }
     var showOutputDropdown by remember { mutableStateOf(false) }
 
-    val Blue = Color(0xFF60B2E5)
-    val DarkGreen = Color(0xFF0F4C5C)
-    val LightGreen = Color(0xFFC0E5C8)
-    val Indigo = Color(0xFF36558F)
-    val Pink = Color(0xFFED7B84)
+
 
 
 
@@ -81,7 +78,7 @@ fun TranslationScreen() {
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
 
-                .background(color = Pink)
+                .background(color = CustomColors.Pink)
                 .padding(8.dp)
         ) {
             Text(
@@ -112,10 +109,10 @@ fun TranslationScreen() {
                 .fillMaxWidth()
                 .height(150.dp)
                 .padding(bottom = 16.dp),
-            label = { Text("Input Text", color = Pink)},
+            label = { Text("Input Text", color = CustomColors.Pink)},
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = Pink,
-                focusedBorderColor = Pink
+                unfocusedBorderColor = CustomColors.Pink,
+                focusedBorderColor = CustomColors.Pink
             )
         )
 
@@ -130,11 +127,11 @@ fun TranslationScreen() {
                     viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = DarkGreen
+                    containerColor = CustomColors.DarkGreen
                 ),
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Translate", color = LightGreen)
+                Text("Translate", color = CustomColors.LightGreen)
             }
             Spacer(modifier = Modifier.width(8.dp))
             // Swap button
@@ -146,11 +143,11 @@ fun TranslationScreen() {
                     inputText = TextFieldValue(translatedText)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = LightGreen
+                    containerColor = CustomColors.LightGreen
                 ),
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Swap", color = DarkGreen)
+                Text("Swap", color = CustomColors.DarkGreen)
             }
         }
 
@@ -177,10 +174,10 @@ fun TranslationScreen() {
                 .fillMaxWidth()
                 .height(150.dp)
                 .padding(bottom = 16.dp),
-            label = { Text("Translated Text", color = Pink)},
+            label = { Text("Translated Text", color = CustomColors.Pink)},
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                unfocusedBorderColor = Pink,
-                focusedBorderColor = Pink
+                unfocusedBorderColor = CustomColors.Pink,
+                focusedBorderColor = CustomColors.Pink
             )
         )
 
@@ -191,7 +188,7 @@ fun TranslationScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(color = Pink)
+                    .background(color = CustomColors.Pink)
                     .padding(8.dp)
             ) {
                 Text(
@@ -209,7 +206,7 @@ fun TranslationScreen() {
                 ) {
                     Text(
                         text = "${viewModel.mapToCode(recentInput.inputLanguage).uppercase()} to ${viewModel.mapToCode(recentInput.outputLanguage).uppercase()}",
-                        color = Indigo,
+                        color = CustomColors.Indigo,
                         fontWeight = FontWeight.Bold
                     )
                     OutlinedButton(
@@ -220,7 +217,7 @@ fun TranslationScreen() {
                             viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = DarkGreen
+                            containerColor = CustomColors.DarkGreen
                         ),
                         modifier = Modifier
                             .padding(start = 8.dp)
