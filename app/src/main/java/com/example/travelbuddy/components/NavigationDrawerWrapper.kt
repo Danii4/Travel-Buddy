@@ -101,7 +101,8 @@ fun NavigationDrawerWrapper(
                         label = { Text(text = item.label) },
                         selected = index == itemIndex,
                         onClick = {
-                            if(item.label == "logout") { scope.launch { viewModel.logoutUser() }}
+                            if(item.label == "Logout") {
+                            scope.launch { viewModel.logoutUser() }}
                             navController.navigate(item.screen.route)
                             scope.launch {
                                 drawerState.close()
