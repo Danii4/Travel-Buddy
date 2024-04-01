@@ -108,7 +108,7 @@ class AddEditExpenseViewModel @Inject constructor(
                         amount.value = it.amount.toString()
                         date.value = it.date
                         type.value = it.type
-                        currency.value = Currency(code = it.currencyCode)
+                        currency.value = Currency(code = it.currency.code, name = it.currency.name, symbol = it.currency.symbol)
                     }
                 }
             }

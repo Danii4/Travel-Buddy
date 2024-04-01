@@ -48,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.data.model.Currency
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
 import com.github.nkuppan.countrycompose.presentation.currency.CountryCurrencySelectionDialog
@@ -253,7 +254,7 @@ fun AddEditExpenseView(
                             type = state.type,
                             amount = BigDecimal(state.amount),
                             date = state.date,
-                            currencyCode = state.currency.code!!
+                            currency = Currency(code = state.currency.code, name = state.currency.name, symbol = state.currency.symbol)
                         )
                         viewModel.submitExpense(newExpense)
                     },

@@ -45,7 +45,7 @@ class ExpenseModel {
         val type: ExpenseType,
         val amount: BigDecimal,
         val date: Date,
-        val currencyCode: String
+        val currency: Currency
     )
 
 }
