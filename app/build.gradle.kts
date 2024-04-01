@@ -141,4 +141,7 @@ dependencies {
 
     implementation("com.github.nkuppan.country:country:1.1.1")
     implementation("com.github.nkuppan.country:countrycompose:1.1.1")
+
+    implementation ("com.amadeus:amadeus-android:1.3.1")
+
 }
