@@ -59,9 +59,10 @@ class AuthRepositoryImpl @Inject constructor(
 
                 userData?.let {
                     val user = UserModel.User(
-                        userData["id"] as String,
+                        userData["uid"] as String,
                         userData["email"] as String,
                         userData["name"] as String,
+                        (userData["tripsIdList"] as List<String>).toMutableList()
                     )
                     ResponseModel.ResponseWithData.Success(user)
                 } ?: ResponseModel.ResponseWithData.Failure(error = "Failed to convert document to User")
@@ -83,10 +84,19 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTripsList(): MutableList<String>? {
+        val userInfo = getUserInfo(user?.uid.toString())
+        return userInfo.data?.tripsIdList
+    }
+
     override fun signOut() {
         firebaseAuth.signOut()
     }
     override fun getUserId(): String? {
         return user?.uid
+    }
+    override suspend fun getUserName(): String? {
+        val userInfo = getUserInfo(user?.uid.toString())
+        return userInfo.data?.name
     }
 }

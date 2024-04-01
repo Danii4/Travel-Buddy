@@ -1,16 +1,16 @@
 package com.example.travelbuddy.data
 
-import com.example.travelbuddy.data.model.ExpenseModel
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.travelbuddy.data.model.Currency
+import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
-import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.data.model.TripModel
+import com.example.travelbuddy.repository.AuthRepository
 import com.example.travelbuddy.repository.TripRepository
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -50,6 +50,23 @@ class TripRepositoryImpl @Inject constructor(
                 error = e.message ?: "Error adding a trip. Please try again."
             )
         }
+    }
+
+    override suspend fun deleteTrip(tripId: String): ResponseModel.Response {
+        try {
+            authRepository.getUserId().let {
+                db.collection("users").document(it!!).update("tripsIdList", FieldValue.arrayRemove(tripId))
+            }
+//            ResponseModel.Response.Success
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while updating user")
+        }
+        try {
+            db.collection("trips").document(tripId).delete()
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting trip")
+        }
+        return ResponseModel.Response.Success
     }
 
     override suspend fun addTripIdToUser(Id: String) {
@@ -173,6 +190,20 @@ class TripRepositoryImpl @Inject constructor(
             ResponseModel.Response.Success
         } catch (e: Exception) {
             ResponseModel.Response.Failure(error = e.message ?: "Error deleting destination")
+        }
+    }
+
+    override suspend fun getTripName(tripId: String): ResponseModel.ResponseWithData<String> {
+        return try {
+            val destSnapshot = db.collection("trips").document(tripId).get().await()
+            if (destSnapshot.exists()) {
+                val destData = destSnapshot.data
+                ResponseModel.ResponseWithData.Success(destData?.get("name").toString())
+            } else {
+                ResponseModel.ResponseWithData.Failure(error="Error getting Destination")
+            }
+        } catch (e: Exception) {
+            ResponseModel.ResponseWithData.Failure(error="Error getting Destination")
         }
     }
 }

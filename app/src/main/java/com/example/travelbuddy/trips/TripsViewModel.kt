@@ -77,4 +77,10 @@ class TripsViewModel @Inject constructor(
     fun navigateToExpense(tripId: String) {
         navWrapper.getNavController().navigate(Screen.Expenses.route + "?tripId=${tripId}")
     }
+
+    fun deleteTrip(tripId: String) {
+        viewModelScope.launch {
+            tripRepository.deleteTrip(tripId)
+        }
+    }
 }
