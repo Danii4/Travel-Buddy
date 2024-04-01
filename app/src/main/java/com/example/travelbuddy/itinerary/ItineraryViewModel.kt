@@ -1,7 +1,9 @@
 package com.example.travelbuddy.itinerary
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -56,7 +58,6 @@ class ItineraryViewModel @Inject constructor(
 
     private fun getData(){
         viewModelScope.launch {
-            Log.d("Destination ID", destinationId.value.toString())
             itineraryRepository.getItinerary(destinationId.value).collect{itinerary ->
                 itinerary.data?.let {
                     itineraryList.value = it
@@ -101,7 +102,7 @@ class ItineraryViewModel @Inject constructor(
         }
     }
 
-    fun submitItinerary(mode: String){
+    fun submitItinerary(){
         viewModelScope.launch {
             val itineraryIdList = mutableListOf<String>()
             itineraryList.value.forEach { itinerary ->
@@ -113,6 +114,19 @@ class ItineraryViewModel @Inject constructor(
                     destId = destinationId.value,
                     itineraryId = itineraryId
                 )
+            }
+            navigateBack()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun generateDestPOI() {
+        amadeusClient.startClient()
+        viewModelScope.launch {
+            amadeusClient.getGeoPoint().collect { generatedItineraryList ->
+                generatedItineraryList.let {
+                    itineraryList.value = it
+                }
             }
         }
     }
