@@ -1,20 +1,9 @@
 package com.example.travelbuddy.unit_conversion.model
 
 import androidx.compose.ui.graphics.Color
-import com.example.travelbuddy.ui.theme.DarkBlue
-import com.example.travelbuddy.ui.theme.DarkGreen
-import com.example.travelbuddy.ui.theme.DarkOrange
-import com.example.travelbuddy.ui.theme.DarkPurple
-import com.example.travelbuddy.ui.theme.DarkRed
+import com.example.travelbuddy.CustomColors
 import com.example.travelbuddy.ui.theme.ExtraLightBlue
 import com.example.travelbuddy.ui.theme.ExtraLightGreen
-import com.example.travelbuddy.ui.theme.ExtraLightOrange
-import com.example.travelbuddy.ui.theme.ExtraLightPurple
-import com.example.travelbuddy.ui.theme.ExtraLightRed
-import com.example.travelbuddy.ui.theme.LightBlue
-import com.example.travelbuddy.ui.theme.LightGreen
-import com.example.travelbuddy.ui.theme.LightOrange
-import com.example.travelbuddy.ui.theme.LightPurple
 import com.example.travelbuddy.ui.theme.LightRed
 import com.example.travelbuddy.unit_conversion.repository.getDefaultConversionData
 
@@ -37,11 +26,11 @@ data class ScreenColor(
 fun ScreenType.getColors(): ScreenColor {
     return when(this){
         ScreenType.DEFAULT -> ScreenColor(Color.White, Color.White, Color.White, Color.White)
-        ScreenType.CURRENCY -> ScreenColor(DarkGreen, LightGreen, ExtraLightGreen, Color.White)
-        ScreenType.LENGTHS -> ScreenColor(DarkRed, LightRed, ExtraLightRed, Color.White)
-        ScreenType.TEMPERATURE -> ScreenColor(DarkBlue, LightBlue, ExtraLightBlue, Color.White)
-        ScreenType.WEIGHT -> ScreenColor(DarkPurple, LightPurple, ExtraLightPurple, Color.White)
-        ScreenType.VOLUME -> ScreenColor(DarkOrange, LightOrange, ExtraLightOrange, Color.White)
+        ScreenType.CURRENCY -> ScreenColor(CustomColors.DarkGreen, CustomColors.LightGreen, ExtraLightGreen, Color.White)
+        ScreenType.LENGTHS -> ScreenColor(CustomColors.Pink, CustomColors.LightPink, LightRed, Color.White)
+        ScreenType.TEMPERATURE -> ScreenColor(CustomColors.DarkBlue, CustomColors.Blue, ExtraLightBlue, Color.White)
+        ScreenType.WEIGHT -> ScreenColor(CustomColors.Indigo, CustomColors.LightIndigo, ExtraLightBlue, Color.White)
+        ScreenType.VOLUME -> ScreenColor(CustomColors.DarkGreen, CustomColors.LightGreen, ExtraLightGreen, Color.White)
     }
 }
 fun ScreenType.getTitle(): String {
