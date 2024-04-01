@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.travelbuddy.languageTranslation.CustomColors
+import com.example.travelbuddy.CustomColors
 import com.example.travelbuddy.languageTranslation.TranslationViewModel
 import com.example.travelbuddy.languageTranslation.components.LanguageSelectionDropdown
 
