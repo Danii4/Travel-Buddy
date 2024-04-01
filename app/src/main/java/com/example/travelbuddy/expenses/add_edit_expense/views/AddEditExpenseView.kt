@@ -148,7 +148,7 @@ fun AddEditExpenseView(
 
             // Text field for entering expense amount
             TextField(
-                label = { Text(text = "Amount ($)") },
+                label = { Text(text = "Amount") },
                 value = state.amount,
                 onValueChange = { viewModel.setExpenseAmount(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -158,6 +158,7 @@ fun AddEditExpenseView(
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                 ),
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -236,6 +237,7 @@ fun AddEditExpenseView(
                     Button(
                         onClick = {
                             viewModel.deleteExpense()
+                            viewModel.navigateBack()
                         },
                         modifier = Modifier.fillMaxWidth(0.5f)
                     ) {

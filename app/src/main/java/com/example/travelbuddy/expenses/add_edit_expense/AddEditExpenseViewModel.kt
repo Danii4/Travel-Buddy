@@ -1,6 +1,7 @@
 package com.example.travelbuddy.expenses.add_edit_expense
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -125,6 +126,19 @@ class AddEditExpenseViewModel @Inject constructor(
         }
     }
 
+    fun deleteExpense() {
+        viewModelScope.launch {
+            when (expenseRepository.deleteExpense(expenseId, tripId)) {
+                is ResponseModel.Response.Success -> {
+                    Log.d("Delete Expense Success", "Successfully delete expense id: $expenseId")
+                }
+                is ResponseModel.Response.Failure -> {
+                    Log.d("Delete Expense Failure", "Error deleting expense id: $expenseId")
+                }
+            }
+        }
+    }
+
     fun navigateBack() {
         navWrapper.getNavController().navigateUp()
     }
@@ -140,9 +154,5 @@ class AddEditExpenseViewModel @Inject constructor(
     fun setExpenseCurrency(newCurrency: Currency) {
         currency.value = newCurrency
 
-    }
-
-    fun deleteExpense() {
-        TODO("Not yet implemented")
     }
 }

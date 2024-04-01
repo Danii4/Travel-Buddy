@@ -72,6 +72,26 @@ class ExpenseRepository(
         }
     }
 
+    suspend fun deleteExpense(expenseId: String?, tripId: String?): ResponseModel.Response {
+        if (tripId.isNullOrBlank()) {
+            return ResponseModel.Response.Failure("Error deleting expenses, tripId is null or blank")
+        }
+        else if (expenseId.isNullOrBlank()) {
+            return ResponseModel.Response.Failure("Error deleting expenses, expenseId is null or blank")
+        }
+        return try {
+            db.collection("trips").document(tripId).update("expensesList", FieldValue.arrayRemove(expenseId))
+            try {
+                db.collection("expenses").document(expenseId).delete()
+                ResponseModel.Response.Success
+            } catch (e: Exception) {
+                return ResponseModel.Response.Failure(e.message ?: "Unknown error deleting expense")
+            }
+        } catch (e: Exception) {
+            return ResponseModel.Response.Failure(e.message ?: "Unknown error removing expense from trip")
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getExpenses(tripId: String): Flow<ResponseModel.ResponseWithData<List<ExpenseModel.Expense>>> {
         return flow {
