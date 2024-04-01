@@ -50,8 +50,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.travelbuddy.CustomColors
 import com.example.travelbuddy.data.model.TripModel
-import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.trips.TripsViewModel
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.example.travelbuddy.trips.add_trips.views.AddTripsPagerView

@@ -53,8 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.util.toRange
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.CustomColors
 import com.example.travelbuddy.data.model.DestinationModel
-import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.trips.add_trips.AddTripsViewModel
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog

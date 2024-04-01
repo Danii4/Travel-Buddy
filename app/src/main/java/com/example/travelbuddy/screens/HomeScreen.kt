@@ -23,87 +23,87 @@ fun HomeScreen() {
             Text(
                 modifier = Modifier.padding(20.dp),
                 text = "Welcome to TravelBuddy",
-                fontSize = 25.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Medium
             )
             //provides the user with the terms and conditions of our app, to improve trust and transparency
             Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Terms and Conditions of Use: by continuing to use our platform you agree to the privacy policies listed below.",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
               Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Your personal information will be stored in our system and your spending habits will be shared with those that you choose to share with.",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                 Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Your browsing preferences and data will also be stored in the system",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                 Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "By using our app, you agree to all the terms and conditions listed.",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                  Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Frequently Asked Questions",
-                fontSize = 25.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                  //FAQ section
                   Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Do I have to be connected to the internet to view my data?",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                      Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Limited content will be visible without full internet access on the app. Please connect to the internet",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                       Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Is it possible to contact someone directly about pricing and questions related to using the app?",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                      Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Yes, for travel agent support or questions relating to a specific itinerary please feel free to contact us at inquiries@travelbuddy.com",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                       Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "How often does the pricing of various flights and hotels change?",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                      Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "In our system we use real time data connected directly to industry suppliers to receive real time pricing.",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                      Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Do you accept partnership or business for companies in the travel industry.",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
                      Text(
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(10.dp),
                 text = "Yes! If you would like to discuss partner opportunities please contact us at partners@travelbuddy.com",
-                fontSize = 20.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Medium
             )
         }
