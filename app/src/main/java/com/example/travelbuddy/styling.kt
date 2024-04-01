@@ -9,7 +9,8 @@ object CustomColors {
     var LightGreen = Color(0XFF92BF9C)
     var Indigo = Color(0xFF36558F)
     var LightIndigo = Color(0xFF6D86B3)
-    var Pink = Color(0xFFC76B73)
+    var Pink = Color(0xFFED7B84)
     var LightPink = Color(0xFFE5C0C3)
+    var LightRed = Color(255, 100, 109)
 }
 
