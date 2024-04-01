@@ -1,18 +1,14 @@
 package com.example.travelbuddy.languageTranslation.views
 
-import androidx.compose.foundation.background
+import TitleBanner
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.languageTranslation.TranslationViewModel
 import com.example.travelbuddy.languageTranslation.components.LanguageSelectionDropdown
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,21 +69,11 @@ fun TranslationScreen() {
 
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
+        TitleBanner(
+            text = "Translate",
+            backgroundColor = CustomColors.Pink
+        )
 
-                .background(color = CustomColors.Pink)
-                .padding(8.dp)
-        ) {
-            Text(
-                "Translate ",
-                textAlign = TextAlign.Center,
-                style = TextStyle(fontWeight = FontWeight.Bold, color = Color.White)
-            )
-        }
         // Input language selection dropdown
         LanguageSelectionDropdown(
             label = "Input",
@@ -133,7 +120,9 @@ fun TranslationScreen() {
             ) {
                 Text("Translate", color = CustomColors.LightGreen)
             }
+
             Spacer(modifier = Modifier.width(8.dp))
+
             // Swap button
             Button(
                 onClick = {
@@ -183,20 +172,10 @@ fun TranslationScreen() {
 
         // Clickable recent inputs shown in a column
         Column {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(color = CustomColors.Pink)
-                    .padding(8.dp)
-            ) {
-                Text(
-                    "Recent Inputs ",
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(fontWeight = FontWeight.ExtraBold, color = Color.White)
-                )
-            }
+            TitleBanner(
+                text = "Recent Inputs",
+                backgroundColor = CustomColors.Pink
+            )
             recentInputs.forEach { recentInput ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
