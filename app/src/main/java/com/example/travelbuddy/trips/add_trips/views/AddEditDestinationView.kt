@@ -104,7 +104,6 @@ fun GenerateDestinationView(
             ) {
                 Text(
                     text = destination.name,
-//                    modifier = Modifier.padding(2.dp),
                     fontWeight = FontWeight.Bold,
                     color = CustomColors.Indigo,
                     fontSize = 20.sp
@@ -115,7 +114,6 @@ fun GenerateDestinationView(
                         color = CustomColors.Indigo,
                         fontSize = 16.sp
                     ),
-//                    modifier = Modifier.padding(2.dp),
                 )
             }
             IconButton(
