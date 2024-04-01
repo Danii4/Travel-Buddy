@@ -55,8 +55,14 @@ class LandingScreenViewModel @Inject constructor(
             val tripsList = authRepository.getTripsList()
             tripCount.value = tripsList?.size ?: 0
             userName.value = authRepository.getUserName().toString()
-            lastTripName.value = tripRepository.getTripName(tripsList
-                ?.get(tripsList.size - 1) ?: "").data.toString()
+            if (tripsList?.size != 0) {
+                lastTripName.value = tripRepository.getTripName(
+                    tripsList
+                        ?.get(tripsList.size - 1) ?: ""
+                ).data.toString()
+            } else{
+                lastTripName.value = "No Upcoming Trips"
+            }
         }
     }
 

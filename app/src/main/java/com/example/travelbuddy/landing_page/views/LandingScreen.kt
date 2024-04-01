@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,7 +57,7 @@ fun LandingScreen() {
 
         Column(
             modifier = Modifier
-                .background(CustomColors.Indigo, shape = RoundedCornerShape(16.dp))
+                .background(Brush.horizontalGradient(listOf(CustomColors.LightIndigo, CustomColors.Indigo)), shape = RoundedCornerShape(16.dp))
                 .height(225.dp)
                 .fillMaxWidth()
                 .padding(15.dp),
@@ -72,7 +73,7 @@ fun LandingScreen() {
             Row {
                 Text(
                     text = state.lastTripName,
-                    fontSize = 36.sp,
+                    fontSize = 30.sp,
                     modifier = Modifier
                         .padding(15.dp)
                         .weight(1f),
