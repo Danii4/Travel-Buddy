@@ -31,16 +31,13 @@ class AmadeusClient() {
                 )){
                 is ApiResult.Success -> {
                     if (coordinates?.data.isNullOrEmpty()){
-                        Log.d("ERROR AMADEUS", "${coordinates.toString()}")
                         res = listOf("")
                     } else {
-                        Log.d("Result", coordinates?.data?.get(0)?.geoCode.toString())
                         res = listOf(coordinates.data[0].geoCode?.latitude.toString(),
                             coordinates.data[0].geoCode?.longitude.toString())
                     }
                 }
                 is ApiResult.Error -> {
-                    Log.d("ERROR AMADEUS", "${coordinates.toString()}")
                     // Handle your error
 
                 }

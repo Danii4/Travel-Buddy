@@ -1,7 +1,6 @@
 package com.example.travelbuddy.data
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.travelbuddy.data.model.DestinationModel
 import com.example.travelbuddy.data.model.ResponseModel
@@ -106,7 +105,6 @@ class DestinationRepositoryImpl @Inject constructor(
             val documentSnapshot  = destRef.get().await()
             if (documentSnapshot?.exists() == true) {
                 val destName = documentSnapshot.data?.get("name") as String
-                Log.d("NAME", destName)
                 ResponseModel.ResponseWithData.Success(destName)
             }
             else {

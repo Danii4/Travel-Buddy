@@ -98,7 +98,6 @@ class ItineraryViewModel @Inject constructor(
             val destName = destinationRepository.getDestinationName(destinationId).data.toString()
 
             val coords = amadeusClient.getCoordinates(destName)
-            Log.d("COORDINATES", coords.toString())
         }
     }
 
