@@ -95,19 +95,7 @@ fun TripCard(
                 modifier = Modifier.weight(1f),
                 overflow = TextOverflow.Ellipsis
             )
-            IconButton(
-                onClick = {
-                    // Handle edit button click
-                    addTripsViewModel.setTripId(trip.id)
-                    // Call function to edit trip
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Trip",
-                    tint = Color.White
-                )
-            }
+
             IconButton(
                 onClick = onDeleteClick
             ) {
