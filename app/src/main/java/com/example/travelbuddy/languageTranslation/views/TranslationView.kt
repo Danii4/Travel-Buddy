@@ -1,16 +1,24 @@
 package com.example.travelbuddy.languageTranslation.views
 
+import TitleBanner
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.languageTranslation.CustomColors
 import com.example.travelbuddy.languageTranslation.TranslationViewModel
 import com.example.travelbuddy.languageTranslation.components.LanguageSelectionDropdown
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslationScreen() {
     var inputText by remember { mutableStateOf(TextFieldValue("")) }
@@ -56,7 +64,16 @@ fun TranslationScreen() {
     var showInputDropdown by remember { mutableStateOf(false) }
     var showOutputDropdown by remember { mutableStateOf(false) }
 
+
+
+
+
     Column(modifier = Modifier.padding(16.dp)) {
+        TitleBanner(
+            text = "Translate",
+            backgroundColor = CustomColors.Pink
+        )
+
         // Input language selection dropdown
         LanguageSelectionDropdown(
             label = "Input",
@@ -79,7 +96,11 @@ fun TranslationScreen() {
                 .fillMaxWidth()
                 .height(150.dp)
                 .padding(bottom = 16.dp),
-            label = { Text("Input Text") }
+            label = { Text("Input Text", color = CustomColors.Pink)},
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                unfocusedBorderColor = CustomColors.Pink,
+                focusedBorderColor = CustomColors.Pink
+            )
         )
 
         // Translate and Swap buttons
@@ -92,11 +113,16 @@ fun TranslationScreen() {
                 onClick = {
                     viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CustomColors.DarkGreen
+                ),
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Translate")
+                Text("Translate", color = CustomColors.LightGreen)
             }
+
             Spacer(modifier = Modifier.width(8.dp))
+
             // Swap button
             Button(
                 onClick = {
@@ -105,9 +131,12 @@ fun TranslationScreen() {
                     outputLanguageSelected = tempLanguage
                     inputText = TextFieldValue(translatedText)
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CustomColors.LightGreen
+                ),
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Swap")
+                Text("Swap", color = CustomColors.DarkGreen)
             }
         }
 
@@ -134,24 +163,51 @@ fun TranslationScreen() {
                 .fillMaxWidth()
                 .height(150.dp)
                 .padding(bottom = 16.dp),
-            label = { Text("Translated Text") }
+            label = { Text("Translated Text", color = CustomColors.Pink)},
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                unfocusedBorderColor = CustomColors.Pink,
+                focusedBorderColor = CustomColors.Pink
+            )
         )
 
         // Clickable recent inputs shown in a column
         Column {
-            Text("Recent Inputs: ")
+            TitleBanner(
+                text = "Recent Inputs",
+                backgroundColor = CustomColors.Pink
+            )
             recentInputs.forEach { recentInput ->
-                OutlinedButton(
-                    onClick = {
-                        inputText = TextFieldValue(recentInput.inputText)
-                        inputLanguageSelected = recentInput.inputLanguage
-                        outputLanguageSelected = recentInput.outputLanguage
-                        viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
-
-                    },
-                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 ) {
-                    Text(recentInput.inputText)
+                    Text(
+                        text = "${viewModel.mapToCode(recentInput.inputLanguage).uppercase()} to ${viewModel.mapToCode(recentInput.outputLanguage).uppercase()}",
+                        color = CustomColors.Indigo,
+                        fontWeight = FontWeight.Bold
+                    )
+                    OutlinedButton(
+                        onClick = {
+                            inputText = TextFieldValue(recentInput.inputText)
+                            inputLanguageSelected = recentInput.inputLanguage
+                            outputLanguageSelected = recentInput.outputLanguage
+                            viewModel.translateText(inputText.text, inputLanguageSelected, outputLanguageSelected)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CustomColors.DarkGreen
+                        ),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                    ) {
+                        Text(
+                            text = recentInput.inputText,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }

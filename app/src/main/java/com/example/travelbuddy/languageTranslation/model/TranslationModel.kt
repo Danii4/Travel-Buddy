@@ -37,7 +37,7 @@ class TranslationModel {
     }
 
     // Maps languages to proper code
-    private fun mapLanguageToCode(language: String): String {
+    fun mapLanguageToCode(language: String): String {
         return when (language) {
             "Arabic" -> "ar"
             "Bengali" -> "bn"
