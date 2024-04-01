@@ -58,7 +58,6 @@ class TripsViewModel @Inject constructor(
             tripRepository.getTrips().collect { trips ->
                 trips.data?.let {
                     tripsList.value = it
-                    Log.d("trips list", tripsList.toString())
                 } ?: run {
                     Log.d("Error", "Error getting trips data")
                 }

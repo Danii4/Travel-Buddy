@@ -1,13 +1,17 @@
 package com.example.travelbuddy.itinerary
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelbuddy.NavWrapper
+import com.example.travelbuddy.amadeus_client.AmadeusClient
 import com.example.travelbuddy.data.model.ItineraryModel
 import com.example.travelbuddy.itinerary.model.ItineraryPageModel
+import com.example.travelbuddy.repository.DestinationRepository
 import com.example.travelbuddy.repository.ItineraryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,23 +26,30 @@ import javax.inject.Inject
 @HiltViewModel
 class ItineraryViewModel @Inject constructor(
     private val itineraryRepository: ItineraryRepository,
+    private val destinationRepository: DestinationRepository,
+    private val amadeusClient: AmadeusClient,
     savedStateHandle: SavedStateHandle,
     private val navWrapper: NavWrapper
-) : ViewModel(){
+) : ViewModel() {
     private val _state = MutableStateFlow(ItineraryPageModel.ItineraryViewState())
     val state: StateFlow<ItineraryPageModel.ItineraryViewState>
         get() = _state
 
-    private val destinationId: MutableStateFlow<String?> = MutableStateFlow(savedStateHandle["destinationId"])
-    private val itineraryList: MutableStateFlow<List<ItineraryModel.Itinerary>> = MutableStateFlow(listOf())
+    private val destinationId: MutableStateFlow<String?> =
+        MutableStateFlow(savedStateHandle["destinationId"])
+    private val itineraryList: MutableStateFlow<List<ItineraryModel.Itinerary>> =
+        MutableStateFlow(listOf())
     private val itineraryName: MutableStateFlow<String> = MutableStateFlow(_state.value.name)
 
     init {
         viewModelScope.launch {
-            combine(itineraryList, itineraryName, destinationId) {
-                    itineraryList: List<ItineraryModel.Itinerary>,
-                    itineraryName: String,
-                    destinationId: String? ->
+            combine(
+                itineraryList,
+                itineraryName,
+                destinationId
+            ) { itineraryList: List<ItineraryModel.Itinerary>,
+                itineraryName: String,
+                destinationId: String? ->
                 ItineraryPageModel.ItineraryViewState(
                     itineraryList = itineraryList,
                     name = itineraryName,
@@ -50,13 +61,12 @@ class ItineraryViewModel @Inject constructor(
         }
     }
 
-    private fun getData(){
+    private fun getData() {
         viewModelScope.launch {
-            Log.d("Destination ID", destinationId.value.toString())
-            itineraryRepository.getItinerary(destinationId.value).collect{itinerary ->
+            itineraryRepository.getItinerary(destinationId.value).collect { itinerary ->
                 itinerary.data?.let {
                     itineraryList.value = it
-                }?: run {
+                } ?: run {
                     Log.d("Error", "Error getting itinerary data")
                 }
             }
@@ -76,19 +86,19 @@ class ItineraryViewModel @Inject constructor(
         itineraryList.value += itineraryItem
     }
 
-    fun deleteItinerary(itinerary: ItineraryModel.Itinerary){
+    fun deleteItinerary(itinerary: ItineraryModel.Itinerary) {
         itineraryList.value -= itinerary
     }
 
-    fun setItineraryName(name: String){
+    fun setItineraryName(name: String) {
         itineraryName.value = name
     }
 
-    fun navigateBack(){
+    fun navigateBack() {
         navWrapper.getNavController().navigateUp()
     }
 
-    fun submitItinerary(mode: String){
+    fun submitItinerary() {
         viewModelScope.launch {
             val itineraryIdList = mutableListOf<String>()
             itineraryList.value.forEach { itinerary ->
@@ -100,6 +110,24 @@ class ItineraryViewModel @Inject constructor(
                     destId = destinationId.value,
                     itineraryId = itineraryId
                 )
+            }
+            navigateBack()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun generateItinerary(destinationId: String) {
+        amadeusClient.startClient()
+        viewModelScope.launch {
+            val destName = destinationRepository.getDestinationName(destinationId).data.toString()
+            val coords = amadeusClient.getCoordinates(destName)
+            amadeusClient.getGeoPoint(
+                latitude = coords.data?.first,
+                longitude = coords.data?.second
+            ).collect { generatedItineraryList ->
+                generatedItineraryList.let {
+                    itineraryList.value = it
+                }
             }
         }
     }
