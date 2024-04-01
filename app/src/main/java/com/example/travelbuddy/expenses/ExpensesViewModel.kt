@@ -3,6 +3,7 @@ package com.example.travelbuddy.expenses
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -103,7 +104,7 @@ class ExpensesViewModel @Inject constructor(
             .navigate(Screen.AddEditExpense.route + "?expenseId=${expenseId}&tripId=${tripId}")
     }
 
-    fun getTotalExpenses(expenseType: ExpenseModel.ExpenseType): Any {
+    fun getTotalExpenses(expenseType: ExpenseModel.ExpenseType): BigDecimal {
         var totalAmount = BigDecimal(0.00)
         for (expense in expensesList.value) {
             if (expense.type == expenseType) {
@@ -205,5 +206,17 @@ class ExpensesViewModel @Inject constructor(
 
     fun navigateBack() {
         navWrapper.getNavController().navigateUp()
+    }
+
+    fun getProgress(expenseType: ExpenseModel.ExpenseType, amount: BigDecimal): Float {
+        return if (amount.compareTo(BigDecimal.ZERO) != 0) (getTotalExpenses(expenseType) / amount).toFloat() else 0.0f
+    }
+
+    fun getProgressColour(progress: Float): Color {
+        return when {
+            progress >= 0.75 -> Color.Red
+            progress >= 0.50 -> Color.Yellow
+            else -> Color.Green
+        }
     }
 }

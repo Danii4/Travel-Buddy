@@ -67,7 +67,43 @@ import com.example.travelbuddy.R
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.ExpensesViewModel
 import com.example.travelbuddy.expenses.model.ExpensesModel
+import java.math.BigDecimal
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun BudgetItem(
+    expenseType: ExpenseModel.ExpenseType,
+    amount: BigDecimal,
+    viewModel: ExpensesViewModel
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = expenseType.displayValue,
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 16.sp,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = "\$${
+                "%.2f".format(
+                    viewModel.getTotalExpenses(expenseType)
+                )
+            } / \$${"%.2f".format(amount.toString().toDouble())}",
+            overflow = TextOverflow.Ellipsis,
+            fontSize = 16.sp,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+    }
+    val progress = viewModel.getProgress(expenseType, amount)
+    LinearProgressIndicator(
+        progress = progress, // Dummy progress for demonstration
+        modifier = Modifier.fillMaxWidth(),
+        color = viewModel.getProgressColour(progress)
+    )
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -184,32 +220,7 @@ fun ExpensesView(
                     .padding(8.dp)
             ) {
                 items(state.budgets.toList()) { (expenseType, amount) ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = expenseType.displayValue,
-                            overflow = TextOverflow.Ellipsis,
-                            fontSize = 16.sp,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            text = "\$${
-                                "%.2f".format(
-                                    viewModel.getTotalExpenses(expenseType)
-                                )
-                            } / \$${"%.2f".format(amount.toString().toDouble())}",
-                            overflow = TextOverflow.Ellipsis,
-                            fontSize = 16.sp,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                    }
-                    LinearProgressIndicator(
-                        progress = 0.5f, // Dummy progress for demonstration
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    BudgetItem(expenseType, amount, viewModel)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -224,8 +235,10 @@ fun ExpensesView(
                     .padding(8.dp)
             ) {
                 viewModel.getData()
-                items(state.expensesList) { expense ->
-                    ExpenseList(expense = expense, viewModel = viewModel, state = state)
+                if (state.expensesList.isNotEmpty()) {
+                    items(state.expensesList) { expense ->
+                        ExpenseList(expense = expense, viewModel = viewModel, state = state)
+                    }
                 }
             }
             Box(
