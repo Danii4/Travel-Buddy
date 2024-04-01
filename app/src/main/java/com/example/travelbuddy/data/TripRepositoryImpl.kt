@@ -172,4 +172,18 @@ class TripRepositoryImpl @Inject constructor(
             ResponseModel.Response.Failure(error = e.message ?: "Error deleting destination")
         }
     }
+
+    override suspend fun getTripName(tripId: String): ResponseModel.ResponseWithData<String> {
+        return try {
+            val destSnapshot = db.collection("trips").document(tripId).get().await()
+            if (destSnapshot.exists()) {
+                val destData = destSnapshot.data
+                ResponseModel.ResponseWithData.Success(destData?.get("name").toString())
+            } else {
+                ResponseModel.ResponseWithData.Failure(error="Error getting Destination")
+            }
+        } catch (e: Exception) {
+            ResponseModel.ResponseWithData.Failure(error="Error getting Destination")
+        }
+    }
 }
