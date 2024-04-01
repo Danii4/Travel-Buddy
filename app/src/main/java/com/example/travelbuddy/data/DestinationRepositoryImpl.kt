@@ -8,7 +8,6 @@ import com.example.travelbuddy.repository.DestinationRepository
 import com.example.travelbuddy.repository.TripRepository
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -97,6 +96,22 @@ class DestinationRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting itinerary ids")
+        }
+    }
+
+    override suspend fun getDestinationName(destinationId: String): ResponseModel.ResponseWithData<String>{
+        val destRef = destinationId.let { db.collection("destinations").document(it) }
+        return try {
+            val documentSnapshot  = destRef.get().await()
+            if (documentSnapshot?.exists() == true) {
+                val destName = documentSnapshot.data?.get("name") as String
+                ResponseModel.ResponseWithData.Success(destName)
+            }
+            else {
+                ResponseModel.ResponseWithData.Failure(error = "Destination does not exist")
+            }
+        } catch (e: Exception) {
+            ResponseModel.ResponseWithData.Failure(error = e.message ?: "Error getting destination name")
         }
     }
 }
