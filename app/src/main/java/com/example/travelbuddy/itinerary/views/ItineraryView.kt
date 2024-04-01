@@ -116,6 +116,7 @@ fun ItineraryView() {
                 Button(
                     onClick = {
                         isSheetOpen = true
+                        viewModel.generateItinerary(state.destinationId.toString())
                     },
                     modifier = Modifier
                         .fillMaxWidth()

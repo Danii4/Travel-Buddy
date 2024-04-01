@@ -14,12 +14,39 @@ class AmadeusClient() {
     private lateinit var activityContext: Context
     val job = SupervisorJob()
     val scope = CoroutineScope(Dispatchers.Main + job)
-
     fun startClient() {
         client = Amadeus.Builder(activityContext)
             .setClientId("tbqK2WGYeVhktIJwwBQQ0MMyHTRDZ7pw")
             .setClientSecret("EAd0FaAWEOMObSxa")
             .build()
+    }
+
+    fun getCoordinates(dest: String): List<String> {
+        var res = listOf("")
+
+        scope.launch {
+            when (val coordinates = client!!.referenceData.locations.get(keyword=dest, subType = listOf(
+                "CITY",
+            )
+                )){
+                is ApiResult.Success -> {
+                    if (coordinates?.data.isNullOrEmpty()){
+                        Log.d("ERROR AMADEUS", "${coordinates.toString()}")
+                        res = listOf("")
+                    } else {
+                        Log.d("Result", coordinates?.data?.get(0)?.geoCode.toString())
+                        res = listOf(coordinates.data[0].geoCode?.latitude.toString(),
+                            coordinates.data[0].geoCode?.longitude.toString())
+                    }
+                }
+                is ApiResult.Error -> {
+                    Log.d("ERROR AMADEUS", "${coordinates.toString()}")
+                    // Handle your error
+
+                }
+            }
+        }
+        return res
     }
 
     fun getGeoPoint(){
