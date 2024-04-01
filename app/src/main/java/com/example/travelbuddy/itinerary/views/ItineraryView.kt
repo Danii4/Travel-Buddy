@@ -115,7 +115,6 @@ fun ItineraryView() {
                 Button(
                     onClick = {
                         isSheetOpen = true
-                        viewModel.generateItinerary(state.destinationId.toString())
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,7 +171,7 @@ fun ItineraryView() {
                         contentAlignment = Alignment.Center
                     ) {
                         Button(
-                            onClick = { viewModel.generateDestPOI() },
+                            onClick = { viewModel.generateItinerary(state.destinationId.toString()) },
                             modifier = Modifier.padding(16.dp)
                         ) {
                             Text("Generate Itinerary")
