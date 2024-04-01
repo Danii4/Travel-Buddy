@@ -1,7 +1,6 @@
 package com.example.travelbuddy.data
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.data.model.ResponseModel
@@ -53,7 +52,6 @@ class TripRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTrip(tripId: String): ResponseModel.Response {
-        Log.d("DELETE", tripId)
         try {
             authRepository.getUserId().let {
                 db.collection("users").document(it!!).update("tripsIdList", FieldValue.arrayRemove(tripId))
@@ -67,12 +65,6 @@ class TripRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             return ResponseModel.Response.Failure(e.message ?: "Unknown error while deleting trip")
         }
-//        return try {
-//            tripId?.let { db.collection("destinations").document(it).update("tripsIdList", FieldValue.arrayRemove(tripId)) }
-//            ResponseModel.Response.Success
-//        } catch (e: Exception) {
-//            return ResponseModel.Response.Failure(e.message ?: "Unknown error while updating user")
-//        }
         return ResponseModel.Response.Success
     }
 
@@ -117,7 +109,6 @@ class TripRepositoryImpl @Inject constructor(
 
         val tripList = mutableListOf<TripModel.Trip>()
         for (trip in tripData) {
-            Log.d("TRIP", trip.id)
             var budgetsData = trip.get("budgets") as Map<String, String>
             val budgets = budgetsData.map { ExpenseModel.ExpenseType.from(it.key) to BigDecimal(it.value) }.toMap().toMutableMap()
             TripModel.Trip(

@@ -79,7 +79,6 @@ class TripsViewModel @Inject constructor(
     }
 
     fun deleteTrip(tripId: String) {
-        Log.d("delete view model", tripId)
         viewModelScope.launch {
             tripRepository.deleteTrip(tripId)
         }
