@@ -202,4 +202,8 @@ class ExpensesViewModel @Inject constructor(
 //            }
 //        })
     }
+
+    fun navigateBack() {
+        navWrapper.getNavController().navigateUp()
+    }
 }

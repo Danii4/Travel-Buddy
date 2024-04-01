@@ -29,8 +29,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -147,15 +150,29 @@ fun ExpensesView(
     val viewModel = hiltViewModel<ExpensesViewModel>()
     val state by viewModel.state.collectAsState()
 
-    Scaffold { paddingValues ->
+    Scaffold (
+        topBar = {
+            CenterAlignedTopAppBar(
+                navigationIcon = {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        modifier = Modifier.clickable { viewModel.navigateBack() }
+                    )
+                },
+                title = {
+                    Text(
+                        text = state.trip.name,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            )
+        }
+    ) { paddingValues ->
         Column(
             modifier = modifier.padding(paddingValues)
         ) {
-            Text(
-                text = state.trip.name,
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium),
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
             LazyColumn(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))

@@ -10,15 +10,16 @@ import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.repository.DestinationRepository
 import com.example.travelbuddy.repository.TripRepository
 import com.example.travelbuddy.trips.add_trips.model.AddTripsPageModel
+import com.github.nkuppan.country.domain.model.Currency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.time.ZoneId
-import java.util.Date
 import java.math.BigDecimal
+import java.util.Date
 import javax.inject.Inject
+
 
 @HiltViewModel
 class AddTripsViewModel @Inject constructor(
@@ -39,19 +40,22 @@ class AddTripsViewModel @Inject constructor(
         MutableStateFlow(
             listOf()
         )
+    private val defaultCurrency : MutableStateFlow<Currency> = MutableStateFlow(_state.value.defaultCurrency)
 
     init {
         viewModelScope.launch {
-            combine(destinationList, tripName, tripId, budgets) {
+            combine(destinationList, tripName, tripId, budgets, defaultCurrency) {
                     destinationList: List<DestinationModel.Destination>,
                     tripName: String,
                     tripId: String?,
-                    budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>> ->
+                    budgets: List<Pair<ExpenseModel.ExpenseType, BigDecimal>>,
+                defaultCurrency: Currency ->
                 AddTripsPageModel.AddTripViewState(
                     destinationList = destinationList,
                     tripName = tripName,
                     tripId = tripId,
-                    budgets = budgets
+                    budgets = budgets,
+                    defaultCurrency = defaultCurrency
                 )
             }.collect {
                 _state.value = it
@@ -186,7 +190,7 @@ class AddTripsViewModel @Inject constructor(
                 tripName = tripName.value,
                 destIdList = destIdList,
                 budgets = budgets.value,
-                defaultCurrency = "CAD"
+                defaultCurrency = defaultCurrency.value.code!!
             )
             tripRepository.addTripIdToUser(tripId.data.toString())
         }
@@ -199,5 +203,9 @@ class AddTripsViewModel @Inject constructor(
     fun navigateToItinerary(destinationId: String) {
         navWrapper.getNavController()
             .navigate(Screen.Itinerary.route + "?destinationId=${destinationId}")
+    }
+
+    fun setDefaultCurrency(currency: Currency) {
+        defaultCurrency.value = currency
     }
 }
