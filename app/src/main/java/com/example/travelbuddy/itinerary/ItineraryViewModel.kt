@@ -6,8 +6,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelbuddy.NavWrapper
+import com.example.travelbuddy.amadeus_client.AmadeusClient
 import com.example.travelbuddy.data.model.ItineraryModel
 import com.example.travelbuddy.itinerary.model.ItineraryPageModel
+import com.example.travelbuddy.repository.DestinationRepository
 import com.example.travelbuddy.repository.ItineraryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ItineraryViewModel @Inject constructor(
     private val itineraryRepository: ItineraryRepository,
+    private val destinationRepository: DestinationRepository,
+    private val amadeusClient: AmadeusClient,
     savedStateHandle: SavedStateHandle,
     private val navWrapper: NavWrapper
 ) : ViewModel(){
@@ -86,6 +90,15 @@ class ItineraryViewModel @Inject constructor(
 
     fun navigateBack(){
         navWrapper.getNavController().navigateUp()
+    }
+
+    fun generateItinerary(destinationId: String){
+        amadeusClient.startClient()
+        viewModelScope.launch {
+            val destName = destinationRepository.getDestinationName(destinationId).data.toString()
+
+            val coords = amadeusClient.getCoordinates(destName)
+        }
     }
 
     fun submitItinerary(mode: String){
