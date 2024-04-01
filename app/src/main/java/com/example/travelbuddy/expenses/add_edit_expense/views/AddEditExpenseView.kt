@@ -58,10 +58,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.travelbuddy.CustomColors
 import com.example.travelbuddy.data.model.Currency
 import com.example.travelbuddy.data.model.ExpenseModel
 import com.example.travelbuddy.expenses.add_edit_expense.AddEditExpenseViewModel
-import com.example.travelbuddy.languageTranslation.CustomColors
 import com.github.nkuppan.countrycompose.presentation.currency.CountryCurrencySelectionDialog
 import java.math.BigDecimal
 

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.travelbuddy.languageTranslation.CustomColors
+import com.example.travelbuddy.CustomColors
 
 
 @RequiresApi(Build.VERSION_CODES.O)
