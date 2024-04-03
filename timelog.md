@@ -27,4 +27,5 @@
 | 2024/03/20 |       |      | 3     |         |         |          | Implement Currency Conversion Screen accessing two APIs to get conversion rate and contry flags                |                                                                               
 | 2024/03/28 |       | 2    |       |         |         |          | work on home page brainstorm and ideas for FAQ section in home screen
 | 2024/03/28 |       | 1    |       |         |         |          | work on improving home screen content
-
+| 2024/04/01 |       | 3    |       |         |         |          | meeting to discuss youtube video content and practice for final presentation
+| 2024/04/03 |       | 2    |       |         |         |          | work on D6 
