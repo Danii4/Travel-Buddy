@@ -36,5 +36,5 @@
 | 2024/04/01 |  3    | 3    |  3    |    3    |    3    |     3    | meeting to discuss youtube video content and practice for final presentation
 | 2024/04/03 |  4    | 2    |       |         |         |          | work on D6 |
 | 2024/04/07 |  2    |      |       |         |         |          | work on D7 | 
-
+| 2024/04/08 |       | 2    |       |         |         |          | work on D7 | 
 
