@@ -11,7 +11,7 @@
 | 2024/03/01 |       |        |       | 5       |         |          | Create Expense View page and add Budget progress                                                                                         |
 | 2024/03/01 |       |        |       |         |         | 4        | Created date picker and search bar components to search and add a destination                                                            |
 | 2024/03/02 |       |        |       |         |         | 3        | Created a data model for destinations and created card layout for each destination                                                       |
-| 2024/03/02 |       |        | 6     |         |         | 3        | Setup Conversion Components for all conversions apart from currency                                                                      |
+| 2024/03/02 |       |        | 6     |         |         |         | Setup Conversion Components for all conversions apart from currency                                                                      |
 | 2024/03/02 | 7     |        |       |         |         |          | Language Translation: prototype UI                                                                                                       |
 | 2024/03/02 |       |        |       | 4       |         |          | Add list of expenses and mock data                                                                                                       |
 | 2024/03/03 | 7     |        |       |         |         |          | Language Translation: prototype for Translating Feature                                                                                  |
@@ -43,12 +43,11 @@
 | 2024/03/29 |       |        |       |         |         | 3        | Enabled navigation to the view destination page and made dependency injections                                                           |
 | 2024/03/29 |       |        |       | 5       |         |          | Add custom Money class to structure how expenses and currencies will be correlated and manipulated                                       |
 | 2024/03/29 |       |        |       |         |         | 4        | work on home page brainstorm and ideas for FAQ section in home screen                                                                    |
-| 2024/03/29 |       |        |       |         |         | 8        | Language Translation: Increased Languages, Improved UI/Syling, Added Language History, Added Recent Input History                        |
+| 2024/03/29 |   8    |        |       |         |         |         | Language Translation: Increased Languages, Improved UI/Syling, Added Language History, Added Recent Input History                        |
 | 2024/03/30 |       |        |       |         |         | 5        | enabled destination add and delete functionality and allowed destinations to be read and modified directly from firebase                 |
 | 2024/03/30 |       |        |       | 9       |         |          | implemented add-edit-expense view model and view functionality, integrate with firebase and trips view                                   |
 | 2024/03/30 |       |        |       | 5       |         |          | implemented add budget view for trip creation, connect with firebase and update trip model                                               |
-| 2024/03/30 |       |        |       |         |         | 7        | Language Translation: Increased Languages, Improved UI/Syling, Added Language History, Added Recent Input History                        |
-| 2024/03/31 |       |        |       |         |         | 3        | implemented the homescreen, the ability to display the last trip on the screen and overhaulled its UI to be inline with our app design   |
+| 2024/03/30 |    7   |        |       |         |         |        | Language Translation: Increased Languages, Improved UI/Syling, Added Language History, Added Recent Input History                        |
 | 2024/03/31 |       |        |       |         |         | 8        | implemented all of the itinerary functionality, including the ability to add itineraries and automatically read itineraries from Firebase |
 | 2024/03/31 |       |        |       | 8       |         |          | integrate budgets from trip model with expenses view model to view current budgets on expenses view                                      |
 | 2024/03/31 |       |        |       | 6       |         |          | implement add and delete expenses with firebase and updating view model to reflect changes                                               |
