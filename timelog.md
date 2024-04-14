@@ -43,10 +43,10 @@
 | 2024/03/31 |       |        |       |         |         | 3        | implemented the homescreen, the ability to display the last trip on the screen and overhaulled its UI to be inline with our app design |
 | 2024/03/31 |       |        |       |         |         | 8        | implemented all of the itinerary functionality, including the ability to add itineraries and automatically read itineraries from Firebase |
 | 2024/03/31 | 8     |        |       |         |         |          | Language Translation: Increased Languages, Improved UI/Syling, Added Language History, Added Recent Input History |
-| 2024/04/01 | 3     | 3      | 3     | 3       | 3       | 3        | meeting to discuss youtube video content and practice for final presentation                                   |
 | 2024/04/01 |       |        |       |         |         | 7        | learnt how to work with APIs in Kotlin, read about the Amadeus API docs and connected the app with the Amadeus API |
 | 2024/04/01 |       |        |       |         |         | 3        | worked with the Amadeus API to generate itinerary and parse the data it would return into itinerary objects    |
 | 2024/04/01 |       |        |       |         |         | 3        | Implemented the homescreen, the ability to display the last trip on the screen and overhaulled its UI to be inline with our app design |
+| 2024/04/01 | 3     | 3      | 3     | 3       | 3       | 3        | meeting to discuss youtube video content and practice for final presentation                                   |
 | 2024/04/03 | 4     | 2      |       |         |         | 4        | work on D6                                                                                                     |
 | 2024/04/07 | 2     |        |       |         |         | 2        | work on D7                                                                                                     |
 | 2024/04/08 |       | 2      |       |         |         |          | work on D7                                                                                                     |
